@@ -3,6 +3,7 @@ module github.com/kacpekwasny/distributed-forum
 go 1.21.3
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/reddec/go-login v0.0.0-20230112160949-9a6fcdb489fe // indirect
