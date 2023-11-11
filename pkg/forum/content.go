@@ -1,15 +1,16 @@
 package forum
 
 import (
+	"html/template"
 	"math"
 	"math/rand"
 	"net/http"
 	"path/filepath"
 	"runtime"
-	"text/template"
 	"time"
 
 	"github.com/kacpekwasny/distributed-forum/pkg/enums"
+	"github.com/kacpekwasny/distributed-forum/pkg/utils"
 )
 
 var tpl *template.Template
@@ -20,13 +21,14 @@ func init() {
 		panic("was not able to aquire the filename of current running file")
 	}
 	dirname := filepath.Dir(filename)
-	templatesGlobSelector := filepath.Join(dirname, "templates", "*.gohtml")
+	templatesGlobSelector := filepath.Join(dirname, "templates", "*.go.html")
 
 	tpl = template.Must(
-		template.Must(
-			template.ParseGlob(templatesGlobSelector),
-		).ParseGlob(templatesGlobSelector),
-	)
+		template.
+			New("forum").
+			Funcs(utils.FuncMapCommon).
+			ParseGlob(templatesGlobSelector))
+
 }
 
 type ContentManagerInterface interface {
@@ -68,12 +70,8 @@ func NewContentManagerVolatile() *ConentMangerVolatile {
 }
 
 func RenderPost(w http.ResponseWriter, p *Post) {
-	// var tmplFile1 = "/home/kacper/go/src/github.com/kacpekwasny/distributed-forum/pkg/forum/post.go.html"
-	// var tmplFile2 = "/home/kacper/go/src/github.com/kacpekwasny/distributed-forum/pkg/forum/all-posts.go.html"
 	err := tpl.Execute(w, []*Post{p, p})
-	if err != nil {
-		panic(err)
-	}
+	utils.Pife(err)
 }
 
 type TimeStampable struct {
