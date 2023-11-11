@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/schema"
@@ -17,7 +18,13 @@ var hmacSecret []byte
 var decoder = schema.NewDecoder()
 
 func init() {
-	hmacSecret = []byte("hmacSampleSecret")
+	stringSecret := os.Getenv("FORUM_JWT_HMAC_SECRET")
+	if len(stringSecret) == 0 {
+		stringSecret = "hmacSampleSecret"
+	}
+	hmacSecret = []byte(stringSecret)
+
+	// Its for a `Key: Value` pair. Just a random key so no collisions will occur
 	jwtCookieKey = "bueykivxivcxf436ugkhgu8owy3886^$&7ae"
 }
 
@@ -76,6 +83,14 @@ func LoginUser(auth Authenticator, w http.ResponseWriter, r *http.Request) error
 	})
 
 	return nil
+}
+
+func LogoutUser(w http.ResponseWriter) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     jwtCookieKey,
+		Value:    "",
+		HttpOnly: true,
+	})
 }
 
 func GetRegisterMe(r *http.Request) (*RegisterMe, error) {

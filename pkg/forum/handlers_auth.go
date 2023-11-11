@@ -9,14 +9,14 @@ import (
 
 func BaseGetFactory(baseValues BaseValues) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := tpl.ExecuteTemplate(w, "base.go.html", baseValues)
+		err := tplPages.ExecuteTemplate(w, "base.go.html", baseValues)
 		utils.Pife(err)
 	}
 }
 
 func ComponentGetFactory(template string, v any) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := tpl.ExecuteTemplate(w, template, v)
+		err := tplPages.ExecuteTemplate(w, template, v)
 		utils.Pife(err)
 	}
 }
@@ -26,12 +26,12 @@ func ComponentGetFactory(template string, v any) func(w http.ResponseWriter, r *
 func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 	err := auth.LoginUser(authenticator, w, r)
 	if err != nil {
-		err = tpl.ExecuteTemplate(w, "login.go.html", LoginFormValues{Err: "Login Failed :c"})
+		err = tplPages.ExecuteTemplate(w, "login.go.html", LoginFormValues{Err: "Login Failed :c"})
 		utils.Pife(err)
 		return
 	}
 	w.Header().Set("HX-Push-Url", "/")
-	err = tpl.ExecuteTemplate(w, "base.go.html",
+	err = tplPages.ExecuteTemplate(w, "base.go.html",
 		BaseValues{
 			Title:          "Welcome :D",
 			MainContentUrl: "welcome"},
@@ -57,11 +57,21 @@ func HandlePostRegister(w http.ResponseWriter, r *http.Request) {
 		default:
 			rfv.Err = "Unknown error occured."
 		}
-		err := tpl.ExecuteTemplate(w, "register.go.html", rfv)
+		err := tplPages.ExecuteTemplate(w, "register.go.html", rfv)
 		utils.Pife(err)
 		return
 	}
 	w.Header().Set("HX-Push-Url", "/login")
-	err := tpl.ExecuteTemplate(w, "login.go.html", rfv)
+	err := tplPages.ExecuteTemplate(w, "login.go.html", rfv)
 	utils.Pife(err)
+}
+
+// ~~ Log Out ~~
+func HandleLogout(w http.ResponseWriter, r *http.Request) {
+	auth.LogoutUser(w)
+	utils.Pife(tplPages.ExecuteTemplate(w, "base.go.html",
+		BaseValues{
+			Title:          "Login",
+			MainContentUrl: "login",
+		}))
 }

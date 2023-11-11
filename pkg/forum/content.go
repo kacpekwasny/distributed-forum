@@ -13,7 +13,10 @@ import (
 	"github.com/kacpekwasny/distributed-forum/pkg/utils"
 )
 
-var tpl *template.Template
+var (
+	tplPages      *template.Template
+	tplComponents *template.Template
+)
 
 func init() {
 	_, filename, _, ok := runtime.Caller(0)
@@ -21,13 +24,20 @@ func init() {
 		panic("was not able to aquire the filename of current running file")
 	}
 	dirname := filepath.Dir(filename)
-	templatesGlobSelector := filepath.Join(dirname, "templates", "*.go.html")
 
-	tpl = template.Must(
+	templatesPagesGlobSelector := filepath.Join(dirname, "templates_pages", "*.go.html")
+	tplPages = template.Must(
 		template.
-			New("forum").
+			New("forumPages").
 			Funcs(utils.FuncMapCommon).
-			ParseGlob(templatesGlobSelector))
+			ParseGlob(templatesPagesGlobSelector))
+
+	templatesComponentsGlobSelector := filepath.Join(dirname, "templates_components", "*.go.html")
+	tplComponents = template.Must(
+		template.
+			New("forumComponents").
+			Funcs(utils.FuncMapCommon).
+			ParseGlob(templatesComponentsGlobSelector))
 
 }
 
@@ -70,7 +80,7 @@ func NewContentManagerVolatile() *ConentMangerVolatile {
 }
 
 func RenderPost(w http.ResponseWriter, p *Post) {
-	err := tpl.Execute(w, []*Post{p, p})
+	err := tplPages.Execute(w, []*Post{p, p})
 	utils.Pife(err)
 }
 

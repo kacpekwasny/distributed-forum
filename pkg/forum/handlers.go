@@ -1,7 +1,6 @@
 package forum
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,23 +14,47 @@ func init() {
 	authenticator = auth.NewVolatileAuthenticator()
 }
 
-func HandleGetComponent(w http.ResponseWriter, r *http.Request) {
+// Return html from template when the request was made by HTMX, for the returned HTML,
+// to be passed into the existing DOM
+func HandleGetPageTemplateAsComponent(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	filename := vars["filename"]
 	w.Header().Set("HX-Push-Url", filename)
-	err := tpl.ExecuteTemplate(w, filename+".go.html", nil)
+	err := tplPages.ExecuteTemplate(w, filename+".go.html", auth.GetJWTFieldsFromContext(r.Context()))
+	utils.Pife(err)
+}
+
+// This function as oposing to the HandleGetPageTemplateAsComponent returns the component, but
+func HandleGetPageTemplateStandalone(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	filename := vars["filename"]
+
+	err := tplPages.ExecuteTemplate(w, filename+".go.html", nil)
+	utils.Pife(err)
+}
+
+// When HTMX calls to retrieve a template from backend, it wants only the component
+// but when the page is reloaded, the request has to return the component wrapped in the actucal
+// proper HTML DOC body, with HEAD containing bootstrap, htmx, etc...
+// This function is supposed to return the component wrapped in the base template.
+func HandleDefault(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	filename := vars["filename"]
+	err := tplPages.ExecuteTemplate(w, "base.go.html",
+		BaseValues{
+			Title:          "",
+			MainContentUrl: filename},
+	)
 	utils.Pife(err)
 }
 
 func HandleWelcome(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("waaaaa")
-	user, ok := auth.GetUsernameFromContext(r.Context())
-	if !ok {
-		utils.Pife(tpl.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("}))
+	jwtf := auth.GetJWTFieldsFromContext(r.Context())
+	if jwtf == nil {
+		utils.Pife(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("}))
 		return
 	}
-	fmt.Println("welcome", user)
-	utils.Pife(tpl.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Username: user}))
+	utils.Pife(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Username: jwtf.Username}))
 }
 
 func AddPost(w http.ResponseWriter, r *http.Request) {

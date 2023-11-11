@@ -14,10 +14,16 @@ type VolatileAuthenticator struct {
 }
 
 func NewVolatileAuthenticator() *VolatileAuthenticator {
-	return &VolatileAuthenticator{
+	va := &VolatileAuthenticator{
 		loginPasswdHash: make(map[string][]byte),
 		loginUsers:      make(map[string]UserI),
 	}
+	va.RegisterUser(&RegisterMe{
+		Login:    "awd",
+		Username: "awd",
+		Password: "awd",
+	})
+	return va
 }
 
 func (va *VolatileAuthenticator) ValidateAuthMe(am *LoginMe) error {

@@ -20,10 +20,14 @@ func setupRouter() *mux.Router {
 	r.HandleFunc("/login", BaseGetFactory(BaseValues{"Login", "login"})).Methods("GET")
 	r.HandleFunc("/login", HandlePostLogin).Methods("POST")
 
+	r.HandleFunc("/logout", HandleLogout).Methods("GET", "POST")
+
 	r.HandleFunc("/register", BaseGetFactory(BaseValues{"Register", "register"})).Methods("GET")
 	r.HandleFunc("/register", HandlePostRegister).Methods("POST")
 
-	r.HandleFunc("/component_{filename}", HandleGetComponent).Methods("GET")
+	r.HandleFunc("/component_{filename}", HandleGetPageTemplateAsComponent).Methods("GET")
+
+	r.HandleFunc("/{filename}", HandleDefault)
 
 	http.Handle("/", r)
 	return r
