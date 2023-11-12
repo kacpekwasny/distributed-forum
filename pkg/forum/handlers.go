@@ -57,12 +57,12 @@ func HandleWelcome(w http.ResponseWriter, r *http.Request) {
 	utils.Loge(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Username: jwtf.Username}))
 }
 
-func AddPost(w http.ResponseWriter, r *http.Request) {
+func AddStory(w http.ResponseWriter, r *http.Request) {
 	u1 := User{
 		Id:       NewRandId(),
 		Username: "kacper",
 	}
-	p1 := Post{
+	p1 := Story{
 		Postable: Postable{
 			Id:            NewRandId(),
 			UserId:        u1.Id,
@@ -70,5 +70,5 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 			TimeStampable: TimeStampable{Timestamp: 0}},
 		Reactionable: Reactionable{Reactions: []Reaction{}},
 	}
-	RenderPost(w, &p1)
+	RenderStory(w, &p1)
 }

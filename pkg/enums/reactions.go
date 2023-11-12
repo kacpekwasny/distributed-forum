@@ -1,8 +1,9 @@
 package enums
 
-type ReactType uint64
+type ReactionType uint64
 
 const (
-	LIKE = ReactType(iota)
+	LIKE = ReactionType(iota)
+	BULLSHIT
 	DISLIKE
 )
