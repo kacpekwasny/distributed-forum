@@ -21,7 +21,7 @@ func HandleGetPageTemplateAsComponent(w http.ResponseWriter, r *http.Request) {
 	filename := vars["filename"]
 	w.Header().Set("HX-Push-Url", filename)
 	err := tplPages.ExecuteTemplate(w, filename+".go.html", auth.GetJWTFieldsFromContext(r.Context()))
-	utils.Pife(err)
+	utils.Loge(err)
 }
 
 // This function as oposing to the HandleGetPageTemplateAsComponent returns the component, but
@@ -30,7 +30,7 @@ func HandleGetPageTemplateStandalone(w http.ResponseWriter, r *http.Request) {
 	filename := vars["filename"]
 
 	err := tplPages.ExecuteTemplate(w, filename+".go.html", nil)
-	utils.Pife(err)
+	utils.Loge(err)
 }
 
 // When HTMX calls to retrieve a template from backend, it wants only the component
@@ -45,16 +45,16 @@ func HandleDefault(w http.ResponseWriter, r *http.Request) {
 			Title:          "",
 			MainContentUrl: filename},
 	)
-	utils.Pife(err)
+	utils.Loge(err)
 }
 
 func HandleWelcome(w http.ResponseWriter, r *http.Request) {
 	jwtf := auth.GetJWTFieldsFromContext(r.Context())
 	if jwtf == nil {
-		utils.Pife(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("}))
+		utils.Loge(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("}))
 		return
 	}
-	utils.Pife(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Username: jwtf.Username}))
+	utils.Loge(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Username: jwtf.Username}))
 }
 
 func AddPost(w http.ResponseWriter, r *http.Request) {

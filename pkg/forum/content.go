@@ -11,6 +11,7 @@ import (
 
 	"github.com/kacpekwasny/distributed-forum/pkg/enums"
 	"github.com/kacpekwasny/distributed-forum/pkg/utils"
+	"github.com/leekchan/gtf"
 )
 
 var (
@@ -29,6 +30,7 @@ func init() {
 	tplPages = template.Must(
 		template.
 			New("forumPages").
+			Funcs(gtf.GtfFuncMap).
 			Funcs(utils.FuncMapCommon).
 			ParseGlob(templatesPagesGlobSelector))
 
@@ -36,6 +38,7 @@ func init() {
 	tplComponents = template.Must(
 		template.
 			New("forumComponents").
+			Funcs(gtf.GtfFuncMap).
 			Funcs(utils.FuncMapCommon).
 			ParseGlob(templatesComponentsGlobSelector))
 

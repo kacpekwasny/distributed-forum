@@ -1,36 +1,25 @@
-<script>document.title = "Register"</script>
+<script>
+  document.title = "Register";
+</script>
 <div class="my-5"></div>
 <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
   <div class="card shadow-lg">
-    <div class="card-body p-5">
+    <div class="card-body p-5 pb-4">
       <h1 class="fs-4 card-title fw-bold mb-4">Register</h1>
       <form hx-post="register" autocomplete="off" hx-target="#id-base-div-2">
         <div class="mb-3">
-          <label class="mb-2 text-muted" for="login">Name</label>
-          <input
-            id="login"
-            type="text"
-            class="form-control"
-            name="Login"
-            value="{{ .Login }}"
-            required
-            autofocus
-          />
-          {{ if .ErrLogin }}
+          <label class="mb-2 text-muted" for="login">Login</label>
+          <input id="login" type="text" class="form-control" name="Login"
+          value="{{ getf . "Login" ""}}" required autofocus /> {{ if hasField .
+          "ErrLogin" }}
           <div class="text-danger">{{ .ErrLogin }}</div>
           {{ end }}
         </div>
 
         <div class="mb-3">
           <label class="mb-2 text-muted" for="username">Username</label>
-          <input
-            id="username"
-            class="form-control"
-            name="Username"
-            value="{{ .Username }}"
-            required
-          />
-          {{ if .ErrUsername }}
+          <input id="username" class="form-control" name="Username" value="{{
+          getf . "Username" "" }}" required /> {{ if hasField . "ErrUsername" }}
           <div class="text-danger">{{ .ErrUsername }}</div>
           {{ end }}
         </div>
@@ -44,7 +33,7 @@
             name="Password"
             required
           />
-          {{ if .ErrPassword }}
+          {{ if hasField . "ErrPassword" }}
           <div class="text-danger">{{ .ErrPassword }}</div>
           {{ end }}
         </div>
@@ -58,20 +47,22 @@
             Register
           </button>
         </div>
-        {{ if .Err }}
+        {{ if hasField . "Err" }}
         <div class="text-danger">{{ .Err }}</div>
         {{ end }}
       </form>
     </div>
+
     <div class="card-footer py-3 border-0">
-      <div class="text-center">
-        Already have an account?
+      <div class="d-flex justify-content-center align-items-center">
+        <div>Already have an account?</div>
         <button
           hx-get="component_login"
           hx-target="#id-base-div-2"
-          class="text-dark"
+          class="text-dark btn btn-info btn-sm"
+          style="margin-left: 0.5rem"
         >
-          Login
+          Log In
         </button>
       </div>
     </div>

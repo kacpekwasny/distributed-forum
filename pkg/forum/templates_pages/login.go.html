@@ -30,7 +30,7 @@
           Log Out
         </button>
       </div>
-      {{ end }}
+      {{ else }}
       <form hx-post="login" hx-target="#id-base-div-2" autocomplete="off">
         <div class="mb-3">
           <label class="mb-2 text-muted" for="email">Login</label>
@@ -38,7 +38,7 @@
             id="email"
             class="form-control"
             name="Login"
-            value=""
+            value="{{ getf . "Login" "" }}"
             required
             autofocus
           />
@@ -72,16 +72,20 @@
           <button type="submit" class="btn btn-primary ms-auto">Login</button>
         </div>
       </form>
+      {{ end }}
     </div>
     <div class="card-footer py-3 border-0">
-      <div class="text-center">
-        Don't have an account?
+      <div class="d-flex justify-content-center align-items-center">
+        <div>
+          Don't have an account?
+        </div>
         <button
           hx-get="component_register"
           hx-target="#id-base-div-2"
-          class="text-dark"
+          class="text-dark btn btn-info btn-sm"
+          style="margin-left: .5rem;"
         >
-          Create One
+          Create one
         </button>
       </div>
     </div>
