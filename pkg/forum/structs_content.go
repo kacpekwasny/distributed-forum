@@ -31,7 +31,7 @@ type Story struct {
 	Reactionable
 }
 
-type Comment struct {
+type Answer struct {
 	PostId Id
 
 	Postable
