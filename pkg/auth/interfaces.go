@@ -1,6 +1,6 @@
 package auth
 
-type UserI interface {
+type UserIface interface {
 	Login() string
 	Username() string
 }
@@ -33,5 +33,5 @@ type Authenticator interface {
 	RegisterUser(*RegisterMe) *RegisterMeResponse
 
 	//
-	GetUserByLogin(login string) UserI
+	GetUserByLogin(login string) UserIface
 }

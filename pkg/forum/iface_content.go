@@ -24,7 +24,8 @@ type HistoryIface interface {
 	// GetFirst n stories ordered by different atributes, from []ages,
 	GetStories(start uint32, end uint32, order OrderIface, filter FilterIface, ages []AgeIface) []StoryIface
 
-	GetUser(id Id) (UserIface, error)
+	GetUser(username string) (UserIface, error)
+	AddUser(login string, username string, password string) (UserIface, error)
 
 	// TODO:
 	// GetAges that user joined,
@@ -64,6 +65,7 @@ type AgeIface interface {
 
 	// Create a Story written by an Author in a certain Age
 	AddStory(author UserIface, age AgeIface, story StoryIface) (StoryIface, error)
+	GetStories(start uint32, end uint32, order OrderIface, filter FilterIface) []StoryIface
 }
 
 type StoryIface interface {
@@ -92,7 +94,7 @@ type AnswerableIface interface {
 type ReactionableIface interface {
 	ReactionStats() (map[enums.ReactionType]uint32, error)
 	Reactions() ([]ReactionIface, error)
-	React(user UserIface, reaction ReactionIface)
+	React(user UserIface, reaction ReactionIface) error
 }
 
 type ReactionIface interface {
@@ -100,8 +102,9 @@ type ReactionIface interface {
 	Enum() enums.ReactionType
 	ParentId() Id
 	AuthorId() Id
+	Author() UserIface
 	Timestamp() uint64
 }
 
-type OrderIface interface{}
-type FilterIface interface{}
+type OrderIface func(idx1, idx2 int) bool
+type FilterIface func(v any) bool

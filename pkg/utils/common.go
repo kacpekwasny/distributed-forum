@@ -1,6 +1,9 @@
 package utils
 
-import "log"
+import (
+	"errors"
+	"log"
+)
 
 // Panic if error
 func Pife(err error) {
@@ -14,4 +17,11 @@ func Loge(err error) {
 	if err != nil {
 		log.Println(err)
 	}
+}
+
+func ErrIfNotOk(ok bool, msg string) error {
+	if ok {
+		return nil
+	}
+	return errors.New(msg)
 }
