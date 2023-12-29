@@ -1,12 +1,8 @@
-package forum
+package noundo
 
 type BaseValues struct {
 	Title          string
 	MainContentUrl string
-}
-
-type IndexValues struct {
-	Text1 string
 }
 
 type LoginFormValues struct {
@@ -27,4 +23,22 @@ type RegisterFormValues struct {
 type WelcomeValues struct {
 	Username string
 	Msg      string
+}
+
+// ~~~~~~  index.go.html ~~~~~~
+
+type IndexValues struct {
+	DisplayName string
+	LocalAges   []AgeInfo
+	Peers       []HistoryInfo
+}
+
+type AgeInfo struct {
+	DisplayName string
+	Href        string
+}
+
+type HistoryInfo struct {
+	DisplayName string
+	Href        string
 }

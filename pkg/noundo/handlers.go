@@ -1,4 +1,4 @@
-package forum
+package noundo
 
 import (
 	"net/http"
@@ -71,4 +71,33 @@ func AddStory(w http.ResponseWriter, r *http.Request) {
 		Reactionable: Reactionable{Reactions: []Reaction{}},
 	}
 	RenderStory(w, &p1)
+}
+
+func HandleHomePage(w http.ResponseWriter, r *http.Request, u UniverseIface) {
+	jwtf := auth.GetJWTFieldsFromContext(r.Context())
+	if jwtf == nil {
+		// TODO - proper template
+		utils.ExecTemplLogErr(tplPages, w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("})
+		return
+	}
+	self := u.Self()
+	ages, err := self.GetAges(0, 100, nil, nil)
+
+	utils.Loge(err)
+
+	utils.ExecTemplLogErr(
+		tplPages,
+		w,
+		"welcome.go.html",
+		IndexValues{
+			DisplayName: self.GetUrl(),
+			LocalAges: utils.Map(
+				ages,
+				func(a AgeIface) AgeInfo {
+					return CreateAgeInfo(self.GetUrl(), a)
+				},
+			),
+			Peers: utils.Map(u.Peers(), CreateHistoryInfo),
+		},
+	)
 }

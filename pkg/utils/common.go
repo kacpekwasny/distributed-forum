@@ -25,3 +25,24 @@ func ErrIfNotOk(ok bool, msg string) error {
 	}
 	return errors.New(msg)
 }
+
+func AnyErr(errs ...error) error {
+	for _, err := range errs {
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Define a generic Map function type
+type MapFunc[A, B any] func(A) B
+
+// Implement the Map function
+func Map[A any, B any](input []A, m MapFunc[A, B]) []B {
+	output := make([]B, len(input))
+	for i, element := range input {
+		output[i] = m(element)
+	}
+	return output
+}

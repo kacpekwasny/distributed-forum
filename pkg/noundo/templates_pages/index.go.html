@@ -1,0 +1,29 @@
+<div>
+    <h1>
+        Welcome to {{ .DisplayName }}
+    </h1>
+    <div>
+        <h3>Ages in this History:</h3>
+        <ul>
+        {{range age := .LocalAges}}
+            <li>
+                <a href="{{ age.Href }}">{{ age.DisplayName }}</a>
+            </li>
+        {{end}}
+        </ul>
+    </div>
+    <div>
+        <h3>We are peered with:</h3>
+        <ul>
+        {{range peer := .Peers}}
+            <li>
+                <a href="{{ peer.Href }}">{{ peer.DisplayName }}</a>
+            </li>
+        {{end}}
+        </ul>
+        <p>
+            This means, that you can post to those Histories while being logged in here
+            (if that history is peered with your Parent History).
+        </p>
+    </div>
+</div>

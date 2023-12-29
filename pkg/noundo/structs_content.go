@@ -1,4 +1,4 @@
-package forum
+package noundo
 
 import "github.com/kacpekwasny/distributed-forum/pkg/enums"
 

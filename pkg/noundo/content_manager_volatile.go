@@ -1,4 +1,4 @@
-package forum
+package noundo
 
 type ConentMangerVolatile struct {
 	posts   map[Id]*Story

@@ -2,6 +2,8 @@
 - im tinking abaut desajn
 
 
+
+
 Założenia:
 - dystrybuowane,
 - obciążenie dzieli
@@ -18,6 +20,14 @@ Important points:
 
 
 To Do:
+- UniverseIface(historyUri string)
+- PeerManager
+- Hot Posts, Top Posts (ale to wsm jak w order dziala)
+- Write the NoUndo Iface and struct for dependency injection
+- try out the gh.com/saber/mo?
+- 
+
+
 - notifications! It is pretty important to be able to follow up some threads on you comments.
   - since we want notification, we have to keep track of last seen state, and the change,
   - my proposed solution is:

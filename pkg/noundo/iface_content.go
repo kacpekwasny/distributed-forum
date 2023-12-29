@@ -1,8 +1,16 @@
-package forum
+package noundo
 
 import "github.com/kacpekwasny/distributed-forum/pkg/enums"
 
 type Id uint64
+
+// UniverseIface is an interface for <object? structure? methods?> giving the ability to retrive
+// any HistoryIface, either to the peered ones, or a read-only iface.
+// Also should have knowledge of the peers.
+type UniverseIface interface {
+	Self() HistoryIface
+	Peers() []HistoryIface
+}
 
 // When I think about this, history is an interface for a database in ints goal,
 // I might make the volatile database, but in the end HistoryIface and all other interfaces must made in a way,
@@ -12,8 +20,15 @@ type Id uint64
 // History is the name for the whole server, that contains all Ages and All Stories
 type HistoryIface interface {
 
+	// Name to be displayed. Ex.: as the value o <a> tag.
+	GetName() string
+
+	// Get the URL of the History. Ex.: value of href atribute in an <a> tag.
+	GetUrl() string
+
 	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
 	CreateAge(owner UserIface, name string) (AgeIface, error)
+	GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error)
 
 	//
 	GetStory(id Id) (StoryIface, error)
@@ -22,7 +37,7 @@ type HistoryIface interface {
 	GetAnswer(id Id) (AnswerIface, error)
 
 	// GetFirst n stories ordered by different atributes, from []ages,
-	GetStories(start uint32, end uint32, order OrderIface, filter FilterIface, ages []AgeIface) []StoryIface
+	GetStories(start int, end int, order OrderIface, filter FilterIface, ages []AgeIface) ([]StoryIface, error)
 
 	GetUser(username string) (UserIface, error)
 	AddUser(login string, username string, password string) (UserIface, error)
@@ -49,8 +64,8 @@ type UserIface interface {
 
 // Are all those other interfaces needed??? TODO
 type AgeIface interface {
-	GetId() (Id, error)
-	GetName() (string, error)
+	GetId() Id
+	GetName() string
 	SetName(name string) error
 
 	GetOwner() (UserIface, error)
@@ -60,12 +75,12 @@ type AgeIface interface {
 	AddAdmin(user UserIface) error
 	RemoveAdmin(user UserIface) error
 
-	GetMembers(start uint32, end uint32) ([]UserIface, error)
-	GetMembersNumber() (uint32, error)
+	GetMembers(start int, end int) ([]UserIface, error)
+	GetMembersNumber() (int, error)
 
 	// Create a Story written by an Author in a certain Age
 	AddStory(author UserIface, age AgeIface, story StoryIface) (StoryIface, error)
-	GetStories(start uint32, end uint32, order OrderIface, filter FilterIface) []StoryIface
+	GetStories(start int, end int, order OrderIface, filter FilterIface) []StoryIface
 }
 
 type StoryIface interface {
@@ -88,11 +103,11 @@ type PostableIface interface {
 
 type AnswerableIface interface {
 	AddAnswer(author UserIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error)
-	Answers(start uint32, end uint32, depth uint32, order OrderIface, filter FilterIface, ages []AgeIface) ([]AnswerIface, error)
+	Answers(start int, end int, depth int, order OrderIface, filter FilterIface, ages []AgeIface) ([]AnswerIface, error)
 }
 
 type ReactionableIface interface {
-	ReactionStats() (map[enums.ReactionType]uint32, error)
+	ReactionStats() (map[enums.ReactionType]int, error)
 	Reactions() ([]ReactionIface, error)
 	React(user UserIface, reaction ReactionIface) error
 }

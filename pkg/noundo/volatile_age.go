@@ -1,4 +1,4 @@
-package forum
+package noundo
 
 import "github.com/kacpekwasny/distributed-forum/pkg/auth"
 
@@ -12,12 +12,12 @@ type AgeVolatile struct {
 	auth            auth.Authenticator
 }
 
-func (a *AgeVolatile) GetId() (Id, error) {
-	return a.id, nil
+func (a *AgeVolatile) GetId() Id {
+	return a.id
 }
 
-func (a *AgeVolatile) GetName() (string, error) {
-	return a.name, nil
+func (a *AgeVolatile) GetName() string {
+	return a.name
 }
 
 func (a *AgeVolatile) SetName(name string) error {
@@ -46,11 +46,11 @@ func (a *AgeVolatile) RemoveAdmin(user UserIface) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (a *AgeVolatile) GetMembers(start uint32, end uint32) ([]UserIface, error) {
+func (a *AgeVolatile) GetMembers(start int, end int) ([]UserIface, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (a *AgeVolatile) GetMembersNumber() (uint32, error) {
+func (a *AgeVolatile) GetMembersNumber() (int, error) {
 	panic("not implemented") // TODO: Implement
 }
 
@@ -59,6 +59,6 @@ func (a *AgeVolatile) AddStory(author UserIface, age AgeIface, story StoryIface)
 	panic("not implemented") // TODO: Implement
 }
 
-func (a *AgeVolatile) GetStories(start uint32, end uint32, order OrderIface, filter FilterIface) []StoryIface {
+func (a *AgeVolatile) GetStories(start int, end int, order OrderIface, filter FilterIface) []StoryIface {
 	panic("not implemented") // TODO: Implement
 }
