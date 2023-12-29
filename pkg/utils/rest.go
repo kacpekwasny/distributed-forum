@@ -14,10 +14,10 @@ func WriteJsonWithStatus(w http.ResponseWriter, v any, code int) error {
 // Marshal the `v` and write it.
 //
 // Remember to set `w.WriteHeader(200, 201, etc.)` before calling this function.
-func WriteJson(w http.ResponseWriter, v any) error {
+func WriteJson(w http.ResponseWriter, marshallable any) error {
 	w.Header().Set("Content-Type", "application/json")
 
-	jsonResp, err := json.Marshal(v)
+	jsonResp, err := json.Marshal(marshallable)
 
 	if err != nil {
 		return err
