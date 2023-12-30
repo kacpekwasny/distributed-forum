@@ -25,7 +25,7 @@ func (a *AgeVolatile) SetName(name string) error {
 
 func (a *AgeVolatile) GetOwner() (UserIface, error) {
 	panic("TODO")
-	// return a.auth.GetUserByLogin(a.ownerUsername), nil
+	// return a.auth.GetUserByEmail(a.ownerUsername), nil
 }
 
 func (a *AgeVolatile) ChangeOwner(user UserIface) error {

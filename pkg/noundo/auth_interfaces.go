@@ -1,19 +1,19 @@
 package noundo
 
 type SimpleUser struct {
-	login    string
+	email    string
 	username string
 }
 
-func NewSimpleUser(login string, username string) *SimpleUser {
+func NewSimpleUser(email string, username string) *SimpleUser {
 	return &SimpleUser{
-		login:    login,
+		email:    email,
 		username: username,
 	}
 }
 
-func (u *SimpleUser) Login() string {
-	return u.login
+func (u *SimpleUser) Email() string {
+	return u.email
 }
 
 func (u *SimpleUser) Username() string {
@@ -26,16 +26,4 @@ func (u *SimpleUser) Id() Id {
 
 func (u *SimpleUser) ParentServer() string {
 	return "http://parent"
-}
-
-type Authenticator interface {
-	// Validate if the passed in credentials are valid
-	ValidateAuthMe(*LoginMe) error
-
-	// Add User to the database of users
-	RegisterUser(*RegisterMe) *RegisterMeResponse
-
-	//
-	GetUserByLogin(login string) UserIface
-	GetUserByUsername(username string) UserIface
 }

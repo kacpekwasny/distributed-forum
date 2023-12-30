@@ -15,7 +15,7 @@ type HistoryVolatile struct {
 	answers map[Id]AnswerIface
 	auth    Authenticator
 
-	// login: UserIface
+	// email: UserIface
 	users map[string]UserIface
 }
 
@@ -67,9 +67,9 @@ func (h *HistoryVolatile) GetUser(username string) (UserIface, error) {
 	return h.auth.GetUserByUsername(username), nil
 }
 
-func (h *HistoryVolatile) AddUser(login string, username string, password string) (UserIface, error) {
-	r := h.auth.RegisterUser(NewRegisterMe(login, username, password))
-	return NewVolatileUser(NewRandId(), login, username, h.GetURL()), utils.ErrIfNotOk(r.Ok, string(r.MsgCode))
+func (h *HistoryVolatile) AddUser(email string, username string, password string) (UserIface, error) {
+	r := h.auth.RegisterUser(NewRegisterMe(email, username, password))
+	return NewVolatileUser(NewRandId(), email, username, h.GetURL()), utils.ErrIfNotOk(r.Ok, string(r.MsgCode))
 }
 
 // Name to be displayed. Ex.: as the value o <a> tag.

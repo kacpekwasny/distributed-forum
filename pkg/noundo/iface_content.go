@@ -40,7 +40,7 @@ type HistoryIface interface {
 	GetStories(start int, end int, order OrderIface, filter FilterIface, ages []AgeIface) ([]StoryIface, error)
 
 	GetUser(username string) (UserIface, error)
-	AddUser(login string, username string, password string) (UserIface, error)
+	AddUser(email string, username string, password string) (UserIface, error)
 
 	// TODO:
 	// GetAges that user joined,
@@ -52,8 +52,8 @@ type UserIface interface {
 	// Id is unchangable, is unique, and is used by server for relations
 	Id() Id
 
-	// Login is the string that the user will use to authenticated themselves, Login is unique in context of History
-	Login() string
+	// Email is the string that the user will use to authenticated themselves, Email is unique in context of History
+	Email() string
 
 	// Username is the string that the user will go by, Username is unique in context of History
 	Username() string

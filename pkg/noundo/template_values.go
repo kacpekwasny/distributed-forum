@@ -10,10 +10,10 @@ type LoginFormValues struct {
 }
 
 type RegisterFormValues struct {
-	Login    string
+	Email    string
 	Username string
 
-	ErrLogin    string
+	ErrEmail    string
 	ErrUsername string
 	ErrPassword string
 

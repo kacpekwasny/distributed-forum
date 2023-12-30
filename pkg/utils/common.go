@@ -47,6 +47,8 @@ func Map[A any, B any](input []A, m MapFunc[A, B]) []B {
 	return output
 }
 
-func OkToErr[T any](v T, ok bool, msg string) (T, error) {
-	return v, ErrIfNotOk(ok, msg)
+func ResultOkToErr[T any](v T, ok bool) func(string) (T, error) {
+	return func(msg string) (T, error) {
+		return v, ErrIfNotOk(ok, msg)
+	}
 }

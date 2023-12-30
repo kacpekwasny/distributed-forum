@@ -1,10 +1,10 @@
 package noundo
 
-func NewVolatileUser(id Id, login string, username string, parentServerURL string) UserIface {
+func NewVolatileUser(id Id, email string, username string, parentServerURL string) UserIface {
 	return &volatileUser{
 		id:              id,
 		username:        username,
-		login:           login,
+		email:           email,
 		parentServerURL: parentServerURL,
 	}
 }
@@ -12,7 +12,7 @@ func NewVolatileUser(id Id, login string, username string, parentServerURL strin
 type volatileUser struct {
 	id              Id
 	username        string
-	login           string
+	email           string
 	parentServerURL string
 }
 
@@ -21,9 +21,9 @@ func (u *volatileUser) Id() Id {
 	return u.id
 }
 
-// Login is the string that the user will use to authenticated themselves, Login is unique in context of History
-func (u *volatileUser) Login() string {
-	return u.login
+// Email is the string that the user will use to authenticated themselves, Email is unique in context of History
+func (u *volatileUser) Email() string {
+	return u.email
 }
 
 // Username is the string that the user will go by, Username is unique in context of History

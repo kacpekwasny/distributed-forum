@@ -54,9 +54,9 @@ func HandlePostRegister(w http.ResponseWriter, r *http.Request) {
 
 	if !regResp.Ok {
 		switch regResp.MsgCode {
-		case LoginInUse:
-			rfv.ErrLogin = "Login is in use."
-		case UsernameInUser:
+		case EmailInUse:
+			rfv.ErrEmail = "Email is in use."
+		case UsernameInUse:
 			rfv.ErrUsername = "Username is in use."
 		case InvalidPassword:
 			rfv.ErrPassword = "Password does not match criteria."
@@ -68,7 +68,7 @@ func HandlePostRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("HX-Push-Url", "/login")
-	err = tplPages.ExecuteTemplate(w, "login.go.html", utils.Ms{"Login": registerMe.Login})
+	err = tplPages.ExecuteTemplate(w, "login.go.html", utils.Ms{"Email": registerMe.Email})
 	utils.Loge(err)
 }
 

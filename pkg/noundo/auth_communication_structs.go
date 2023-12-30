@@ -3,14 +3,14 @@ package noundo
 // The basic REST Response
 type RestResp struct {
 	Ok      bool
-	MsgCode MsgCode
+	MsgCode MsgEnum
 }
 
 // Information required from User
 // Information required to be held in body of http.Request
 // that will be used to
 type LoginMe struct {
-	Login    string
+	Email    string
 	Password string
 }
 
@@ -19,7 +19,7 @@ type LoginMeResponse struct {
 }
 
 type RegisterMe struct {
-	Login    string
+	Email    string
 	Username string
 	Password string
 }
@@ -34,14 +34,14 @@ type JWTFields struct {
 	JWTIssuedTimestamp uint64
 }
 
-type MsgCode string
+type MsgEnum string
 
 const (
-	Ok              MsgCode = "ok"
-	Err             MsgCode = "err"
-	DecodeErr       MsgCode = "decode_err"
-	TokenSignErr    MsgCode = "token_signed_err"
-	LoginInUse      MsgCode = "login_in_use"
-	UsernameInUser  MsgCode = "username_in_use"
-	InvalidPassword MsgCode = "invalid_pass"
+	Ok              MsgEnum = "ok"
+	Err             MsgEnum = "err"
+	DecodeErr       MsgEnum = "decode_err"
+	TokenSignErr    MsgEnum = "token_signed_err"
+	EmailInUse      MsgEnum = "email_in_use"
+	UsernameInUse   MsgEnum = "username_in_use"
+	InvalidPassword MsgEnum = "invalid_pass"
 )

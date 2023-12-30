@@ -8,11 +8,11 @@
       <h1 class="fs-4 card-title fw-bold mb-4">Register</h1>
       <form hx-post="register" autocomplete="off" hx-target="#id-base-div-2">
         <div class="mb-3">
-          <label class="mb-2 text-muted" for="login">Login</label>
-          <input id="login" type="text" class="form-control" name="Login"
-          value="{{ getf . "Login" ""}}" required autofocus /> {{ if hasField .
-          "ErrLogin" }}
-          <div class="text-danger">{{ .ErrLogin }}</div>
+          <label class="mb-2 text-muted" for="login">Email</label>
+          <input id="login" type="text" class="form-control" name="Email"
+          value="{{ getf . "Email" ""}}" required autofocus /> {{ if hasField .
+          "ErrEmail" }}
+          <div class="text-danger">{{ .ErrEmail }}</div>
           {{ end }}
         </div>
 

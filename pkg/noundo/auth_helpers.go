@@ -61,7 +61,7 @@ func LoginUser(auth Authenticator, w http.ResponseWriter, r *http.Request) error
 		return err
 	}
 
-	user := auth.GetUserByLogin(authMe.Login)
+	user := auth.GetUserByEmail(authMe.Email)
 
 	// TODO: currently unsecure
 	token := jwt.NewWithClaims(

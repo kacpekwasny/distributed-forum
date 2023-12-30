@@ -33,12 +33,12 @@
       {{ else }}
       <form hx-post="login" hx-target="#id-base-div-2" autocomplete="off">
         <div class="mb-3">
-          <label class="mb-2 text-muted" for="email">Login</label>
+          <label class="mb-2 text-muted" for="email">Email</label>
           <input
             id="email"
             class="form-control"
-            name="Login"
-            value="{{ getf . "Login" "" }}"
+            name="Email"
+            value="{{ getf . "Email" "" }}"
             required
             autofocus
           />
