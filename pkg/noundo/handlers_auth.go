@@ -3,7 +3,6 @@ package noundo
 import (
 	"net/http"
 
-	"github.com/kacpekwasny/noundo/pkg/auth"
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
@@ -24,7 +23,7 @@ func ComponentGetFactory(template string, v any) func(w http.ResponseWriter, r *
 // ~~ Login ~~
 
 func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
-	err := auth.LoginUser(authenticator, w, r)
+	err := LoginUser(authenticator, w, r)
 	if err != nil {
 		err = tplPages.ExecuteTemplate(w, "login.go.html", LoginFormValues{Err: "Login Failed :c"})
 		utils.Loge(err)
@@ -42,11 +41,11 @@ func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 // ~~ Register ~~
 
 func HandlePostRegister(w http.ResponseWriter, r *http.Request) {
-	registerMe, err := auth.GetRegisterMe(r)
+	registerMe, err := GetRegisterMe(r)
 
-	var regResp *auth.RegisterMeResponse
+	var regResp *RegisterMeResponse
 	if err != nil {
-		regResp = &auth.RegisterMeResponse{RestResp: auth.RestResp{Ok: false, MsgCode: auth.DecodeErr}}
+		regResp = &RegisterMeResponse{RestResp: RestResp{Ok: false, MsgCode: DecodeErr}}
 	} else {
 		regResp = authenticator.RegisterUser(registerMe)
 	}
@@ -55,11 +54,11 @@ func HandlePostRegister(w http.ResponseWriter, r *http.Request) {
 
 	if !regResp.Ok {
 		switch regResp.MsgCode {
-		case auth.LoginInUse:
+		case LoginInUse:
 			rfv.ErrLogin = "Login is in use."
-		case auth.UsernameInUser:
+		case UsernameInUser:
 			rfv.ErrUsername = "Username is in use."
-		case auth.InvalidPassword:
+		case InvalidPassword:
 			rfv.ErrPassword = "Password does not match criteria."
 		default:
 			rfv.Err = "Unknown error occured."
@@ -75,7 +74,7 @@ func HandlePostRegister(w http.ResponseWriter, r *http.Request) {
 
 // ~~ Log Out ~~
 func HandleLogout(w http.ResponseWriter, r *http.Request) {
-	auth.LogoutUser(w)
+	LogoutUser(w)
 	utils.Loge(tplPages.ExecuteTemplate(w, "base.go.html",
 		BaseValues{
 			Title:          "Login",

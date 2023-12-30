@@ -1,4 +1,4 @@
-package auth
+package noundo
 
 import (
 	"context"

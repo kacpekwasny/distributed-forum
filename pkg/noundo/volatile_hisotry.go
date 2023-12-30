@@ -3,7 +3,6 @@ package noundo
 import (
 	"sort"
 
-	"github.com/kacpekwasny/noundo/pkg/auth"
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
@@ -14,7 +13,7 @@ type HistoryVolatile struct {
 	ages    []AgeIface
 	stories map[Id]StoryIface
 	answers map[Id]AnswerIface
-	auth    auth.Authenticator
+	auth    Authenticator
 
 	// login: UserIface
 	users map[string]UserIface
@@ -25,7 +24,7 @@ func NewHistoryVolatile() HistoryIface {
 		ages:    []AgeIface{},
 		stories: make(map[Id]StoryIface),
 		answers: make(map[Id]AnswerIface),
-		auth:    auth.NewVolatileAuthenticator(),
+		auth:    NewVolatileAuthenticator(),
 	}
 }
 
@@ -69,7 +68,7 @@ func (h *HistoryVolatile) GetUser(username string) (UserIface, error) {
 }
 
 func (h *HistoryVolatile) AddUser(login string, username string, password string) (UserIface, error) {
-	r := h.auth.RegisterUser(auth.NewRegisterMe(login, username, password))
+	r := h.auth.RegisterUser(NewRegisterMe(login, username, password))
 	return NewVolatileUser(NewRandId(), login, username, h.GetURL()), utils.ErrIfNotOk(r.Ok, string(r.MsgCode))
 }
 

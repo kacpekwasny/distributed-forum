@@ -1,4 +1,4 @@
-package auth
+package noundo
 
 import (
 	"errors"
@@ -137,7 +137,7 @@ func JWTCheckAndParse(r *http.Request) (JWTFields, error) {
 	// token.Claims is an interface
 	mapClaims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return jfEmpty, errors.New("failed type assertion: `token.CLaims.(jwt.MapClaims)`")
+		return jfEmpty, errors.New("failed type assertion: `token.Claims.(jwt.MapClaims)`")
 	}
 
 	jf, err := jwtFieldsFromMapClaims(mapClaims)

@@ -1,13 +1,4 @@
-package auth
-
-import "github.com/kacpekwasny/noundo/pkg/noundo"
-
-type UserIface interface {
-	Id() noundo.Id
-	Login() string
-	Username() string
-	ParentServer() string
-}
+package noundo
 
 type SimpleUser struct {
 	login    string
@@ -29,7 +20,7 @@ func (u *SimpleUser) Username() string {
 	return u.username
 }
 
-func (u *SimpleUser) Id() noundo.Id {
+func (u *SimpleUser) Id() Id {
 	return 1234567
 }
 

@@ -1,7 +1,5 @@
 package noundo
 
-import "github.com/kacpekwasny/noundo/pkg/auth"
-
 // a *AgeVolatile AgeIface
 
 type AgeVolatile struct {
@@ -9,7 +7,7 @@ type AgeVolatile struct {
 	name            string
 	ownerUsername   string
 	adminsUsernames []string
-	auth            auth.Authenticator
+	auth            Authenticator
 }
 
 func (a *AgeVolatile) GetId() Id {

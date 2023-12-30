@@ -1,4 +1,4 @@
-package auth
+package noundo
 
 // The basic REST Response
 type RestResp struct {

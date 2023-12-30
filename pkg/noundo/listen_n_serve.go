@@ -5,13 +5,12 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/kacpekwasny/noundo/pkg/auth"
 )
 
 func setupRouter() *mux.Router {
 
 	r := mux.NewRouter()
-	r.Use(auth.HttpAuthenticator)
+	r.Use(HttpAuthenticator)
 
 	r.HandleFunc("/", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainContentURL: "welcome"})).Methods("GET")
 	r.HandleFunc("/welcome", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainContentURL: "welcome"})).Methods("GET")

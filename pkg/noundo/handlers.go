@@ -4,14 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/kacpekwasny/noundo/pkg/auth"
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
-var authenticator auth.Authenticator
+var authenticator Authenticator
 
 func init() {
-	authenticator = auth.NewVolatileAuthenticator()
+	authenticator = NewVolatileAuthenticator()
 }
 
 // Return html from template when the request was made by HTMX, for the returned HTML,
@@ -20,7 +19,7 @@ func HandleGetPageTemplateAsComponent(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	filename := vars["filename"]
 	w.Header().Set("HX-Push-Url", filename)
-	err := tplPages.ExecuteTemplate(w, filename+".go.html", auth.GetJWTFieldsFromContext(r.Context()))
+	err := tplPages.ExecuteTemplate(w, filename+".go.html", GetJWTFieldsFromContext(r.Context()))
 	utils.Loge(err)
 }
 
@@ -49,7 +48,7 @@ func HandleDefault(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleWelcome(w http.ResponseWriter, r *http.Request) {
-	jwtf := auth.GetJWTFieldsFromContext(r.Context())
+	jwtf := GetJWTFieldsFromContext(r.Context())
 	if jwtf == nil {
 		utils.Loge(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("}))
 		return
