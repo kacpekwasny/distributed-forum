@@ -52,3 +52,11 @@ func ResultOkToErr[T any](v T, ok bool) func(string) (T, error) {
 		return v, ErrIfNotOk(ok, msg)
 	}
 }
+
+func Left[T any](v T, err error) T {
+	return v
+}
+
+func Right[T any](v T, err error) error {
+	return err
+}
