@@ -13,7 +13,7 @@ type HistoryVolatile struct {
 	ages    []AgeIface
 	stories map[Id]StoryIface
 	answers map[Id]AnswerIface
-	auth    Authenticator
+	auth    AuthenticatorIface
 
 	// email: UserIface
 	users map[string]UserIface
@@ -24,7 +24,7 @@ func NewHistoryVolatile() HistoryIface {
 		ages:    []AgeIface{},
 		stories: make(map[Id]StoryIface),
 		answers: make(map[Id]AnswerIface),
-		auth:    NewVolatileAuthenticator(),
+		// auth:    NewVolatileAuthenticator(),
 	}
 }
 
@@ -64,7 +64,7 @@ func (h *HistoryVolatile) GetStories(start int, end int, order OrderIface, filte
 }
 
 func (h *HistoryVolatile) GetUser(username string) (UserIface, error) {
-	return h.auth.GetUserByUsername(username), nil
+	return nil, nil
 }
 
 func (h *HistoryVolatile) AddUser(email string, username string, password string) (UserIface, error) {

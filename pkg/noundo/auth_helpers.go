@@ -48,7 +48,7 @@ func ValidateAuthMe(a *LoginMe) (bool, error) {
 
 // Parse http.Request.Body, then check if data passed is valid and if so set
 // header on ResponseWriter to JWT with appropriate data.
-func LoginUser(auth Authenticator, w http.ResponseWriter, r *http.Request) error {
+func LoginUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request) error {
 	authMe, err := GetLoginMe(r)
 	if err != nil {
 		log.Printf("parse Credentials from request: %s\n", err)
@@ -103,7 +103,7 @@ func GetRegisterMe(r *http.Request) (*RegisterMe, error) {
 	return &registerMe, err
 }
 
-func RegisterUser(auth Authenticator, r *http.Request) *RegisterMeResponse {
+func RegisterUser(auth AuthenticatorIface, r *http.Request) *RegisterMeResponse {
 	registerMe, err := GetRegisterMe(r)
 
 	if err != nil {

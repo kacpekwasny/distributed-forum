@@ -7,10 +7,10 @@ import (
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
-var authenticator Authenticator
+var authenticator AuthenticatorIface
 
 func init() {
-	authenticator = NewVolatileAuthenticator()
+	authenticator = NewAuthenticator(NewVolatileAuthStorage())
 }
 
 // Return html from template when the request was made by HTMX, for the returned HTML,
