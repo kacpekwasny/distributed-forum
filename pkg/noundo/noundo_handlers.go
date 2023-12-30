@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/kacpekwasny/noundo/pkg/auth"
 	"github.com/kacpekwasny/noundo/pkg/utils"
 	"github.com/samber/mo"
 )
@@ -14,12 +13,12 @@ func (n *NoUndo) handleLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (n *NoUndo) handleIndex(w http.ResponseWriter, r *http.Request) {
-	jwtf := auth.GetJWTFieldsFromContext(r.Context())
-	if jwtf == nil {
-		// TODO - proper template
-		utils.ExecTemplLogErr(tplPages, w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("})
-		return
-	}
+	// jwtf := auth.GetJWTFieldsFromContext(r.Context())
+	// if jwtf == nil {
+	// 	// TODO - proper template
+	// 	utils.ExecTemplLogErr(tplPages, w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("})
+	// 	return
+	// }
 	self := n.Self()
 
 	ages, err := self.GetAges(

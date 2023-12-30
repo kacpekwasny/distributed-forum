@@ -2,9 +2,11 @@ package main
 
 import (
 	"github.com/kacpekwasny/noundo/pkg/noundo"
+	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
 func main() {
-	// noundo.NewNoUndo
-	noundo.ListenAndServe()
+	his := &noundo.HistoryVolatile{}
+	uni := noundo.NewUniverse(his)
+	utils.Loge(noundo.NewNoUndo(uni).ListenAndServe(":8080"))
 }

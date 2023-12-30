@@ -15,6 +15,18 @@ type HistoryVolatile struct {
 	stories map[Id]StoryIface
 	answers map[Id]AnswerIface
 	auth    auth.Authenticator
+
+	// login: UserIface
+	users map[string]UserIface
+}
+
+func NewHistoryVolatile() HistoryIface {
+	return &HistoryVolatile{
+		ages:    []AgeIface{},
+		stories: make(map[Id]StoryIface),
+		answers: make(map[Id]AnswerIface),
+		auth:    auth.NewVolatileAuthenticator(),
+	}
 }
 
 // Create a 'subreddit', but for the sake of naming, it will be called an `Age`
@@ -41,7 +53,7 @@ func (h *HistoryVolatile) GetAnswer(id Id) (AnswerIface, error) {
 }
 
 // GetFirst n stories ordered by different atributes, from []ages,
-func (h *HistoryVolatile) GetStories(start uint32, end uint32, order OrderIface, filter FilterIface, ages []AgeIface) []StoryIface {
+func (h *HistoryVolatile) GetStories(start int, end int, order OrderIface, filter FilterIface, ages []AgeIface) ([]StoryIface, error) {
 	stories := []StoryIface{}
 	for _, story := range h.stories {
 		if filter(story) {
@@ -49,13 +61,28 @@ func (h *HistoryVolatile) GetStories(start uint32, end uint32, order OrderIface,
 		}
 	}
 	sort.SliceStable(stories, order)
-	return stories
+	return stories, nil
 }
 
 func (h *HistoryVolatile) GetUser(username string) (UserIface, error) {
-	panic("TODO ")
+	return h.auth.GetUserByUsername(username), nil
 }
 
 func (h *HistoryVolatile) AddUser(login string, username string, password string) (UserIface, error) {
-	panic("TODO ")
+	r := h.auth.RegisterUser(auth.NewRegisterMe(login, username, password))
+	return NewVolatileUser(NewRandId(), login, username, h.GetURL()), utils.ErrIfNotOk(r.Ok, string(r.MsgCode))
+}
+
+// Name to be displayed. Ex.: as the value o <a> tag.
+func (h *HistoryVolatile) GetName() string {
+	return "localhost:8080"
+}
+
+// Get the URL of the History. Ex.: value of href atribute in an <a> tag.
+func (h *HistoryVolatile) GetURL() string {
+	return "http://localhost:8080"
+}
+
+func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error) {
+	return h.ages, nil
 }

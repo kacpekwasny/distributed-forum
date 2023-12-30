@@ -11,12 +11,14 @@ const PasswordHashCost = 14
 type VolatileAuthenticator struct {
 	loginPasswdHash map[string][]byte
 	loginUsers      map[string]UserIface
+	usernameUsers   map[string]UserIface
 }
 
 func NewVolatileAuthenticator() *VolatileAuthenticator {
 	va := &VolatileAuthenticator{
 		loginPasswdHash: make(map[string][]byte),
 		loginUsers:      make(map[string]UserIface),
+		usernameUsers:   make(map[string]UserIface),
 	}
 	va.RegisterUser(&RegisterMe{
 		Login:    "awd",
@@ -44,10 +46,18 @@ func (va *VolatileAuthenticator) RegisterUser(rm *RegisterMe) *RegisterMeRespons
 		return &RegisterMeResponse{RestResp{false, Err}}
 	}
 	va.loginPasswdHash[rm.Login] = bytes
-	va.loginUsers[rm.Login] = NewSimpleUser(rm.Login, rm.Username)
+
+	user := NewSimpleUser(rm.Login, rm.Username)
+	va.loginUsers[rm.Login] = user
+	va.usernameUsers[rm.Username] = user
+
 	return &RegisterMeResponse{RestResp{true, Ok}}
 }
 
 func (va *VolatileAuthenticator) GetUserByLogin(login string) UserIface {
 	return va.loginUsers[login]
+}
+
+func (va *VolatileAuthenticator) GetUserByUsername(username string) UserIface {
+	return va.usernameUsers[username]
 }
