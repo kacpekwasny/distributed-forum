@@ -60,3 +60,19 @@ func Left[T any](v T, err error) T {
 func Right[T any](v T, err error) error {
 	return err
 }
+
+func LeftLogRight[T any](v T, err error) T {
+	if err != nil {
+		log.Println(err)
+	}
+	return v
+}
+
+func LeftCallbackIfErr[T any](v T, err error) func(func(callback error)) T {
+	return func(f func(err error)) T {
+		if err != nil {
+			f(err)
+		}
+		return v
+	}
+}
