@@ -2,7 +2,7 @@ package noundo
 
 type BaseValues struct {
 	Title          string
-	MainContentUrl string
+	MainContentURL string
 }
 
 type LoginFormValues struct {

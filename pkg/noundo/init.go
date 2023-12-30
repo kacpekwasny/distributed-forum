@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/kacpekwasny/distributed-forum/pkg/utils"
+	"github.com/kacpekwasny/noundo/pkg/utils"
 	"github.com/leekchan/gtf"
 )
 

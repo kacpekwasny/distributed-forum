@@ -3,8 +3,8 @@ package noundo
 import (
 	"sort"
 
-	"github.com/kacpekwasny/distributed-forum/pkg/auth"
-	"github.com/kacpekwasny/distributed-forum/pkg/utils"
+	"github.com/kacpekwasny/noundo/pkg/auth"
+	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
 // TODO:

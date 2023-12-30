@@ -1,19 +1,14 @@
 package noundo
 
-import (
-	"log"
-	"net/http"
+import "github.com/gorilla/mux"
 
-	"github.com/gorilla/mux"
-	"github.com/kacpekwasny/noundo/pkg/auth"
-)
-
-func setupRouter() *mux.Router {
-
+func (n *NoUndo) setupRouterAndHandlers() {
 	r := mux.NewRouter()
-	r.Use(auth.HttpAuthenticator)
 
-	r.HandleFunc("/", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainContentURL: "welcome"})).Methods("GET")
+	r.HandleFunc("/", n.handleIndex).Methods("GET")
+
+	// TODO - substitute these function for methods of NoUndo
+	r.HandleFunc("/index", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainContentURL: "welcome"})).Methods("GET")
 	r.HandleFunc("/welcome", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainContentURL: "welcome"})).Methods("GET")
 	r.HandleFunc("/component_welcome", HandleWelcome).Methods("GET")
 
@@ -29,19 +24,5 @@ func setupRouter() *mux.Router {
 
 	r.HandleFunc("/{filename}", HandleDefault)
 
-	http.Handle("/", r)
-	return r
-}
-
-func ListenAndServe() {
-	r := setupRouter()
-
-	const addr = "127.0.0.1:8083"
-
-	log.Println("listening on: ", addr)
-	err := http.ListenAndServe(addr, r)
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	n.r = r
 }

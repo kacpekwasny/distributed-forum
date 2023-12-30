@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/kacpekwasny/distributed-forum/pkg/utils"
+	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
 func NewRandId() Id {

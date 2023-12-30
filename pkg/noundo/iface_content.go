@@ -1,6 +1,6 @@
 package noundo
 
-import "github.com/kacpekwasny/distributed-forum/pkg/enums"
+import "github.com/kacpekwasny/noundo/pkg/enums"
 
 type Id uint64
 
@@ -24,7 +24,7 @@ type HistoryIface interface {
 	GetName() string
 
 	// Get the URL of the History. Ex.: value of href atribute in an <a> tag.
-	GetUrl() string
+	GetURL() string
 
 	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
 	CreateAge(owner UserIface, name string) (AgeIface, error)

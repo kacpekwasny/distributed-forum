@@ -6,9 +6,9 @@ import (
 
 // ~~~~~~  index.go.html ~~~~~~
 
-func CreateAgeInfo(parentUrl string, age AgeIface) AgeInfo {
+func CreateAgeInfo(parentURL string, age AgeIface) AgeInfo {
 	name := age.GetName()
-	href, _ := url.JoinPath(parentUrl, name)
+	href, _ := url.JoinPath(parentURL, name)
 	return AgeInfo{
 		DisplayName: name,
 		Href:        href,
@@ -17,7 +17,7 @@ func CreateAgeInfo(parentUrl string, age AgeIface) AgeInfo {
 
 func CreateHistoryInfo(his HistoryIface) HistoryInfo {
 	name := his.GetName()
-	href := his.GetUrl()
+	href := his.GetURL()
 	return HistoryInfo{
 		DisplayName: name,
 		Href:        href,

@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/kacpekwasny/distributed-forum/pkg/noundo"
+	"github.com/kacpekwasny/noundo/pkg/noundo"
 )
 
 func main() {
+	// noundo.NewNoUndo
 	noundo.ListenAndServe()
 }

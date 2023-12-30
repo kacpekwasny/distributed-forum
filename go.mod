@@ -1,4 +1,4 @@
-module github.com/kacpekwasny/distributed-forum
+module github.com/kacpekwasny/noundo
 
 go 1.21.3
 

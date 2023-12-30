@@ -1,6 +1,6 @@
 package noundo
 
-import "github.com/kacpekwasny/distributed-forum/pkg/auth"
+import "github.com/kacpekwasny/noundo/pkg/auth"
 
 // a *AgeVolatile AgeIface
 

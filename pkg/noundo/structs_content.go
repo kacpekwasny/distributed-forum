@@ -1,6 +1,6 @@
 package noundo
 
-import "github.com/kacpekwasny/distributed-forum/pkg/enums"
+import "github.com/kacpekwasny/noundo/pkg/enums"
 
 // ~~ Structs ~~
 type TimeStampable struct {

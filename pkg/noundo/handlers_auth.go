@@ -3,8 +3,8 @@ package noundo
 import (
 	"net/http"
 
-	"github.com/kacpekwasny/distributed-forum/pkg/auth"
-	"github.com/kacpekwasny/distributed-forum/pkg/utils"
+	"github.com/kacpekwasny/noundo/pkg/auth"
+	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
 func BaseGetFactory(baseValues BaseValues) func(http.ResponseWriter, *http.Request) {
@@ -34,7 +34,7 @@ func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 	err = tplPages.ExecuteTemplate(w, "base.go.html",
 		BaseValues{
 			Title:          "Welcome :D",
-			MainContentUrl: "welcome"},
+			MainContentURL: "welcome"},
 	)
 	utils.Loge(err)
 }
@@ -79,6 +79,6 @@ func HandleLogout(w http.ResponseWriter, r *http.Request) {
 	utils.Loge(tplPages.ExecuteTemplate(w, "base.go.html",
 		BaseValues{
 			Title:          "Login",
-			MainContentUrl: "login",
+			MainContentURL: "login",
 		}))
 }

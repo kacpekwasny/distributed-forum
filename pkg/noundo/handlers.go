@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/kacpekwasny/distributed-forum/pkg/auth"
-	"github.com/kacpekwasny/distributed-forum/pkg/utils"
+	"github.com/kacpekwasny/noundo/pkg/auth"
+	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
 var authenticator auth.Authenticator
@@ -43,7 +43,7 @@ func HandleDefault(w http.ResponseWriter, r *http.Request) {
 	err := tplPages.ExecuteTemplate(w, "base.go.html",
 		BaseValues{
 			Title:          "",
-			MainContentUrl: filename},
+			MainContentURL: filename},
 	)
 	utils.Loge(err)
 }
@@ -71,33 +71,4 @@ func AddStory(w http.ResponseWriter, r *http.Request) {
 		Reactionable: Reactionable{Reactions: []Reaction{}},
 	}
 	RenderStory(w, &p1)
-}
-
-func HandleHomePage(w http.ResponseWriter, r *http.Request, u UniverseIface) {
-	jwtf := auth.GetJWTFieldsFromContext(r.Context())
-	if jwtf == nil {
-		// TODO - proper template
-		utils.ExecTemplLogErr(tplPages, w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("})
-		return
-	}
-	self := u.Self()
-	ages, err := self.GetAges(0, 100, nil, nil)
-
-	utils.Loge(err)
-
-	utils.ExecTemplLogErr(
-		tplPages,
-		w,
-		"welcome.go.html",
-		IndexValues{
-			DisplayName: self.GetUrl(),
-			LocalAges: utils.Map(
-				ages,
-				func(a AgeIface) AgeInfo {
-					return CreateAgeInfo(self.GetUrl(), a)
-				},
-			),
-			Peers: utils.Map(u.Peers(), CreateHistoryInfo),
-		},
-	)
 }
