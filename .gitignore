@@ -23,3 +23,4 @@ go.work
 
 ### MY EDIT ###
 tmp/
+.VSCodeCounter
