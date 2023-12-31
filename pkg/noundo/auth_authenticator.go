@@ -5,8 +5,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const PasswordHashCost = 14
-
 type AuthenticatorIface interface {
 	// Validate if the passed in credentials are valid
 	ValidateAuthMe(*LoginMe) error
@@ -17,12 +15,6 @@ type AuthenticatorIface interface {
 	//
 	GetUserByEmail(email string) UserAuthIface
 	GetUserByUsername(username string) UserAuthIface
-}
-
-type AuthenticatorStorageIface interface {
-	CreateUserOrErr(email string, username string, password []byte) MsgEnum
-	GetUserByEmail(email string) (UserAuthIface, error)
-	GetUserByUsername(username string) (UserAuthIface, error)
 }
 
 type UserIdentity interface {
@@ -57,54 +49,15 @@ func (u *inramUser) PasswdHash() []byte {
 	return u.passwdHash
 }
 
-type Authenticator struct {
-	authStorage AuthenticatorStorageIface
-}
-
-type volatileAuthStorage struct {
-	emailUsers    map[string]UserAuthIface
-	usernameUsers map[string]UserAuthIface
-}
-
-// ~~~ Authenticator Storage ~~~
-func NewVolatileAuthStorage() AuthenticatorStorageIface {
-	return &volatileAuthStorage{
-		emailUsers:    make(map[string]UserAuthIface),
-		usernameUsers: make(map[string]UserAuthIface),
-	}
-}
-
-func (va *volatileAuthStorage) CreateUserOrErr(email, username string, password []byte) MsgEnum {
-	if _, ok := va.emailUsers[email]; ok {
-		return EmailInUse
-	}
-	if _, ok := va.usernameUsers[username]; ok {
-		return UsernameInUse
-	}
-	u := &inramUser{
-		email:      email,
-		username:   username,
-		passwdHash: password,
-	}
-	va.emailUsers[email] = u
-	va.usernameUsers[username] = u
-	return Ok
-}
-
-func (va *volatileAuthStorage) GetUserByEmail(email string) (UserAuthIface, error) {
-	user, ok := va.emailUsers[email]
-	return utils.ResultOkToErr(user, ok)("email_not_found")
-}
-
-func (va *volatileAuthStorage) GetUserByUsername(username string) (UserAuthIface, error) {
-	user, ok := va.usernameUsers[username]
-	return utils.ResultOkToErr(user, ok)("username_not_found")
-}
-
 // ~~~ Authenticator ~~~
-func NewAuthenticator(as AuthenticatorStorageIface) AuthenticatorIface {
-	a := &Authenticator{as}
-	return a
+
+type Authenticator struct {
+	authStorage      AuthenticatorStorageIface
+	PasswordHashCost int
+}
+
+func NewAuthenticator(as AuthenticatorStorageIface, PasswordHashCost int) AuthenticatorIface {
+	return &Authenticator{as, PasswordHashCost}
 }
 
 func (a *Authenticator) ValidateAuthMe(am *LoginMe) error {
@@ -121,7 +74,7 @@ func (a *Authenticator) RegisterUser(rm *RegisterMe) *RegisterMeResponse {
 		return &RegisterMeResponse{RestResp{false, EmailInUse}}
 	}
 
-	hashBytes, err := bcrypt.GenerateFromPassword([]byte(rm.Password), PasswordHashCost)
+	hashBytes, err := bcrypt.GenerateFromPassword([]byte(rm.Password), a.PasswordHashCost)
 	if err != nil {
 		return &RegisterMeResponse{RestResp{false, Err}}
 	}
