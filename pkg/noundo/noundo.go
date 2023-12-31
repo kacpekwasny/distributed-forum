@@ -1,6 +1,7 @@
 package noundo
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -20,6 +21,7 @@ func NewNoUndo(uni UniverseIface) *NoUndo {
 }
 
 func (n *NoUndo) ListenAndServe(addr string) error {
+	log.Println("Listening on", addr)
 	return http.ListenAndServe(addr, n.r)
 }
 

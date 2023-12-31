@@ -23,7 +23,7 @@ func (n *NoUndo) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	ages, err := self.GetAges(
 		0,
-		int(mo.TupleToResult(strconv.ParseInt(r.URL.Query().Get("agesnum"), 10, 32)).OrElse(50)),
+		int(mo.TupleToResult(strconv.ParseInt(r.URL.Query().Get("ages_num"), 10, 32)).OrElse(50)),
 		nil,
 		nil,
 	)
