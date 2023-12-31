@@ -2,12 +2,14 @@ package noundo
 
 func NewUniverse(self HistoryIface) UniverseIface {
 	return &universe{
-		self: self,
+		self:        self,
+		peersFunnel: &peersFunnel{},
 	}
 }
 
 type universe struct {
-	self HistoryIface
+	self        HistoryIface
+	peersFunnel PeersFunnelIface
 }
 
 func (u *universe) Self() HistoryIface {
@@ -15,5 +17,5 @@ func (u *universe) Self() HistoryIface {
 }
 
 func (u *universe) Peers() []HistoryIface {
-	panic("not implemented") // TODO: Implement
+	return u.peersFunnel.AlivePeers()
 }
