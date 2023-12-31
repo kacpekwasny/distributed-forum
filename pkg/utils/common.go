@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"log"
 )
 
@@ -47,6 +48,16 @@ func Map[A any, B any](input []A, m MapFunc[A, B]) []B {
 	return output
 }
 
+func Filter[T any](tSlice []T, keep func(t T) bool) []T {
+	out := []T{}
+	for _, t := range tSlice {
+		if keep(t) {
+			out = append(out, t)
+		}
+	}
+	return out
+}
+
 func ResultOkToErr[T any](v T, ok bool) func(string) (T, error) {
 	return func(msg string) (T, error) {
 		return v, ErrIfNotOk(ok, msg)
@@ -68,11 +79,27 @@ func LeftLogRight[T any](v T, err error) T {
 	return v
 }
 
-func LeftCallbackIfErr[T any](v T, err error) func(func(callback error)) T {
+func LeftCallbackIfErr[T any](v T, err error) func(callback func(err error)) T {
 	return func(f func(err error)) T {
 		if err != nil {
 			f(err)
 		}
 		return v
 	}
+}
+
+func MapGetDef[K comparable, V any](map_ map[K]V, key K, def V) V {
+	v, ok := map_[key]
+	if ok {
+		return v
+	}
+	return def
+}
+
+func MapGetErr[K comparable, V any](map_ map[K]V, key K) (V, error) {
+	v, ok := map_[key]
+	if ok {
+		return v, nil
+	}
+	return v, errors.New(fmt.Sprint("key not found in map:", key))
 }
