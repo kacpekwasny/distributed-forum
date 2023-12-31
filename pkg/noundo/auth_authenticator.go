@@ -7,10 +7,10 @@ import (
 
 type AuthenticatorIface interface {
 	// Validate if the passed in credentials are valid
-	ValidateAuthMe(*LoginMe) error
+	ValidateAuthMe(*SignInRequest) error
 
 	// Add User to the database of users
-	RegisterUser(*RegisterMe) *RegisterMeResponse
+	SignUpUser(*SignUpRequest) *SignUpResponse
 
 	//
 	GetUserByEmail(email string) UserAuthIface
@@ -60,7 +60,7 @@ func NewAuthenticator(as AuthenticatorStorageIface, PasswordHashCost int) Authen
 	return &Authenticator{as, PasswordHashCost}
 }
 
-func (a *Authenticator) ValidateAuthMe(am *LoginMe) error {
+func (a *Authenticator) ValidateAuthMe(am *SignInRequest) error {
 	user, err := a.authStorage.GetUserByEmail(am.Email)
 	if err != nil {
 		return err
@@ -68,19 +68,19 @@ func (a *Authenticator) ValidateAuthMe(am *LoginMe) error {
 	return bcrypt.CompareHashAndPassword(user.PasswdHash(), []byte(am.Password))
 }
 
-func (a *Authenticator) RegisterUser(rm *RegisterMe) *RegisterMeResponse {
+func (a *Authenticator) SignUpUser(rm *SignUpRequest) *SignUpResponse {
 	_, err := a.authStorage.GetUserByEmail(rm.Email)
 	if err == nil {
-		return &RegisterMeResponse{RestResp{false, EmailInUse}}
+		return &SignUpResponse{RestResp{false, EmailInUse}}
 	}
 
 	hashBytes, err := bcrypt.GenerateFromPassword([]byte(rm.Password), a.PasswordHashCost)
 	if err != nil {
-		return &RegisterMeResponse{RestResp{false, Err}}
+		return &SignUpResponse{RestResp{false, Err}}
 	}
 
 	msg := a.authStorage.CreateUserOrErr(rm.Email, rm.Username, hashBytes)
-	return &RegisterMeResponse{RestResp{msg == Ok, msg}}
+	return &SignUpResponse{RestResp{msg == Ok, msg}}
 }
 
 func (a *Authenticator) GetUserByEmail(email string) UserAuthIface {

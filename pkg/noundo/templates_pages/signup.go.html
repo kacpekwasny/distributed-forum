@@ -1,15 +1,15 @@
 <script>
-  document.title = "Register";
+  document.title = "Sign Up";
 </script>
 <div class="my-5"></div>
 <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
   <div class="card shadow-lg">
     <div class="card-body p-5 pb-4">
-      <h1 class="fs-4 card-title fw-bold mb-4">Register</h1>
-      <form hx-post="register" autocomplete="off" hx-target="#id-base-div-2">
+      <h1 class="fs-4 card-title fw-bold mb-4">Sign Up</h1>
+      <form hx-post="signup" autocomplete="off" hx-target="#id-base-div-2">
         <div class="mb-3">
-          <label class="mb-2 text-muted" for="login">Email</label>
-          <input id="login" type="text" class="form-control" name="Email"
+          <label class="mb-2 text-muted" for="email">Email</label>
+          <input id="email" type="text" class="form-control" name="Email"
           value="{{ getf . "Email" ""}}" required autofocus /> {{ if hasField .
           "ErrEmail" }}
           <div class="text-danger">{{ .ErrEmail }}</div>
@@ -39,12 +39,12 @@
         </div>
 
         <p class="form-text text-muted mb-3">
-          By registering you agree with our terms and condition.
+          By signing up you agree with our terms and condition.
         </p>
 
         <div class="align-items-center d-flex">
           <button type="submit" class="btn btn-primary ms-auto">
-            Register
+            Sign Up
           </button>
         </div>
         {{ if hasField . "Err" }}
@@ -57,12 +57,12 @@
       <div class="d-flex justify-content-center align-items-center">
         <div>Already have an account?</div>
         <button
-          hx-get="component_login"
+          hx-get="component_signin"
           hx-target="#id-base-div-2"
           class="text-dark btn btn-info btn-sm"
           style="margin-left: 0.5rem"
         >
-          Log In
+          Sign In
         </button>
       </div>
     </div>

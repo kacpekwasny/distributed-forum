@@ -8,7 +8,7 @@ import (
 	"github.com/samber/mo"
 )
 
-func (n *NoUndo) handleLogin(w http.ResponseWriter, r *http.Request) {
+func (n *NoUndo) handleSignIn(w http.ResponseWriter, r *http.Request) {
 
 }
 

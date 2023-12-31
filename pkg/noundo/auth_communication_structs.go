@@ -9,22 +9,22 @@ type RestResp struct {
 // Information required from User
 // Information required to be held in body of http.Request
 // that will be used to
-type LoginMe struct {
+type SignInRequest struct {
 	Email    string
 	Password string
 }
 
-type LoginMeResponse struct {
+type SignInResponse struct {
 	RestResp
 }
 
-type RegisterMe struct {
+type SignUpRequest struct {
 	Email    string
 	Username string
 	Password string
 }
 
-type RegisterMeResponse struct {
+type SignUpResponse struct {
 	RestResp
 }
 

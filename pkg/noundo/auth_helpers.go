@@ -29,27 +29,27 @@ func init() {
 }
 
 // Decode `http.Request.Body` into `AuthMe struct`
-func GetLoginMe(r *http.Request) (*LoginMe, error) {
+func GetSignInRequest(r *http.Request) (*SignInRequest, error) {
 	err := r.ParseForm()
 
 	if err != nil {
 		return nil, err
 	}
-	var loginMe LoginMe
-	err = decoder.Decode(&loginMe, r.Form)
-	return &loginMe, err
+	var signIn SignInRequest
+	err = decoder.Decode(&signIn, r.Form)
+	return &signIn, err
 }
 
 // Function for checking if
 // Read AuthMe doc
-func ValidateAuthMe(a *LoginMe) (bool, error) {
+func ValidateAuthMe(a *SignInRequest) (bool, error) {
 	return true, nil
 }
 
 // Parse http.Request.Body, then check if data passed is valid and if so set
 // header on ResponseWriter to JWT with appropriate data.
-func LoginUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request) error {
-	authMe, err := GetLoginMe(r)
+func SignInUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request) error {
+	authMe, err := GetSignInRequest(r)
 	if err != nil {
 		log.Printf("parse Credentials from request: %s\n", err)
 		return err
@@ -85,7 +85,7 @@ func LoginUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request) 
 	return nil
 }
 
-func LogoutUser(w http.ResponseWriter) {
+func SignOutUser(w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     jwtCookieKey,
 		Value:    "",
@@ -93,24 +93,24 @@ func LogoutUser(w http.ResponseWriter) {
 	})
 }
 
-func GetRegisterMe(r *http.Request) (*RegisterMe, error) {
+func GetSignUpRequest(r *http.Request) (*SignUpRequest, error) {
 	err := r.ParseForm()
 	if err != nil {
 		return nil, err
 	}
-	var registerMe RegisterMe
-	err = decoder.Decode(&registerMe, r.Form)
-	return &registerMe, err
+	var signUp SignUpRequest
+	err = decoder.Decode(&signUp, r.Form)
+	return &signUp, err
 }
 
-func RegisterUser(auth AuthenticatorIface, r *http.Request) *RegisterMeResponse {
-	registerMe, err := GetRegisterMe(r)
+func SignUpUser(auth AuthenticatorIface, r *http.Request) *SignUpResponse {
+	signUp, err := GetSignUpRequest(r)
 
 	if err != nil {
-		return &RegisterMeResponse{RestResp{false, DecodeErr}}
+		return &SignUpResponse{RestResp{false, DecodeErr}}
 	}
 
-	return auth.RegisterUser(registerMe)
+	return auth.SignUpUser(signUp)
 }
 
 // Validate the JWT sent with the incoming Request

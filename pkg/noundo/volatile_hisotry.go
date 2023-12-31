@@ -68,7 +68,7 @@ func (h *HistoryVolatile) GetUser(username string) (UserIface, error) {
 }
 
 func (h *HistoryVolatile) AddUser(email string, username string, password string) (UserIface, error) {
-	r := h.auth.RegisterUser(NewRegisterMe(email, username, password))
+	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
 	return NewVolatileUser(NewRandId(), email, username, h.GetURL()), utils.ErrIfNotOk(r.Ok, string(r.MsgCode))
 }
 

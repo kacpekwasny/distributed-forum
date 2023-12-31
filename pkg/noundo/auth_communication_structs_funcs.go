@@ -24,8 +24,8 @@ func jwtFieldsFromMapClaims(mp jwt.MapClaims) (JWTFields, error) {
 	}, nil
 }
 
-func NewRegisterMe(email, username, password string) *RegisterMe {
-	return &RegisterMe{
+func NewSignUpRequest(email, username, password string) *SignUpRequest {
+	return &SignUpRequest{
 		Email:    email,
 		Username: username,
 		Password: password,

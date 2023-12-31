@@ -12,13 +12,13 @@ func (n *NoUndo) setupRouterAndHandlers() {
 	r.HandleFunc("/welcome", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainContentURL: "welcome"})).Methods("GET")
 	r.HandleFunc("/component_welcome", HandleWelcome).Methods("GET")
 
-	r.HandleFunc("/login", BaseGetFactory(BaseValues{"Login", "login"})).Methods("GET")
-	r.HandleFunc("/login", HandlePostLogin).Methods("POST")
+	r.HandleFunc("/signin", BaseGetFactory(BaseValues{"SignIn", "signin"})).Methods("GET")
+	r.HandleFunc("/signin", HandlePostSignIn).Methods("POST")
 
-	r.HandleFunc("/logout", HandleLogout).Methods("GET", "POST")
+	r.HandleFunc("/signout", HandleSignOut).Methods("GET", "POST")
 
-	r.HandleFunc("/register", BaseGetFactory(BaseValues{"Register", "register"})).Methods("GET")
-	r.HandleFunc("/register", HandlePostRegister).Methods("POST")
+	r.HandleFunc("/signup", BaseGetFactory(BaseValues{"Sign Up", "signup"})).Methods("GET")
+	r.HandleFunc("/signup", HandlePostSignUp).Methods("POST")
 
 	r.HandleFunc("/component_{filename}", HandleGetPageTemplateAsComponent).Methods("GET")
 

@@ -20,12 +20,12 @@ func ComponentGetFactory(template string, v any) func(w http.ResponseWriter, r *
 	}
 }
 
-// ~~ Login ~~
+// ~~ SignIn ~~
 
-func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
-	err := LoginUser(authenticator, w, r)
+func HandlePostSignIn(w http.ResponseWriter, r *http.Request) {
+	err := SignInUser(authenticator, w, r)
 	if err != nil {
-		err = tplPages.ExecuteTemplate(w, "login.go.html", LoginFormValues{Err: "Login Failed :c"})
+		err = tplPages.ExecuteTemplate(w, "signin.go.html", SignInFormValues{Err: "Sign In Failed :c"})
 		utils.Loge(err)
 		return
 	}
@@ -38,19 +38,19 @@ func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 	utils.Loge(err)
 }
 
-// ~~ Register ~~
+// ~~ SignUp ~~
 
-func HandlePostRegister(w http.ResponseWriter, r *http.Request) {
-	registerMe, err := GetRegisterMe(r)
+func HandlePostSignUp(w http.ResponseWriter, r *http.Request) {
+	signUp, err := GetSignUpRequest(r)
 
-	var regResp *RegisterMeResponse
+	var regResp *SignUpResponse
 	if err != nil {
-		regResp = &RegisterMeResponse{RestResp: RestResp{Ok: false, MsgCode: DecodeErr}}
+		regResp = &SignUpResponse{RestResp: RestResp{Ok: false, MsgCode: DecodeErr}}
 	} else {
-		regResp = authenticator.RegisterUser(registerMe)
+		regResp = authenticator.SignUpUser(signUp)
 	}
 
-	var rfv RegisterFormValues
+	var rfv SignUpFormValues
 
 	if !regResp.Ok {
 		switch regResp.MsgCode {
@@ -63,21 +63,21 @@ func HandlePostRegister(w http.ResponseWriter, r *http.Request) {
 		default:
 			rfv.Err = "Unknown error occured."
 		}
-		err := tplPages.ExecuteTemplate(w, "register.go.html", rfv)
+		err := tplPages.ExecuteTemplate(w, "signup.go.html", rfv)
 		utils.Loge(err)
 		return
 	}
-	w.Header().Set("HX-Push-Url", "/login")
-	err = tplPages.ExecuteTemplate(w, "login.go.html", utils.Ms{"Email": registerMe.Email})
+	w.Header().Set("HX-Push-Url", "/signin")
+	err = tplPages.ExecuteTemplate(w, "signin.go.html", utils.Ms{"Email": signUp.Email})
 	utils.Loge(err)
 }
 
-// ~~ Log Out ~~
-func HandleLogout(w http.ResponseWriter, r *http.Request) {
-	LogoutUser(w)
+// ~~ Sign Out ~~
+func HandleSignOut(w http.ResponseWriter, r *http.Request) {
+	SignOutUser(w)
 	utils.Loge(tplPages.ExecuteTemplate(w, "base.go.html",
 		BaseValues{
-			Title:          "Login",
-			MainContentURL: "login",
+			Title:          "Sign In",
+			MainContentURL: "signin",
 		}))
 }

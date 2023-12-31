@@ -5,11 +5,11 @@ type BaseValues struct {
 	MainContentURL string
 }
 
-type LoginFormValues struct {
+type SignInFormValues struct {
 	Err string
 }
 
-type RegisterFormValues struct {
+type SignUpFormValues struct {
 	Email    string
 	Username string
 
