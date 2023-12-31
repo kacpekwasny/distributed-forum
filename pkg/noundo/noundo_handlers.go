@@ -32,9 +32,9 @@ func (n *NoUndo) handleIndex(w http.ResponseWriter, r *http.Request) {
 	utils.ExecTemplLogErr(
 		tplPages,
 		w,
-		"welcome.go.html",
+		"index.go.html",
 		IndexValues{
-			DisplayName: self.GetURL(),
+			DisplayName: self.GetName(),
 			LocalAges: utils.Map(
 				ages,
 				func(a AgeIface) AgeInfo {
