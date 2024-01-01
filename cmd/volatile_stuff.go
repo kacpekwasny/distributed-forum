@@ -4,10 +4,10 @@ import "github.com/kacpekwasny/noundo/pkg/noundo"
 
 var volHistory noundo.HistoryIface
 var volUniverse noundo.UniverseIface
-var peersFunnel *noundo.PeersFunnel
+var peersNexus *noundo.PeersNexus
 
 func init() {
 	volHistory = &noundo.HistoryVolatile{}
-	peersFunnel = noundo.NewPeersFunnel()
-	volUniverse = noundo.NewUniverse(volHistory, peersFunnel)
+	peersNexus = noundo.NewPeersNexus()
+	volUniverse = noundo.NewUniverse(volHistory, peersNexus)
 }

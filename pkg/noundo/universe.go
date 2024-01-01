@@ -1,15 +1,15 @@
 package noundo
 
-func NewUniverse(self HistoryIface, peersFunnel_ PeersFunnelIface) UniverseIface {
+func NewUniverse(self HistoryIface, peersNexus_ PeersNexusIface) UniverseIface {
 	return &universe{
-		self:        self,
-		peersFunnel: peersFunnel_,
+		self:       self,
+		peersNexus: peersNexus_,
 	}
 }
 
 type universe struct {
-	self        HistoryIface
-	peersFunnel PeersFunnelIface
+	self       HistoryIface
+	peersNexus PeersNexusIface
 }
 
 func (u *universe) Self() HistoryIface {
@@ -17,5 +17,5 @@ func (u *universe) Self() HistoryIface {
 }
 
 func (u *universe) Peers() []HistoryIface {
-	return u.peersFunnel.AlivePeers()
+	return u.peersNexus.AlivePeers()
 }

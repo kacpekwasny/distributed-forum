@@ -7,26 +7,26 @@ import (
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
-type PeersFunnelIface interface {
+type PeersNexusIface interface {
 	AlivePeers() []HistoryIface
 	GetHistory(name string) (HistoryIface, error)
 	RegisterPeerManager(pm PeerManagerIface)
 	UnregisterPeerManager(historyName string)
 }
 
-type PeersFunnel struct {
+type PeersNexus struct {
 	peerManagers    []PeerManagerIface
 	historyNamePeer map[string]PeerManagerIface
 }
 
-func NewPeersFunnel() *PeersFunnel {
-	return &PeersFunnel{
+func NewPeersNexus() *PeersNexus {
+	return &PeersNexus{
 		peerManagers:    []PeerManagerIface{},
 		historyNamePeer: make(map[string]PeerManagerIface),
 	}
 }
 
-func (p *PeersFunnel) AlivePeers() []HistoryIface {
+func (p *PeersNexus) AlivePeers() []HistoryIface {
 	peers := utils.Filter(p.peerManagers, func(t PeerManagerIface) bool {
 		return t.PeerAlive() == nil
 	})
@@ -40,7 +40,7 @@ func (p *PeersFunnel) AlivePeers() []HistoryIface {
 	})
 }
 
-func (p *PeersFunnel) GetHistory(name string) (HistoryIface, error) {
+func (p *PeersNexus) GetHistory(name string) (HistoryIface, error) {
 	histPeer, err := utils.MapGetErr(p.historyNamePeer, name)
 	if err != nil {
 		return nil, err
@@ -48,12 +48,12 @@ func (p *PeersFunnel) GetHistory(name string) (HistoryIface, error) {
 	return histPeer.History()
 }
 
-func (p *PeersFunnel) RegisterPeerManager(pm PeerManagerIface) {
+func (p *PeersNexus) RegisterPeerManager(pm PeerManagerIface) {
 	p.peerManagers = append(p.peerManagers, pm)
 	p.historyNamePeer[pm.HistoryURL()] = pm
 }
 
-func (p *PeersFunnel) UnregisterPeerManager(historyName string) {
+func (p *PeersNexus) UnregisterPeerManager(historyName string) {
 	for i, pm := range p.peerManagers {
 		if pm.HistoryName() == historyName {
 			p.peerManagers = slices.Delete(p.peerManagers, i, i+1)
