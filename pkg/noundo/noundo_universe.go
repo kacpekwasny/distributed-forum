@@ -1,5 +1,13 @@
 package noundo
 
+// UniverseIface is an interface for <object? structure? methods?> giving the ability to retrive
+// any HistoryIface, either to the peered ones, or a read-only iface.
+// Also should have knowledge of the peers.
+type UniverseIface interface {
+	Self() HistoryIface
+	Peers() []HistoryIface
+}
+
 func NewUniverse(self HistoryIface, peersNexus_ PeersNexusIface) UniverseIface {
 	return &universe{
 		self:       self,
