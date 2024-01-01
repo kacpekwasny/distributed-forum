@@ -4,6 +4,9 @@ package noundo
 type PeerManagerIface interface {
 	PeerAlive() error
 	History() (HistoryIface, error)
-	HistoryName() string
 	HistoryURL() string
+	HistoryName() string
+}
+
+type PeerManager struct {
 }

@@ -2,6 +2,7 @@ package noundo
 
 import (
 	"log"
+	"slices"
 
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
@@ -10,6 +11,7 @@ type PeersFunnelIface interface {
 	AlivePeers() []HistoryIface
 	GetHistory(name string) (HistoryIface, error)
 	RegisterPeerManager(pm PeerManagerIface)
+	UnregisterPeerManager(historyName string)
 }
 
 type PeersFunnel struct {
@@ -49,4 +51,13 @@ func (p *PeersFunnel) GetHistory(name string) (HistoryIface, error) {
 func (p *PeersFunnel) RegisterPeerManager(pm PeerManagerIface) {
 	p.peerManagers = append(p.peerManagers, pm)
 	p.historyNamePeer[pm.HistoryURL()] = pm
+}
+
+func (p *PeersFunnel) UnregisterPeerManager(historyName string) {
+	for i, pm := range p.peerManagers {
+		if pm.HistoryName() == historyName {
+			p.peerManagers = slices.Delete(p.peerManagers, i, i+1)
+		}
+	}
+	delete(p.historyNamePeer, historyName)
 }
