@@ -6,7 +6,5 @@ import (
 )
 
 func main() {
-	his := &noundo.HistoryVolatile{}
-	uni := noundo.NewUniverse(his)
-	utils.Loge(noundo.NewNoUndo(uni).ListenAndServe(":8080"))
+	utils.Loge(noundo.NewNoUndo(volUniverse).ListenAndServe(":8080"))
 }

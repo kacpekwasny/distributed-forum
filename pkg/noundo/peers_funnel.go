@@ -9,14 +9,22 @@ import (
 type PeersFunnelIface interface {
 	AlivePeers() []HistoryIface
 	GetHistory(name string) (HistoryIface, error)
+	RegisterPeerManager(pm PeerManagerIface)
 }
 
-type peersFunnel struct {
+type PeersFunnel struct {
 	peerManagers    []PeerManagerIface
 	historyNamePeer map[string]PeerManagerIface
 }
 
-func (p *peersFunnel) AlivePeers() []HistoryIface {
+func NewPeersFunnel() *PeersFunnel {
+	return &PeersFunnel{
+		peerManagers:    []PeerManagerIface{},
+		historyNamePeer: make(map[string]PeerManagerIface),
+	}
+}
+
+func (p *PeersFunnel) AlivePeers() []HistoryIface {
 	peers := utils.Filter(p.peerManagers, func(t PeerManagerIface) bool {
 		return t.PeerAlive() == nil
 	})
@@ -25,15 +33,20 @@ func (p *peersFunnel) AlivePeers() []HistoryIface {
 			log.Println(
 				"PeerManager says the connection is alive,",
 				"but cannot get History.",
-				"Error while trying to get history:", err)
+				"The error while trying to get history:", err)
 		})
 	})
 }
 
-func (p *peersFunnel) GetHistory(name string) (HistoryIface, error) {
+func (p *PeersFunnel) GetHistory(name string) (HistoryIface, error) {
 	histPeer, err := utils.MapGetErr(p.historyNamePeer, name)
 	if err != nil {
 		return nil, err
 	}
 	return histPeer.History()
+}
+
+func (p *PeersFunnel) RegisterPeerManager(pm PeerManagerIface) {
+	p.peerManagers = append(p.peerManagers, pm)
+	p.historyNamePeer[pm.HistoryURL()] = pm
 }

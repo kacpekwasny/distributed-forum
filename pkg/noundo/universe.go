@@ -1,9 +1,9 @@
 package noundo
 
-func NewUniverse(self HistoryIface) UniverseIface {
+func NewUniverse(self HistoryIface, peersFunnel_ PeersFunnelIface) UniverseIface {
 	return &universe{
 		self:        self,
-		peersFunnel: &peersFunnel{},
+		peersFunnel: peersFunnel_,
 	}
 }
 
