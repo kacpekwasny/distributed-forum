@@ -1,5 +1,9 @@
 package noundo
 
+func NewPeerManagerDummy(his HistoryIface) PeerManagerIface {
+	return &PeerManagerDummy{his}
+}
+
 type PeerManagerDummy struct {
 	his HistoryIface
 }

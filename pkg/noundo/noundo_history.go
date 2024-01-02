@@ -15,7 +15,7 @@ type HistoryIface interface {
 	GetURL() string
 
 	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
-	CreateAge(owner UserIface, name string) (AgeIface, error)
+	CreateAge(owner UserFullIface, ageName string) (AgeIface, error)
 	GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error)
 
 	//
@@ -27,11 +27,58 @@ type HistoryIface interface {
 	// GetFirst n stories ordered by different atributes, from []ages,
 	GetStories(start int, end int, order OrderIface, filter FilterIface, ages []AgeIface) ([]StoryIface, error)
 
-	GetUser(username string) (UserIface, error)
-	AddUser(email string, username string, password string) (UserIface, error)
+	GetUser(username string) (UserFullIface, error)
+	AddUser(email string, username string, password string) (UserFullIface, error)
 
 	// TODO:
 	// GetAges that user joined,
 	// GetStories first n stories of user ordered by (maybe merge with the first method???)
 	// GetComments first n comments of user ordered by
+}
+
+type History struct {
+	name    string
+	url     string
+	storage StorageIface
+}
+
+// Name to be displayed. Ex.: as the value o <a> tag.
+func (h *History) GetName() string {
+	return h.name
+}
+
+// Get the URL of the History. Ex.: value of href atribute in an <a> tag.
+func (h *History) GetURL() string {
+	return h.url
+}
+
+// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
+func (h *History) CreateAge(owner UserFullIface, ageName string) (AgeIface, error) {
+	return h.storage.CreateAge(owner, ageName)
+}
+
+func (h *History) GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (h *History) GetStory(id Id) (StoryIface, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+// Get answer from anywhere in
+func (h *History) GetAnswer(id Id) (AnswerIface, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+// GetFirst n stories ordered by different atributes, from []ages,
+func (h *History) GetStories(start int, end int, order OrderIface, filter FilterIface, ages []AgeIface) ([]StoryIface, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (h *History) GetUser(username string) (UserFullIface, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (h *History) AddUser(email string, username string, password string) (UserFullIface, error) {
+	panic("not implemented") // TODO: Implement
 }

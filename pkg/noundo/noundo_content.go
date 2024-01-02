@@ -15,20 +15,20 @@ type AnswerIface interface {
 type PostableIface interface {
 	Id() Id
 	Body() string
-	Author() UserIface
+	Author() UserFullIface
 	AuthorId() Id
 	ReactionableIface
 }
 
 type AnswerableIface interface {
-	AddAnswer(author UserIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error)
+	AddAnswer(author UserFullIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error)
 	Answers(start int, end int, depth int, order OrderIface, filter FilterIface, ages []AgeIface) ([]AnswerIface, error)
 }
 
 type ReactionableIface interface {
 	ReactionStats() (map[enums.ReactionType]int, error)
 	Reactions() ([]ReactionIface, error)
-	React(user UserIface, reaction ReactionIface) error
+	React(user UserFullIface, reaction ReactionIface) error
 }
 
 type ReactionIface interface {
@@ -36,7 +36,7 @@ type ReactionIface interface {
 	Enum() enums.ReactionType
 	ParentId() Id
 	AuthorId() Id
-	Author() UserIface
+	Author() UserFullIface
 	Timestamp() uint64
 }
 

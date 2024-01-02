@@ -23,28 +23,28 @@ func (a *AgeVolatile) SetName(name string) error {
 	return nil
 }
 
-func (a *AgeVolatile) GetOwner() (UserIface, error) {
+func (a *AgeVolatile) GetOwner() (UserFullIface, error) {
 	panic("TODO")
 	// return a.auth.GetUserByEmail(a.ownerUsername), nil
 }
 
-func (a *AgeVolatile) ChangeOwner(user UserIface) error {
+func (a *AgeVolatile) ChangeOwner(user UserFullIface) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (a *AgeVolatile) GetAdmins() ([]UserIface, error) {
+func (a *AgeVolatile) GetAdmins() ([]UserFullIface, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (a *AgeVolatile) AddAdmin(user UserIface) error {
+func (a *AgeVolatile) AddAdmin(user UserFullIface) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (a *AgeVolatile) RemoveAdmin(user UserIface) error {
+func (a *AgeVolatile) RemoveAdmin(user UserFullIface) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (a *AgeVolatile) GetMembers(start int, end int) ([]UserIface, error) {
+func (a *AgeVolatile) GetMembers(start int, end int) ([]UserFullIface, error) {
 	panic("not implemented") // TODO: Implement
 }
 
@@ -53,7 +53,7 @@ func (a *AgeVolatile) GetMembersNumber() (int, error) {
 }
 
 // Create a Story written by an Author in a certain Age
-func (a *AgeVolatile) AddStory(author UserIface, age AgeIface, story StoryIface) (StoryIface, error) {
+func (a *AgeVolatile) AddStory(author UserFullIface, age AgeIface, story StoryIface) (StoryIface, error) {
 	panic("not implemented") // TODO: Implement
 }
 

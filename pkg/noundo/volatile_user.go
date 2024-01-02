@@ -1,19 +1,21 @@
 package noundo
 
-func NewVolatileUser(id Id, email string, username string, parentServerURL string) UserIface {
+func NewVolatileUser(id Id, email string, username string, passwdHash []byte, parentServerURL string) UserFullIface {
 	return &volatileUser{
-		id:              id,
-		username:        username,
-		email:           email,
-		parentServerURL: parentServerURL,
+		id:               id,
+		username:         username,
+		email:            email,
+		parentServerName: parentServerURL,
+		passwdHash:       passwdHash,
 	}
 }
 
 type volatileUser struct {
-	id              Id
-	username        string
-	email           string
-	parentServerURL string
+	id               Id
+	username         string
+	email            string
+	parentServerName string
+	passwdHash       []byte
 }
 
 // Id is unchangable, is unique, and is used by server for relations
@@ -32,6 +34,15 @@ func (u *volatileUser) Username() string {
 }
 
 // The server that is the parent for this account
-func (u *volatileUser) ParentServer() string {
-	return u.parentServerURL
+func (u *volatileUser) ParentServerName() string {
+	return u.parentServerName
+}
+
+// The server that is the parent for this account
+func (u *volatileUser) FullUsername() string {
+	return u.username + "@" + u.parentServerName
+}
+
+func (u *volatileUser) PasswdHash() []byte {
+	return u.passwdHash
 }

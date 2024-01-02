@@ -3,23 +3,26 @@ package noundo
 import "github.com/kacpekwasny/noundo/pkg/utils"
 
 type volatileAuthStorage struct {
-	emailUsers    map[string]UserAuthIface
-	usernameUsers map[string]UserAuthIface
+	emailUsers    *map[string]UserFullIface
+	usernameUsers *map[string]UserFullIface
 }
 
 // ~~~ Authenticator Storage ~~~
-func NewVolatileAuthStorage() AuthenticatorStorageIface {
+func NewVolatileAuthStorage(
+	emailUsers *map[string]UserFullIface,
+	usernameUsers *map[string]UserFullIface,
+) AuthenticatorStorageIface {
 	return &volatileAuthStorage{
-		emailUsers:    make(map[string]UserAuthIface),
-		usernameUsers: make(map[string]UserAuthIface),
+		emailUsers:    emailUsers,
+		usernameUsers: usernameUsers,
 	}
 }
 
 func (va *volatileAuthStorage) CreateUserOrErr(email, username string, password []byte) MsgEnum {
-	if _, ok := va.emailUsers[email]; ok {
+	if _, ok := (*va.emailUsers)[email]; ok {
 		return EmailInUse
 	}
-	if _, ok := va.usernameUsers[username]; ok {
+	if _, ok := (*va.usernameUsers)[username]; ok {
 		return UsernameInUse
 	}
 	u := &inramUser{
@@ -27,17 +30,17 @@ func (va *volatileAuthStorage) CreateUserOrErr(email, username string, password 
 		username:   username,
 		passwdHash: password,
 	}
-	va.emailUsers[email] = u
-	va.usernameUsers[username] = u
+	(*va.emailUsers)[email] = u
+	(*va.usernameUsers)[username] = u
 	return Ok
 }
 
 func (va *volatileAuthStorage) GetUserByEmail(email string) (UserAuthIface, error) {
-	user, ok := va.emailUsers[email]
+	user, ok := (*va.emailUsers)[email]
 	return utils.ResultOkToErr(user, ok)("email_not_found")
 }
 
 func (va *volatileAuthStorage) GetUserByUsername(username string) (UserAuthIface, error) {
-	user, ok := va.usernameUsers[username]
+	user, ok := (*va.usernameUsers)[username]
 	return utils.ResultOkToErr(user, ok)("username_not_found")
 }

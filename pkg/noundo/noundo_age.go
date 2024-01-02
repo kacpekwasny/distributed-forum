@@ -5,17 +5,17 @@ type AgeIface interface {
 	GetName() string
 	SetName(name string) error
 
-	GetOwner() (UserIface, error)
-	ChangeOwner(user UserIface) error
+	GetOwner() (UserFullIface, error)
+	ChangeOwner(user UserFullIface) error
 
-	GetAdmins() ([]UserIface, error)
-	AddAdmin(user UserIface) error
-	RemoveAdmin(user UserIface) error
+	GetAdmins() ([]UserFullIface, error)
+	AddAdmin(user UserFullIface) error
+	RemoveAdmin(user UserFullIface) error
 
-	GetMembers(start int, end int) ([]UserIface, error)
+	GetMembers(start int, end int) ([]UserFullIface, error)
 	GetMembersNumber() (int, error)
 
 	// Create a Story written by an Author in a certain Age
-	AddStory(author UserIface, age AgeIface, story StoryIface) (StoryIface, error)
+	AddStory(author UserFullIface, age AgeIface, story StoryIface) (StoryIface, error)
 	GetStories(start int, end int, order OrderIface, filter FilterIface) []StoryIface
 }

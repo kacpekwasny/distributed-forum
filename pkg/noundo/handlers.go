@@ -10,7 +10,7 @@ import (
 var authenticator AuthenticatorIface
 
 func init() {
-	authenticator = NewAuthenticator(NewVolatileAuthStorage(), 14)
+	// authenticator = NewAuthenticator(NewVolatileAuthStorage(make(map[string]UserAuthIface), make(map[string]UserAuthIface)), 14)
 }
 
 // Return html from template when the request was made by HTMX, for the returned HTML,

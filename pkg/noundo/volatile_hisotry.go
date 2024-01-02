@@ -16,20 +16,22 @@ type HistoryVolatile struct {
 	auth    AuthenticatorIface
 
 	// email: UserIface
-	users map[string]UserIface
+	users map[string]UserAuthIface
 }
 
 func NewHistoryVolatile() HistoryIface {
+	usersUsername := make(map[string]UserFullIface)
+	usersEmail := make(map[string]UserFullIface)
 	return &HistoryVolatile{
 		ages:    []AgeIface{},
 		stories: make(map[Id]StoryIface),
 		answers: make(map[Id]AnswerIface),
-		// auth:    NewVolatileAuthenticator(),
+		auth:    NewAuthenticator(NewVolatileAuthStorage(&usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST),
 	}
 }
 
 // Create a 'subreddit', but for the sake of naming, it will be called an `Age`
-func (h *HistoryVolatile) CreateAge(owner UserIface, name string) (AgeIface, error) {
+func (h *HistoryVolatile) CreateAge(owner UserFullIface, name string) (AgeIface, error) {
 	age := &AgeVolatile{
 		id:              NewRandId(),
 		name:            name,
@@ -63,11 +65,11 @@ func (h *HistoryVolatile) GetStories(start int, end int, order OrderIface, filte
 	return stories, nil
 }
 
-func (h *HistoryVolatile) GetUser(username string) (UserIface, error) {
+func (h *HistoryVolatile) GetUser(username string) (UserFullIface, error) {
 	return nil, nil
 }
 
-func (h *HistoryVolatile) AddUser(email string, username string, password string) (UserIface, error) {
+func (h *HistoryVolatile) AddUser(email string, username string, password string) (UserFullIface, error) {
 	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
 	return NewVolatileUser(NewRandId(), email, username, h.GetURL()), utils.ErrIfNotOk(r.Ok, string(r.MsgCode))
 }

@@ -5,6 +5,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const DEFAULT_PASS_HASH_COST = 14
+
 type AuthenticatorIface interface {
 	// Validate if the passed in credentials are valid
 	ValidateAuthMe(*SignInRequest) error
@@ -12,29 +14,20 @@ type AuthenticatorIface interface {
 	// Add User to the database of users
 	SignUpUser(*SignUpRequest) *SignUpResponse
 
-	//
 	GetUserByEmail(email string) UserAuthIface
 	GetUserByUsername(username string) UserAuthIface
 }
 
-type UserIdentity interface {
-	Email() string
-	Username() string
-}
-
-type UserPasswd interface {
-	PasswdHash() []byte
-}
-
 type UserAuthIface interface {
-	UserIdentity
-	UserPasswd
+	UserIdentityIface
+	PasswdhashIface
 }
 
 type inramUser struct {
-	email      string
-	username   string
-	passwdHash []byte
+	email            string
+	username         string
+	passwdHash       []byte
+	parentServerName string
 }
 
 func (u *inramUser) Email() string {
@@ -47,6 +40,16 @@ func (u *inramUser) Username() string {
 
 func (u *inramUser) PasswdHash() []byte {
 	return u.passwdHash
+}
+
+// Domain of the server that is the parent for this account
+func (u *inramUser) ParentServerName() string {
+	return u.parentServerName
+}
+
+// Username() + "@" + ParentServerName()`
+func (u *inramUser) FullUsername() string {
+	return u.username + "@" + u.parentServerName
 }
 
 // ~~~ Authenticator ~~~
