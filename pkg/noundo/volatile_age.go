@@ -57,6 +57,6 @@ func (a *AgeVolatile) AddStory(author UserFullIface, age AgeIface, story StoryIf
 	panic("not implemented") // TODO: Implement
 }
 
-func (a *AgeVolatile) GetStories(start int, end int, order OrderIface, filter FilterIface) []StoryIface {
+func (a *AgeVolatile) GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) []StoryIface {
 	panic("not implemented") // TODO: Implement
 }

@@ -17,5 +17,5 @@ type AgeIface interface {
 
 	// Create a Story written by an Author in a certain Age
 	AddStory(author UserFullIface, age AgeIface, story StoryIface) (StoryIface, error)
-	GetStories(start int, end int, order OrderIface, filter FilterIface) []StoryIface
+	GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) []StoryIface
 }
