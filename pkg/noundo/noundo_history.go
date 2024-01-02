@@ -6,6 +6,8 @@ package noundo
 // So my idea is, that everything that cannot be associated strictly with any Iface will be History method.
 
 // History is the name for the whole server, that contains all Ages and All Stories
+// It is an interface for storage (in case of using the local history)
+// Or for a peer (in case of working with a remote history)
 type HistoryIface interface {
 
 	// Name to be displayed. Ex.: as the value o <a> tag.
@@ -15,7 +17,7 @@ type HistoryIface interface {
 	GetURL() string
 
 	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
-	CreateAge(owner UserFullIface, ageName string) (AgeIface, error)
+	CreateAge(owner UserPublicIface, ageName string) (AgeIface, error)
 	GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error)
 
 	//
@@ -27,8 +29,8 @@ type HistoryIface interface {
 	// GetFirst n stories ordered by different atributes, from []ages,
 	GetStories(start int, end int, order OrderIface, filter FilterIface, ages []AgeIface) ([]StoryIface, error)
 
-	GetUser(username string) (UserFullIface, error)
-	AddUser(email string, username string, password string) (UserFullIface, error)
+	GetUser(username string) (UserPublicIface, error)
+	AddUser(email string, username string, password string) (UserPublicIface, error)
 
 	// TODO:
 	// GetAges that user joined,
@@ -53,7 +55,7 @@ func (h *History) GetURL() string {
 }
 
 // Create a 'subreddit', but for the sake of naming, it will be called an `Age`
-func (h *History) CreateAge(owner UserFullIface, ageName string) (AgeIface, error) {
+func (h *History) CreateAge(owner UserPublicIface, ageName string) (AgeIface, error) {
 	return h.storage.CreateAge(owner, ageName)
 }
 
@@ -79,6 +81,6 @@ func (h *History) GetUser(username string) (UserFullIface, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (h *History) AddUser(email string, username string, password string) (UserFullIface, error) {
+func (h *History) AddUser(email string, username string, password string) (UserPublicIface, error) {
 	panic("not implemented") // TODO: Implement
 }

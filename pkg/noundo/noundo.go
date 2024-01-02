@@ -16,7 +16,7 @@ func NewNoUndo(uni UniverseIface) *NoUndo {
 	n := &NoUndo{
 		uni: uni,
 	}
-	n.setupRouterAndHandlers()
+	n.setupRouter()
 	return n
 }
 

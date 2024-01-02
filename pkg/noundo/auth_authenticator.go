@@ -18,40 +18,6 @@ type AuthenticatorIface interface {
 	GetUserByUsername(username string) UserAuthIface
 }
 
-type UserAuthIface interface {
-	UserIdentityIface
-	PasswdhashIface
-}
-
-type inramUser struct {
-	email            string
-	username         string
-	passwdHash       []byte
-	parentServerName string
-}
-
-func (u *inramUser) Email() string {
-	return u.email
-}
-
-func (u *inramUser) Username() string {
-	return u.username
-}
-
-func (u *inramUser) PasswdHash() []byte {
-	return u.passwdHash
-}
-
-// Domain of the server that is the parent for this account
-func (u *inramUser) ParentServerName() string {
-	return u.parentServerName
-}
-
-// Username() + "@" + ParentServerName()`
-func (u *inramUser) FullUsername() string {
-	return u.username + "@" + u.parentServerName
-}
-
 // ~~~ Authenticator ~~~
 
 type Authenticator struct {

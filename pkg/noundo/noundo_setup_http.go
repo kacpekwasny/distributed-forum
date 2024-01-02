@@ -1,11 +1,18 @@
 package noundo
 
-import "github.com/gorilla/mux"
+import (
+	"log/slog"
 
-func (n *NoUndo) setupRouterAndHandlers() {
+	"github.com/go-chi/httplog/v2"
+	"github.com/gorilla/mux"
+)
+
+func (n *NoUndo) setupRouter() {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", n.handleIndex).Methods("GET")
+	r.Use(httpLogger())
+
+	r.HandleFunc("/", n.HandleIndex).Methods("GET")
 
 	// TODO - substitute these function for methods of NoUndo
 	r.HandleFunc("/index", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainContentURL: "welcome"})).Methods("GET")
@@ -25,4 +32,20 @@ func (n *NoUndo) setupRouterAndHandlers() {
 	r.HandleFunc("/{filename}", HandleDefault)
 
 	n.r = r
+}
+
+func httpLogger() mux.MiddlewareFunc {
+	// Logger
+	logger := httplog.NewLogger("httplog-example", httplog.Options{
+		LogLevel:         slog.LevelDebug,
+		Concise:          true,
+		RequestHeaders:   true,
+		MessageFieldName: "message",
+		Tags: map[string]string{
+			"version": "v1.0-81aa4244d9fc8076a",
+			"env":     "dev",
+		},
+	})
+
+	return httplog.RequestLogger(logger)
 }

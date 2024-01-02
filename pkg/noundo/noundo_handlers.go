@@ -8,19 +8,12 @@ import (
 	"github.com/samber/mo"
 )
 
-func (n *NoUndo) handleSignIn(w http.ResponseWriter, r *http.Request) {
+func (n *NoUndo) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (n *NoUndo) handleIndex(w http.ResponseWriter, r *http.Request) {
-	// jwtf := auth.GetJWTFieldsFromContext(r.Context())
-	// if jwtf == nil {
-	// 	// TODO - proper template
-	// 	utils.ExecTemplLogErr(tplPages, w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("})
-	// 	return
-	// }
+func (n *NoUndo) HandleIndex(w http.ResponseWriter, r *http.Request) {
 	self := n.Self()
-
 	ages, err := self.GetAges(
 		0,
 		int(mo.TupleToResult(strconv.ParseInt(r.URL.Query().Get("ages_num"), 10, 32)).OrElse(50)),

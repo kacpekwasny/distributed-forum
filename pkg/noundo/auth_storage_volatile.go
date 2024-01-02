@@ -18,6 +18,7 @@ func NewVolatileAuthStorage(
 	}
 }
 
+// TODO multithread handling
 func (va *volatileAuthStorage) CreateUserOrErr(email, username string, password []byte) MsgEnum {
 	if _, ok := (*va.emailUsers)[email]; ok {
 		return EmailInUse
@@ -25,7 +26,7 @@ func (va *volatileAuthStorage) CreateUserOrErr(email, username string, password 
 	if _, ok := (*va.usernameUsers)[username]; ok {
 		return UsernameInUse
 	}
-	u := &inramUser{
+	u := &UserStruct{
 		email:      email,
 		username:   username,
 		passwdHash: password,

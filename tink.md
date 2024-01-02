@@ -20,6 +20,7 @@ Important points:
 
 
 To Do:
+- History > PeerManager || StorageIface
 - UniverseIface(historyUri string)
 - PeerManager
 - Hot Posts, Top Posts (ale to wsm jak w order dziala)
