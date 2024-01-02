@@ -22,7 +22,7 @@ type PostableIface interface {
 
 type AnswerableIface interface {
 	AddAnswer(author UserFullIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error)
-	Answers(start int, end int, depth int, order OrderIface, filter FilterIface, ages []AgeIface) ([]AnswerIface, error)
+	Answers(start int, end int, depth int, order OrderIface[AnswerableIface], filter FilterIface[AnswerableIface], ages []AgeIface) ([]AnswerIface, error)
 }
 
 type ReactionableIface interface {
@@ -39,6 +39,3 @@ type ReactionIface interface {
 	Author() UserFullIface
 	Timestamp() uint64
 }
-
-type OrderIface func(idx1, idx2 int) bool
-type FilterIface func(v any) bool

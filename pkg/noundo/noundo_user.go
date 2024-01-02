@@ -1,16 +1,13 @@
 package noundo
 
-type UserIdentityIface interface {
+type EmailIface interface {
 	// Email is the string that the user will use to authenticated themselves, Email is unique in context of History
 	Email() string
-
-	// Username is the string that the user will go by, Username is unique in context of History
-	Username() string
 }
 
-type ParentServerNameIface interface {
-	// Domain of the server that is the parent for this account
-	ParentServerName() string
+type UsernameIface interface {
+	// Username is the string that the user will go by, Username is unique in context of History
+	Username() string
 }
 
 type PasswdhashIface interface {
@@ -18,24 +15,28 @@ type PasswdhashIface interface {
 }
 
 type FullUsernameIface interface {
+	// Domain of the server that is the parent for this account
+	ParentServerName() string
 
 	// Username() + "@" + ParentServerName()`
 	FullUsername() string
 }
 
 type UserPublicIface interface {
-	UserIdentityIface
+	UsernameIface
 	FullUsernameIface
 }
 
 type UserFullIface interface {
-	UserIdentityIface
+	EmailIface
+	UsernameIface
 	PasswdhashIface
 	FullUsernameIface
 }
 
 type UserAuthIface interface {
-	UserIdentityIface
+	EmailIface
+	UsernameIface
 	PasswdhashIface
 }
 

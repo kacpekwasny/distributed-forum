@@ -58,14 +58,16 @@ func (h *HistoryVolatile) GetAnswer(id Id) (AnswerIface, error) {
 }
 
 // GetFirst n stories ordered by different atributes, from []ages,
-func (h *HistoryVolatile) GetStories(start int, end int, order OrderIface, filter FilterIface, ages []AgeIface) ([]StoryIface, error) {
+func (h *HistoryVolatile) GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface], ages []AgeIface) ([]StoryIface, error) {
 	stories := []StoryIface{}
 	for _, story := range h.stories {
-		if filter(story) {
+		if filter.Keep(story) {
 			stories = append(stories, story)
 		}
 	}
-	sort.SliceStable(stories, order)
+	sort.SliceStable(stories, func(i, j int) bool {
+		return order.Less(stories[i], stories[j])
+	})
 	return stories, nil
 }
 
@@ -88,6 +90,10 @@ func (h *HistoryVolatile) GetURL() string {
 	return h.url
 }
 
-func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error) {
+func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error) {
 	return h.ages, nil
+}
+
+func (h *HistoryVolatile) GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
+	panic("not implemented") // TODO: Implement
 }
