@@ -44,7 +44,7 @@ func HandleDefault(w http.ResponseWriter, r *http.Request) {
 func HandleWelcome(w http.ResponseWriter, r *http.Request) {
 	jwtf := GetJWTFieldsFromContext(r.Context())
 	if jwtf == nil {
-		utils.Loge(tmpl.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("}))
+		utils.Loge(tmpl.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Sign In :(("}))
 		return
 	}
 	utils.Loge(tmpl.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Username: jwtf.Username}))

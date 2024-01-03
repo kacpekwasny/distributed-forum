@@ -22,6 +22,8 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 		tmpl,
 		w,
 		r,
+		"home",
+		"/",
 		HomeValues{
 			DisplayName: self.GetName(),
 			LocalAges: utils.Map(
@@ -32,6 +34,5 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 			),
 			Peers: utils.Map(n.Peers(), CreateHistoryInfo),
 		},
-		"home",
 	)
 }

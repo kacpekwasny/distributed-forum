@@ -1,37 +1,15 @@
 {{ template "basestart" }}
-{{ block "signup" . }}
+{{ block "signin" . }}
 <script>
   document.title = "Sign In";
 </script>
 <div class="my-5"></div>
-<div id="signin-form" class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+<div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
   <div class="card shadow-lg">
     <div class="card-body p-5">
       <h1 class="fs-4 card-title fw-bold mb-4">Sign In</h1>
-      {{ if hasField . "Username"}}
-      <div class="w-100 d-flex justify-content-between align-items-center">
-        <small
-          class="blockquote-footer mt-0 mb-0 text-right d-flex align-items-center"
-        >
-          You are logged in as &nbsp;
-          <button
-            hx-get="account"
-            hx-target="#id-base-div-2"
-            class="btn btn-sm px-0 py-0 border-0"
-          >
-            <cite class="text-warning underline">
-              <u> {{ .Username }} </u>
-            </cite>
-          </button>
-        </small>
-        <button
-          hx-get="logout"
-          hx-target="#id-base-div-2"
-          class="float-end badge btn-warning pa-1"
-        >
-          Log Out
-        </button>
-      </div>
+      {{ if .CurrentUsername }}
+      {{ template "signed_in" .CurrentUsername }}
       {{ else }}
       <form hx-post="signin" hx-target="#id-base-div-2" autocomplete="off">
         <div class="mb-3">
@@ -82,7 +60,7 @@
           Don't have an account?
         </div>
         <button
-          hx-get="component_signup"
+          hx-get="signup"
           hx-target="#id-base-div-2"
           class="text-dark btn btn-info btn-sm"
           style="margin-left: .5rem;"

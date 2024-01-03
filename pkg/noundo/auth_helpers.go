@@ -18,6 +18,7 @@ var hmacSecret []byte
 var decoder = schema.NewDecoder()
 
 func init() {
+	// TODO (change this)
 	stringSecret := os.Getenv("FORUM_JWT_HMAC_SECRET")
 	if len(stringSecret) == 0 {
 		stringSecret = "hmacSampleSecret"
@@ -38,12 +39,6 @@ func GetSignInRequest(r *http.Request) (*SignInRequest, error) {
 	var signIn SignInRequest
 	err = decoder.Decode(&signIn, r.Form)
 	return &signIn, err
-}
-
-// Function for checking if
-// Read AuthMe doc
-func ValidateAuthMe(a *SignInRequest) (bool, error) {
-	return true, nil
 }
 
 // Parse http.Request.Body, then check if data passed is valid and if so set

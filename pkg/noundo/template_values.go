@@ -5,11 +5,17 @@ type BaseValues struct {
 	MainComponentURL string
 }
 
+type IsUser struct {
+	CurrentUsername string
+}
+
 type SignInFormValues struct {
+	IsUser
 	Err string
 }
 
 type SignUpFormValues struct {
+	IsUser
 	Email    string
 	Username string
 

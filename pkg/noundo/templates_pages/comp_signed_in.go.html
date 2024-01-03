@@ -1,0 +1,25 @@
+{{ define "signed_in" }}
+<div class="w-100 d-flex justify-content-between align-items-center">
+    <small
+      class="blockquote-footer mt-0 mb-0 text-right d-flex align-items-center"
+    >
+      You are logged in as &nbsp;
+      <button
+        hx-get="account"
+        hx-target="#id-base-div-2"
+        class="btn btn-sm px-0 py-0 border-0"
+      >
+        <cite class="text-warning underline">
+          <u> {{ . }} </u>
+        </cite>
+      </button>
+    </small>
+    <button
+      hx-get="signout"
+      hx-target="#id-base-div-2"
+      class="float-end badge btn-warning pa-1"
+    >
+      Sign Out
+    </button>
+  </div>
+{{ end }}

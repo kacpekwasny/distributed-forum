@@ -23,7 +23,7 @@ func RenderStory(w http.ResponseWriter, p *Story) {
 
 func BaseGetFactory(baseValues BaseValues) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, _ *http.Request) {
-		utils.ExecTemplLogErr(tmpl, w, "base", baseValues)
+		utils.ExecTemplLogErr(tmpl, w, "base.go.html", baseValues)
 	}
 }
 
@@ -34,8 +34,15 @@ func ComponentGetFactory(template string, v any) func(w http.ResponseWriter, r *
 	}
 }
 
-func ExecTemplHtmxSensitiveExplicitBase(tpl *template.Template, w http.ResponseWriter, r *http.Request, data any, pageName string, pageNameBase string) {
+func PageHandlerFactory(pageName string, pushUrl string) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ExecTemplHtmxSensitive(tmpl, w, r, pageName, pushUrl, nil)
+	}
+}
+
+func ExecTemplHtmxSensitiveExplicitBase(tpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pageNameBase string, pushUrl string, data any) {
 	if r.Header.Get("hx-request") == "true" {
+		w.Header().Set("HX-Push-Url", pushUrl)
 		utils.ExecTemplLogErr(tpl, w, pageName, data)
 		return
 	}
@@ -43,6 +50,6 @@ func ExecTemplHtmxSensitiveExplicitBase(tpl *template.Template, w http.ResponseW
 	utils.ExecTemplLogErr(tpl, w, pageNameBase, data)
 }
 
-func ExecTemplHtmxSensitive(tpl *template.Template, w http.ResponseWriter, r *http.Request, data any, pageName string) {
-	ExecTemplHtmxSensitiveExplicitBase(tpl, w, r, data, pageName, "page_"+pageName+".go.html")
+func ExecTemplHtmxSensitive(tpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pushUrl string, data any) {
+	ExecTemplHtmxSensitiveExplicitBase(tpl, w, r, pageName, "page_"+pageName+".go.html", pushUrl, data)
 }
