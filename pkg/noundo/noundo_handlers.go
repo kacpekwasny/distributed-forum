@@ -28,8 +28,8 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 			DisplayName: self.GetName(),
 			LocalAges: utils.Map(
 				ages,
-				func(a AgeIface) AgeInfo {
-					return CreateAgeInfo(self.GetURL(), a)
+				func(a AgeIface) AgeLink {
+					return CreateAgeInfo("/", a)
 				},
 			),
 			Peers: utils.Map(n.Peers(), CreateHistoryInfo),

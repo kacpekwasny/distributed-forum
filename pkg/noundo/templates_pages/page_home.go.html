@@ -10,7 +10,7 @@
         <ul>
         {{range .LocalAges}}
             <li>
-                <a href="{{ .Href }}">{{ .DisplayName }}</a>
+                {{ template "age_link" . }}
             </li>
         {{end}}
         </ul>

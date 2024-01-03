@@ -35,13 +35,13 @@ type WelcomeValues struct {
 
 type HomeValues struct {
 	DisplayName string
-	LocalAges   []AgeInfo
+	LocalAges   []AgeLink
 	Peers       []HistoryInfo
 }
 
-type AgeInfo struct {
-	DisplayName string
-	Href        string
+type AgeLink struct {
+	Name string
+	Href string
 }
 
 type HistoryInfo struct {
