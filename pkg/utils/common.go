@@ -64,27 +64,27 @@ func ResultOkToErr[T any](v T, ok bool) func(string) (T, error) {
 	}
 }
 
-func Left[T any](v T, err error) T {
-	return v
+func Left[L any, R any](l L, _ R) L {
+	return l
 }
 
-func Right[T any](v T, err error) error {
-	return err
+func Right[L any, R any](_ L, r R) R {
+	return r
 }
 
-func LeftLogRight[T any](v T, err error) T {
+func LeftLogRight[L any, R any](l L, err error) L {
 	if err != nil {
 		log.Println(err)
 	}
-	return v
+	return l
 }
 
-func LeftCallbackIfErr[T any](v T, err error) func(callback func(err error)) T {
-	return func(f func(err error)) T {
+func LeftCallbackIfErr[L any](l L, err error) func(callback func(err error)) L {
+	return func(f func(err error)) L {
 		if err != nil {
 			f(err)
 		}
-		return v
+		return l
 	}
 }
 
@@ -102,4 +102,11 @@ func MapGetErr[K comparable, V any](map_ map[K]V, key K) (V, error) {
 		return v, nil
 	}
 	return v, errors.New(fmt.Sprint("key not found in map:", key))
+}
+
+func Must[T any](t T, err error) T {
+	if err != nil {
+		panic(err)
+	}
+	return t
 }
