@@ -8,7 +8,7 @@ package noundo
 // History is the name for the whole server, that contains all Ages and All Stories
 // It is an interface for storage (in case of using the local history)
 // Or for a peer (in case of working with a remote history)
-type HistoryIface interface {
+type HistoryPublicIface interface {
 
 	// domain name
 	GetName() string
@@ -33,10 +33,19 @@ type HistoryIface interface {
 	GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error)
 
 	GetUser(username string) (UserPublicIface, error)
-	AddUser(email string, username string, password string) (UserPublicIface, error)
 
 	// TODO:
 	// GetAges that user joined,
 	// GetStories first n stories of user ordered by (maybe merge with the first method???)
 	// GetComments first n comments of user ordered by
+}
+
+type HistoryPrivateIface interface {
+	Authenticator() AuthenticatorIface
+	AddUser(email string, username string, password string) (UserPublicIface, error)
+}
+
+type HistoryFullIface interface {
+	HistoryPublicIface
+	HistoryPrivateIface
 }

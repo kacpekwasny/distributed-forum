@@ -1,3 +1,5 @@
+{{ template "basestart" }}
+{{ block "signup" . }}
 <script>
   document.title = "Sign In";
 </script>
@@ -91,3 +93,5 @@
     </div>
   </div>
 </div>
+{{ end }}
+{{ template "baseend" }}

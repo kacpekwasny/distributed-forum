@@ -4,11 +4,12 @@ package noundo
 // any HistoryIface, either to the peered ones, or a read-only iface.
 // Also should have knowledge of the peers.
 type UniverseIface interface {
-	Self() HistoryIface
-	Peers() []HistoryIface
+	Self() HistoryFullIface
+	Authenticator() AuthenticatorIface
+	Peers() []HistoryPublicIface
 }
 
-func NewUniverse(self HistoryIface, peersNexus_ PeersNexusIface) UniverseIface {
+func NewUniverse(self HistoryFullIface, peersNexus_ PeersNexusIface) UniverseIface {
 	return &universe{
 		self:       self,
 		peersNexus: peersNexus_,
@@ -16,14 +17,18 @@ func NewUniverse(self HistoryIface, peersNexus_ PeersNexusIface) UniverseIface {
 }
 
 type universe struct {
-	self       HistoryIface
+	self       HistoryFullIface
 	peersNexus PeersNexusIface
 }
 
-func (u *universe) Self() HistoryIface {
+func (u *universe) Self() HistoryFullIface {
 	return u.self
 }
 
-func (u *universe) Peers() []HistoryIface {
+func (u *universe) Peers() []HistoryPublicIface {
 	return u.peersNexus.AlivePeers()
+}
+
+func (u *universe) Authenticator() AuthenticatorIface {
+	return u.self.Authenticator()
 }

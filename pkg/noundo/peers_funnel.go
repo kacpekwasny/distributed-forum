@@ -8,8 +8,8 @@ import (
 )
 
 type PeersNexusIface interface {
-	AlivePeers() []HistoryIface
-	GetHistory(name string) (HistoryIface, error)
+	AlivePeers() []HistoryPublicIface
+	GetHistory(name string) (HistoryPublicIface, error)
 	RegisterPeerManager(pm PeerManagerIface)
 	UnregisterPeerManager(historyName string)
 }
@@ -26,11 +26,11 @@ func NewPeersNexus() *PeersNexus {
 	}
 }
 
-func (p *PeersNexus) AlivePeers() []HistoryIface {
+func (p *PeersNexus) AlivePeers() []HistoryPublicIface {
 	peers := utils.Filter(p.peerManagers, func(t PeerManagerIface) bool {
 		return t.PeerAlive() == nil
 	})
-	return utils.Map(peers, func(p PeerManagerIface) HistoryIface {
+	return utils.Map(peers, func(p PeerManagerIface) HistoryPublicIface {
 		return utils.LeftCallbackIfErr(p.History())(func(err error) {
 			log.Println(
 				"PeerManager says the connection is alive,",
@@ -40,7 +40,7 @@ func (p *PeersNexus) AlivePeers() []HistoryIface {
 	})
 }
 
-func (p *PeersNexus) GetHistory(name string) (HistoryIface, error) {
+func (p *PeersNexus) GetHistory(name string) (HistoryPublicIface, error) {
 	histPeer, err := utils.MapGetErr(p.historyNamePeer, name)
 	if err != nil {
 		return nil, err

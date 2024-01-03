@@ -7,19 +7,13 @@ import (
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
-var authenticator AuthenticatorIface
-
-func init() {
-	// authenticator = NewAuthenticator(NewVolatileAuthStorage(make(map[string]UserAuthIface), make(map[string]UserAuthIface)), 14)
-}
-
 // Return html from template when the request was made by HTMX, for the returned HTML,
 // to be passed into the existing DOM
 func HandleGetPageTemplateAsComponent(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	filename := vars["filename"]
 	w.Header().Set("HX-Push-Url", filename)
-	err := tplPages.ExecuteTemplate(w, filename+".go.html", GetJWTFieldsFromContext(r.Context()))
+	err := tmpl.ExecuteTemplate(w, filename+".go.html", GetJWTFieldsFromContext(r.Context()))
 	utils.Loge(err)
 }
 
@@ -28,7 +22,7 @@ func HandleGetPageTemplateStandalone(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	filename := vars["filename"]
 
-	err := tplPages.ExecuteTemplate(w, filename+".go.html", nil)
+	err := tmpl.ExecuteTemplate(w, filename+".go.html", nil)
 	utils.Loge(err)
 }
 
@@ -39,10 +33,10 @@ func HandleGetPageTemplateStandalone(w http.ResponseWriter, r *http.Request) {
 func HandleDefault(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	filename := vars["filename"]
-	err := tplPages.ExecuteTemplate(w, "base.go.html",
+	err := tmpl.ExecuteTemplate(w, "base.go.html",
 		BaseValues{
-			Title:          "",
-			MainContentURL: filename},
+			Title:            "",
+			MainComponentURL: filename},
 	)
 	utils.Loge(err)
 }
@@ -50,10 +44,10 @@ func HandleDefault(w http.ResponseWriter, r *http.Request) {
 func HandleWelcome(w http.ResponseWriter, r *http.Request) {
 	jwtf := GetJWTFieldsFromContext(r.Context())
 	if jwtf == nil {
-		utils.Loge(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("}))
+		utils.Loge(tmpl.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Msg: "It's a shame you didn't Log In :(("}))
 		return
 	}
-	utils.Loge(tplPages.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Username: jwtf.Username}))
+	utils.Loge(tmpl.ExecuteTemplate(w, "welcome.go.html", WelcomeValues{Username: jwtf.Username}))
 }
 
 func AddStory(w http.ResponseWriter, r *http.Request) {

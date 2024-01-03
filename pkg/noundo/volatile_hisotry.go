@@ -1,6 +1,7 @@
 package noundo
 
 import (
+	"errors"
 	"sort"
 
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -18,10 +19,10 @@ type HistoryVolatile struct {
 	auth    AuthenticatorIface
 
 	// email: UserIface
-	users map[string]UserAuthIface
+	users map[string]UserFullIface
 }
 
-func NewHistoryVolatile(domain string) HistoryIface {
+func NewHistoryVolatile(domain string) HistoryFullIface {
 	usersUsername := make(map[string]UserFullIface)
 	usersEmail := make(map[string]UserFullIface)
 	return &HistoryVolatile{
@@ -31,6 +32,7 @@ func NewHistoryVolatile(domain string) HistoryIface {
 		stories: make(map[Id]StoryIface),
 		answers: make(map[Id]AnswerIface),
 		auth:    NewAuthenticator(NewVolatileAuthStorage(&usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST),
+		users:   usersUsername,
 	}
 }
 
@@ -72,12 +74,15 @@ func (h *HistoryVolatile) GetStories(start int, end int, order OrderIface[StoryI
 }
 
 func (h *HistoryVolatile) GetUser(username string) (UserPublicIface, error) {
-	return nil, nil
+	return utils.MapGetErr[string, UserFullIface](h.users, username)
 }
 
 func (h *HistoryVolatile) AddUser(email string, username string, password string) (UserPublicIface, error) {
 	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
-	return NewVolatileUser(NewRandId(), email, username, []byte{}, h.GetURL()), utils.ErrIfNotOk(r.Ok, string(r.MsgCode))
+	if r.Ok {
+		return h.GetUser(username)
+	}
+	return nil, errors.New(string(r.MsgCode))
 }
 
 // Name to be displayed. Ex.: as the value o <a> tag.
@@ -96,4 +101,8 @@ func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface[AgeIface]
 
 func (h *HistoryVolatile) GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
 	panic("not implemented") // TODO: Implement
+}
+
+func (h *HistoryVolatile) Authenticator() AuthenticatorIface {
+	return h.auth
 }

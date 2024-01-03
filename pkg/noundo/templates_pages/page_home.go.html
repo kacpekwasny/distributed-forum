@@ -1,3 +1,6 @@
+{{ template "basestart" }}
+
+{{ block "home" . }}
 <div>
     <h1>
         Welcome to {{ .DisplayName }}
@@ -27,3 +30,6 @@
         </p>
     </div>
 </div>
+{{ end }}
+
+{{ template "baseend" }}

@@ -1,6 +1,7 @@
 package noundo
 
 import (
+	"html/template"
 	"math"
 	"math/rand"
 	"net/http"
@@ -16,6 +17,32 @@ func NewRandId() Id {
 }
 
 func RenderStory(w http.ResponseWriter, p *Story) {
-	err := tplPages.Execute(w, []*Story{p, p})
+	err := tmpl.Execute(w, []*Story{p, p})
 	utils.Pife(err)
+}
+
+func BaseGetFactory(baseValues BaseValues) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
+		utils.ExecTemplLogErr(tmpl, w, "base", baseValues)
+	}
+}
+
+func ComponentGetFactory(template string, v any) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := tmpl.ExecuteTemplate(w, template, v)
+		utils.Loge(err)
+	}
+}
+
+func ExecTemplHtmxSensitiveExplicitBase(tpl *template.Template, w http.ResponseWriter, r *http.Request, data any, pageName string, pageNameBase string) {
+	if r.Header.Get("hx-request") == "true" {
+		utils.ExecTemplLogErr(tpl, w, pageName, data)
+		return
+	}
+
+	utils.ExecTemplLogErr(tpl, w, pageNameBase, data)
+}
+
+func ExecTemplHtmxSensitive(tpl *template.Template, w http.ResponseWriter, r *http.Request, data any, pageName string) {
+	ExecTemplHtmxSensitiveExplicitBase(tpl, w, r, data, pageName, "page_"+pageName+".go.html")
 }

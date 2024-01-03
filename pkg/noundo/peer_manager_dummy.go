@@ -1,18 +1,18 @@
 package noundo
 
-func NewPeerManagerDummy(his HistoryIface) PeerManagerIface {
+func NewPeerManagerDummy(his HistoryPublicIface) PeerManagerIface {
 	return &PeerManagerDummy{his}
 }
 
 type PeerManagerDummy struct {
-	his HistoryIface
+	his HistoryPublicIface
 }
 
 func (pmd *PeerManagerDummy) PeerAlive() error {
 	return nil
 }
 
-func (pmd *PeerManagerDummy) History() (HistoryIface, error) {
+func (pmd *PeerManagerDummy) History() (HistoryPublicIface, error) {
 	return pmd.his, nil
 }
 

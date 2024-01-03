@@ -10,22 +10,23 @@ import (
 func (n *NoUndo) setupRouter() {
 	r := mux.NewRouter()
 
+	r.Use(HttpAuthenticator)
 	r.Use(httpLogger())
 
-	r.HandleFunc("/", n.HandleIndex).Methods("GET")
+	r.HandleFunc("/", n.HandleHome).Methods("GET")
 
 	// TODO - substitute these function for methods of NoUndo
-	r.HandleFunc("/index", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainContentURL: "welcome"})).Methods("GET")
-	r.HandleFunc("/welcome", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainContentURL: "welcome"})).Methods("GET")
+	r.HandleFunc("/index", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainComponentURL: "welcome"})).Methods("GET")
+	r.HandleFunc("/welcome", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainComponentURL: "welcome"})).Methods("GET")
 	r.HandleFunc("/component_welcome", HandleWelcome).Methods("GET")
 
 	r.HandleFunc("/signin", BaseGetFactory(BaseValues{"SignIn", "signin"})).Methods("GET")
-	r.HandleFunc("/signin", HandlePostSignIn).Methods("POST")
+	r.HandleFunc("/signin", n.HandlePostSignIn).Methods("POST")
 
-	r.HandleFunc("/signout", HandleSignOut).Methods("GET", "POST")
+	r.HandleFunc("/signout", n.HandleSignOut).Methods("GET", "POST")
 
 	r.HandleFunc("/signup", BaseGetFactory(BaseValues{"Sign Up", "signup"})).Methods("GET")
-	r.HandleFunc("/signup", HandlePostSignUp).Methods("POST")
+	r.HandleFunc("/signup", n.HandlePostSignUp).Methods("POST")
 
 	r.HandleFunc("/component_{filename}", HandleGetPageTemplateAsComponent).Methods("GET")
 

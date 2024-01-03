@@ -8,11 +8,7 @@ import (
 	"github.com/samber/mo"
 )
 
-func (n *NoUndo) HandleSignIn(w http.ResponseWriter, r *http.Request) {
-
-}
-
-func (n *NoUndo) HandleIndex(w http.ResponseWriter, r *http.Request) {
+func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 	self := n.Self()
 	ages, err := self.GetAges(
 		0,
@@ -22,11 +18,11 @@ func (n *NoUndo) HandleIndex(w http.ResponseWriter, r *http.Request) {
 	)
 	utils.Loge(err)
 
-	utils.ExecTemplLogErr(
-		tplPages,
+	ExecTemplHtmxSensitive(
+		tmpl,
 		w,
-		"index.go.html",
-		IndexValues{
+		r,
+		HomeValues{
 			DisplayName: self.GetName(),
 			LocalAges: utils.Map(
 				ages,
@@ -36,5 +32,6 @@ func (n *NoUndo) HandleIndex(w http.ResponseWriter, r *http.Request) {
 			),
 			Peers: utils.Map(n.Peers(), CreateHistoryInfo),
 		},
+		"home",
 	)
 }

@@ -26,11 +26,11 @@ func (n *NoUndo) ListenAndServe(addr string) error {
 }
 
 // Alias for NoUndo.uni.Self()
-func (n *NoUndo) Self() HistoryIface {
+func (n *NoUndo) Self() HistoryFullIface {
 	return n.uni.Self()
 }
 
 // Alias for NoUndo.uni.Self()
-func (n *NoUndo) Peers() []HistoryIface {
+func (n *NoUndo) Peers() []HistoryPublicIface {
 	return n.uni.Peers()
 }

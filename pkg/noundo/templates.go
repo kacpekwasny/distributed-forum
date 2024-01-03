@@ -10,8 +10,11 @@ import (
 )
 
 var (
-	tplPages      *template.Template
-	tplComponents *template.Template
+
+	// Pages with and without head built in
+	// "home" 			-> page only, prepared for an htmx response.
+	// "home.go.html" 	-> page with htmx, bootstrap, etc links in head built in.
+	tmpl *template.Template
 )
 
 func init() {
@@ -22,19 +25,10 @@ func init() {
 	dirname := filepath.Dir(filename)
 
 	templatesPagesGlobSelector := filepath.Join(dirname, "templates_pages", "*.go.html")
-	tplPages = template.Must(
+	tmpl = template.Must(
 		template.
 			New("forumPages").
 			Funcs(gtf.GtfFuncMap).
 			Funcs(utils.FuncMapCommon).
 			ParseGlob(templatesPagesGlobSelector))
-
-	templatesComponentsGlobSelector := filepath.Join(dirname, "templates_components", "*.go.html")
-	tplComponents = template.Must(
-		template.
-			New("forumComponents").
-			Funcs(gtf.GtfFuncMap).
-			Funcs(utils.FuncMapCommon).
-			ParseGlob(templatesComponentsGlobSelector))
-
 }

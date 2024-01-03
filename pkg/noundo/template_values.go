@@ -1,8 +1,8 @@
 package noundo
 
 type BaseValues struct {
-	Title          string
-	MainContentURL string
+	Title            string
+	MainComponentURL string
 }
 
 type SignInFormValues struct {
@@ -25,9 +25,9 @@ type WelcomeValues struct {
 	Msg      string
 }
 
-// ~~~~~~  index.go.html ~~~~~~
+// ~~~~~~  home.go.html ~~~~~~
 
-type IndexValues struct {
+type HomeValues struct {
 	DisplayName string
 	LocalAges   []AgeInfo
 	Peers       []HistoryInfo

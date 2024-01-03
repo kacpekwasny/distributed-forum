@@ -4,7 +4,7 @@ import (
 	"net/url"
 )
 
-// ~~~~~~  index.go.html ~~~~~~
+// ~~~~~~  home.go.html ~~~~~~
 
 func CreateAgeInfo(parentURL string, age AgeIface) AgeInfo {
 	name := age.GetName()
@@ -15,7 +15,7 @@ func CreateAgeInfo(parentURL string, age AgeIface) AgeInfo {
 	}
 }
 
-func CreateHistoryInfo(his HistoryIface) HistoryInfo {
+func CreateHistoryInfo(his HistoryPublicIface) HistoryInfo {
 	name := his.GetName()
 	href := his.GetURL()
 	return HistoryInfo{

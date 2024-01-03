@@ -1,3 +1,6 @@
+{{ template "basestart" }}
+
+{{ block "welcome" . }}
 <script>document.title = "Welcome :)"</script>
 <div class="my-3"></div>
 <div class="alert alert-primary display-4">
@@ -16,3 +19,6 @@
     </div>
   </div>
 </div>
+{{ end }}
+
+{{ template "baseend" }}

@@ -2,7 +2,7 @@ package main
 
 import n "github.com/kacpekwasny/noundo/pkg/noundo"
 
-var volHistory n.HistoryIface
+var volHistory n.HistoryFullIface
 var volUniverse n.UniverseIface
 var peersNexus n.PeersNexusIface
 
