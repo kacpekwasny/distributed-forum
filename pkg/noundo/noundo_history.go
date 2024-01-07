@@ -16,10 +16,10 @@ type HistoryPublicIface interface {
 	// Get the URL of the History. schema + domain
 	GetURL() string
 
-	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
-	CreateAge(owner UserPublicIface, ageName string) (AgeIface, error)
+	// Single age
+	GetAge(name string) (AgeIface, error)
 
-	//
+	// Get Ages
 	GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error)
 
 	//
@@ -30,8 +30,11 @@ type HistoryPublicIface interface {
 
 	// GetFirst n stories ordered by different atributes, from []ages,
 	GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface], ages []AgeIface) ([]StoryIface, error)
+
+	//
 	GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error)
 
+	// Retrive all user info by supplying a username
 	GetUser(username string) (UserPublicIface, error)
 
 	// TODO:
@@ -42,7 +45,15 @@ type HistoryPublicIface interface {
 
 type HistoryPrivateIface interface {
 	Authenticator() AuthenticatorIface
-	AddUser(email string, username string, password string) (UserPublicIface, error)
+
+	// Create a new user
+	CreateUser(email string, username string, password string) (UserPublicIface, error)
+
+	// Create a new story within
+	CreateStory(ageName string, story CreateStoryIface) (StoryIface, error)
+
+	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
+	CreateAge(owner UserPublicIface, ageName string) (AgeIface, error)
 }
 
 type HistoryFullIface interface {

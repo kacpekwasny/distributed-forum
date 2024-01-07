@@ -7,7 +7,7 @@ type ConentMangerVolatile struct {
 
 func (cmv *ConentMangerVolatile) AddStory(u *User, p *Story) error {
 	// todo: validate post
-	cmv.posts[p.Id] = p
+	cmv.posts[p.Id()] = p
 
 	return nil
 }

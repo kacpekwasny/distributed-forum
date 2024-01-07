@@ -4,26 +4,26 @@ import "github.com/kacpekwasny/noundo/pkg/enums"
 
 // ~~ Structs ~~
 type TimeStampable struct {
-	Timestamp uint64
+	timestamp uint64
 }
 
 type Postable struct {
-	Id       Id
-	UserId   Id
-	Contents string
+	id            Id
+	userFUsername string
+	contents      string
 
 	TimeStampable
 }
 
 type Reaction struct {
-	UserId    Id
-	ReactType enums.ReactionType
+	userFUsername string
+	reactType     enums.ReactionType
 
 	TimeStampable
 }
 
 type Reactionable struct {
-	Reactions []Reaction
+	reactions []Reaction
 }
 
 type Story struct {
@@ -38,6 +38,7 @@ type Answer struct {
 	Reactionable
 }
 
+// TODO remove
 type User struct {
 	Id       Id
 	Username string

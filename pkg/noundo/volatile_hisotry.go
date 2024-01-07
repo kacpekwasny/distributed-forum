@@ -5,15 +5,16 @@ import (
 	"sort"
 
 	"github.com/kacpekwasny/noundo/pkg/utils"
+	"golang.org/x/exp/maps"
 )
 
 // TODO:
-// h *HistoryVolatile HistoryIface
+// h *HistoryVolatile HistoryFullIface
 
 type HistoryVolatile struct {
 	name    string
 	url     string
-	ages    []AgeIface
+	ages    map[string]AgeIface
 	stories map[Id]StoryIface
 	answers map[Id]AnswerIface
 	auth    AuthenticatorIface
@@ -28,7 +29,7 @@ func NewHistoryVolatile(domain string) HistoryFullIface {
 	return &HistoryVolatile{
 		name:    domain,
 		url:     "http://" + domain,
-		ages:    []AgeIface{},
+		ages:    make(map[string]AgeIface),
 		stories: make(map[Id]StoryIface),
 		answers: make(map[Id]AnswerIface),
 		auth:    NewAuthenticator(NewVolatileAuthStorage(&usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST),
@@ -44,7 +45,7 @@ func (h *HistoryVolatile) CreateAge(owner UserPublicIface, name string) (AgeIfac
 		ownerUsername:   owner.Username(),
 		adminsUsernames: []string{},
 	}
-	h.ages = append(h.ages, age)
+	h.ages[name] = age
 	return age, nil
 }
 
@@ -77,7 +78,7 @@ func (h *HistoryVolatile) GetUser(username string) (UserPublicIface, error) {
 	return utils.MapGetErr[string, UserFullIface](h.users, username)
 }
 
-func (h *HistoryVolatile) AddUser(email string, username string, password string) (UserPublicIface, error) {
+func (h *HistoryVolatile) CreateUser(email string, username string, password string) (UserPublicIface, error) {
 	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
 	if r.Ok {
 		return h.GetUser(username)
@@ -96,7 +97,7 @@ func (h *HistoryVolatile) GetURL() string {
 }
 
 func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error) {
-	return h.ages, nil
+	return maps.Values(h.ages), nil
 }
 
 func (h *HistoryVolatile) GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
@@ -105,4 +106,21 @@ func (h *HistoryVolatile) GetStoriesUserJoined(user UserPublicIface, start int, 
 
 func (h *HistoryVolatile) Authenticator() AuthenticatorIface {
 	return h.auth
+}
+
+// Single age
+func (h *HistoryVolatile) GetAge(name string) (AgeIface, error) {
+	panic("not implemented") // TODO: Implement
+}
+
+func (h *HistoryVolatile) CreateStory(ageName string, story CreateStoryIface) (StoryIface, error) {
+	_, exists := h.ages[ageName]
+	if !exists {
+		return nil, errors.New("age with ageName: '" + ageName + "' doesnt exist")
+	}
+
+	id := NewRandId()
+	storyInternal := NewStoryVolatile(story.AuthorFUsername(), id, story.Content())
+	h.stories[id] = storyInternal
+	return storyInternal, nil
 }

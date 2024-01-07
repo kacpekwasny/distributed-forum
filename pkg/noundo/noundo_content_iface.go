@@ -2,6 +2,8 @@ package noundo
 
 import "github.com/kacpekwasny/noundo/pkg/enums"
 
+// TODO iface read + iface write
+
 type StoryIface interface {
 	PostableIface
 	AnswerableIface
@@ -14,9 +16,8 @@ type AnswerIface interface {
 
 type PostableIface interface {
 	Id() Id
-	Body() string
-	Author() UserFullIface
-	AuthorId() Id
+	Content() string
+	AuthorFUsername() string
 	ReactionableIface
 }
 
@@ -35,7 +36,6 @@ type ReactionIface interface {
 	Id() Id
 	Enum() enums.ReactionType
 	ParentId() Id
-	AuthorId() Id
-	Author() UserFullIface
+	AuthorFUsername() string
 	Timestamp() uint64
 }

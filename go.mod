@@ -17,6 +17,7 @@ require (
 require (
 	github.com/go-chi/chi/v5 v5.0.11 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
+	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect

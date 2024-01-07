@@ -57,11 +57,11 @@ func AddStory(w http.ResponseWriter, r *http.Request) {
 	}
 	p1 := Story{
 		Postable: Postable{
-			Id:            NewRandId(),
-			UserId:        u1.Id,
-			Contents:      "wubba lubba dab dab",
-			TimeStampable: TimeStampable{Timestamp: 0}},
-		Reactionable: Reactionable{Reactions: []Reaction{}},
+			id:            NewRandId(),
+			userFUsername: u1.Username,
+			contents:      "wubba lubba dab dab",
+			TimeStampable: TimeStampable{timestamp: 0}},
+		Reactionable: Reactionable{reactions: []Reaction{}},
 	}
 	RenderStory(w, &p1)
 }

@@ -18,7 +18,6 @@ func (n *NoUndo) setupRouter() {
 	// TODO - substitute these function for methods of NoUndo
 	r.HandleFunc("/index", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainComponentURL: "welcome"})).Methods("GET")
 	r.HandleFunc("/welcome", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainComponentURL: "welcome"})).Methods("GET")
-	r.HandleFunc("/component_welcome", HandleWelcome).Methods("GET")
 
 	r.HandleFunc("/signin", n.HandleSignInGet).Methods("GET")
 	r.HandleFunc("/signin", n.HandleSignInPost).Methods("POST")
@@ -27,8 +26,6 @@ func (n *NoUndo) setupRouter() {
 
 	r.HandleFunc("/signup", n.HandleSignUpGet).Methods("GET")
 	r.HandleFunc("/signup", n.HandleSignUpPost).Methods("POST")
-
-	r.HandleFunc("/{filename}", HandleDefault)
 
 	n.r = r
 }

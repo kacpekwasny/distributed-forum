@@ -2,18 +2,43 @@ package noundo
 
 import (
 	"html/template"
-	"math"
 	"math/rand"
 	"net/http"
 	"time"
+	"unsafe"
 
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
+type Id string
+
+const (
+	letterBytes   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	letterIdxBits = 6                    // 6 bits to represent a letter index
+	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
+	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
+	idLen         = 4
+)
+
+var src = rand.NewSource(time.Now().UnixNano())
+
+// https://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-go
 func NewRandId() Id {
-	src := rand.NewSource(time.Now().UnixNano())
-	r := rand.New(src)
-	return Id(math.MaxUint64 * r.Float64())
+	b := make([]byte, idLen)
+	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
+	for i, cache, remain := idLen-1, src.Int63(), letterIdxMax; i >= 0; {
+		if remain == 0 {
+			cache, remain = src.Int63(), letterIdxMax
+		}
+		if idx := int(cache & letterIdxMask); idx < len(letterBytes) {
+			b[i] = letterBytes[idx]
+			i--
+		}
+		cache >>= letterIdxBits
+		remain--
+	}
+
+	return Id(*(*string)(unsafe.Pointer(&b)))
 }
 
 func RenderStory(w http.ResponseWriter, p *Story) {

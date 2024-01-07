@@ -21,7 +21,7 @@ func (u *SimpleUser) Username() string {
 }
 
 func (u *SimpleUser) Id() Id {
-	return 1234567
+	return "1234567"
 }
 
 func (u *SimpleUser) ParentServer() string {
