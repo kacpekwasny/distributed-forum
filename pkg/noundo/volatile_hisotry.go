@@ -61,16 +61,18 @@ func (h *HistoryVolatile) GetAnswer(id Id) (AnswerIface, error) {
 }
 
 // GetFirst n stories ordered by different atributes, from []ages,
-func (h *HistoryVolatile) GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface], ages []AgeIface) ([]StoryIface, error) {
+func (h *HistoryVolatile) GetStories(ageNames []string, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
 	stories := []StoryIface{}
 	for _, story := range h.stories {
-		if filter.Keep(story) {
+		if filter == nil || filter.Keep(story) {
 			stories = append(stories, story)
 		}
 	}
-	sort.SliceStable(stories, func(i, j int) bool {
-		return order.Less(stories[i], stories[j])
-	})
+	if order != nil {
+		sort.SliceStable(stories, func(i, j int) bool {
+			return order.Less(stories[i], stories[j])
+		})
+	}
 	return stories, nil
 }
 
@@ -81,7 +83,9 @@ func (h *HistoryVolatile) GetUser(username string) (UserPublicIface, error) {
 func (h *HistoryVolatile) CreateUser(email string, username string, password string) (UserPublicIface, error) {
 	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
 	if r.Ok {
-		return h.GetUser(username)
+		u := (h.auth.GetUserByEmail(username)).(*UserStruct)
+		u.parentServerName = h.GetName()
+		return u, nil
 	}
 	return nil, errors.New(string(r.MsgCode))
 }

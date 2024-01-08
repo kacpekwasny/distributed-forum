@@ -1,8 +1,7 @@
 package noundo
 
-func NewVolatileUser(id Id, email string, username string, passwdHash []byte, parentServerURL string) UserFullIface {
+func NewVolatileUser(email string, username string, passwdHash []byte, parentServerURL string) UserFullIface {
 	return &volatileUser{
-		id:               id,
 		username:         username,
 		email:            email,
 		parentServerName: parentServerURL,
@@ -11,16 +10,10 @@ func NewVolatileUser(id Id, email string, username string, passwdHash []byte, pa
 }
 
 type volatileUser struct {
-	id               Id
 	username         string
 	email            string
 	parentServerName string
 	passwdHash       []byte
-}
-
-// Id is unchangable, is unique, and is used by server for relations
-func (u *volatileUser) Id() Id {
-	return u.id
 }
 
 // Email is the string that the user will use to authenticated themselves, Email is unique in context of History

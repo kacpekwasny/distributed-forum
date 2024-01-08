@@ -48,3 +48,17 @@ type HistoryInfo struct {
 	DisplayName string
 	Href        string
 }
+
+type PageAgeValues struct {
+	Name        string
+	Description string
+	Stories     []CompStoryValues
+}
+
+type CompStoryValues struct {
+	Id              string
+	AuthorFUsername string
+	Content         string
+
+	// TODO answers
+}

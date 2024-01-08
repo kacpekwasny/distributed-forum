@@ -1,0 +1,15 @@
+{{ template "basestart" }}
+
+<div>
+    <h1>{{ .Name }}</h1>
+    <p>{{ .Description }}</p>
+    <ul>
+    {{ range .Stories }}
+        <li>
+            {{ template "post" . }}
+        </li>
+    {{ end }}
+    </ul>
+</div>
+
+{{ template "baseend" }}

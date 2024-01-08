@@ -1,13 +1,17 @@
 package main
 
-import n "github.com/kacpekwasny/noundo/pkg/noundo"
+import (
+	"fmt"
 
-var h0 n.HistoryFullIface
-var volUniverse n.UniverseIface
-var peersNexus n.PeersNexusIface
+	n "github.com/kacpekwasny/noundo/pkg/noundo"
+)
+
+var uni0 n.UniverseIface
+var uni1 n.UniverseIface
+var uni2 n.UniverseIface
 
 func init() {
-	h0 = n.NewHistoryVolatile("localhost:8080")
+	h0 := n.NewHistoryVolatile("localhost:8080")
 	h1 := n.NewHistoryVolatile("localhost:8081")
 	h2 := n.NewHistoryVolatile("localhost:8082")
 
@@ -19,13 +23,29 @@ func init() {
 	a1, _ := h1.CreateAge(u1k, "age1")
 	a2, _ := h2.CreateAge(u2k, "age2")
 
-	h0.CreateStory(a0.GetName(), n.NewCreateStory(u0k.FullUsername(), "# My first post\n prev was the header. this is the content."))
-	h1.CreateStory(a1.GetName(), n.NewCreateStory(u1k.FullUsername(), "# My first post\n prev was the header. this is the content."))
-	h2.CreateStory(a2.GetName(), n.NewCreateStory(u2k.FullUsername(), "# My first post\n prev was the header. this is the content."))
+	createStories(h0, 5, a0.GetName(), u0k.FullUsername(), "# My first post\n prev was the header. this is the content.")
+	createStories(h1, 5, a1.GetName(), u1k.FullUsername(), "# My first post\n prev was the header. this is the content.")
+	createStories(h2, 5, a2.GetName(), u2k.FullUsername(), "# My first post\n prev was the header. this is the content.")
 
-	peersNexus = n.NewPeersNexus()
-	peersNexus.RegisterPeerManager(n.NewPeerManagerDummy(h1))
-	peersNexus.RegisterPeerManager(n.NewPeerManagerDummy(h2))
+	peersNexus0 := n.NewPeersNexus()
+	peersNexus0.RegisterPeerManager(n.NewPeerManagerDummy(h1))
+	peersNexus0.RegisterPeerManager(n.NewPeerManagerDummy(h2))
 
-	volUniverse = n.NewUniverse(h0, peersNexus)
+	peersNexus1 := n.NewPeersNexus()
+	peersNexus1.RegisterPeerManager(n.NewPeerManagerDummy(h0))
+	peersNexus1.RegisterPeerManager(n.NewPeerManagerDummy(h2))
+
+	peersNexus2 := n.NewPeersNexus()
+	peersNexus2.RegisterPeerManager(n.NewPeerManagerDummy(h1))
+	peersNexus2.RegisterPeerManager(n.NewPeerManagerDummy(h0))
+
+	uni0 = n.NewUniverse(h0, peersNexus0)
+	uni1 = n.NewUniverse(h1, peersNexus1)
+	uni2 = n.NewUniverse(h2, peersNexus2)
+}
+
+func createStories(h n.HistoryFullIface, m int, age string, authorFUsername string, text string) {
+	for i := 0; i < m; i++ {
+		h.CreateStory(age, n.NewCreateStory(authorFUsername, fmt.Sprintf("%v"+text, i)))
+	}
 }

@@ -29,7 +29,7 @@ type HistoryPublicIface interface {
 	GetAnswer(id Id) (AnswerIface, error)
 
 	// GetFirst n stories ordered by different atributes, from []ages,
-	GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface], ages []AgeIface) ([]StoryIface, error)
+	GetStories(ageNames []string, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error)
 
 	//
 	GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error)

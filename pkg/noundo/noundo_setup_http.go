@@ -14,6 +14,7 @@ func (n *NoUndo) setupRouter() {
 	r.Use(httpLogger())
 
 	r.HandleFunc("/", n.HandleHome).Methods("GET")
+	r.HandleFunc("/a/{age}", n.HandleAge).Methods("GET")
 
 	// TODO - substitute these function for methods of NoUndo
 	r.HandleFunc("/index", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainComponentURL: "welcome"})).Methods("GET")
