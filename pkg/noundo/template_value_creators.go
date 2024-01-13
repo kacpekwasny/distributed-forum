@@ -23,3 +23,13 @@ func CreateHistoryInfo(his HistoryPublicIface) HistoryInfo {
 		Href:        href,
 	}
 }
+
+func CreateCompWriteStory(hxPost string) CompWriteStory {
+	return CompWriteStory{
+		HxPost:        hxPost,
+		TitleLenMin:   TITLE_LEN_MIN,
+		TitleLenMax:   TITLE_LEN_MAX,
+		ContentLenMin: CONTENT_LEN_MIN,
+		ContentLenMax: CONTENT_LEN_MAX,
+	}
+}

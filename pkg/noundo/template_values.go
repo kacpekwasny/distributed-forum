@@ -57,7 +57,11 @@ type PageAgeValues struct {
 }
 
 type CompWriteStory struct {
-	HxPost string
+	HxPost        string
+	TitleLenMin   int
+	TitleLenMax   int
+	ContentLenMin int
+	ContentLenMax int
 }
 
 type CompStoryValues struct {

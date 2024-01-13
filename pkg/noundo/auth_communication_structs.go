@@ -31,6 +31,7 @@ type SignUpResponse struct {
 // TODO: UserFUsername field in JWT
 type JWTFields struct {
 	Username           string
+	UserFUsername      string // TODO add it in auth stuff
 	JWTIssuedTimestamp uint64
 }
 

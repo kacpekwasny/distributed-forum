@@ -1,18 +1,20 @@
 {{ template "basestart" }}
 
+{{ block "age" . }}
 <div>
     <h1>{{ .Name }}</h1>
     <p>{{ .Description }}</p>
 
     {{ template "write_story" .WriteStory }}
 
-    <ul class="mt-4">
+    <div class="mt-4">
     {{ range .Stories }}
-        <li class="pr-0 pb-3 pl-3">
+        <div class="my-4">
             {{ template "post" . }}
-        </li>
+        </div>
     {{ end }}
-    </ul>
+    </div>
 </div>
+{{ end }}
 
 {{ template "baseend" }}
