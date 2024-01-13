@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	n "github.com/kacpekwasny/noundo/pkg/noundo"
 )
 
@@ -23,9 +21,9 @@ func init() {
 	a1, _ := h1.CreateAge(u1k, "age1")
 	a2, _ := h2.CreateAge(u2k, "age2")
 
-	createStories(h0, 5, a0.GetName(), u0k.FullUsername(), "# My first post\n prev was the header. this is the content.")
-	createStories(h1, 5, a1.GetName(), u1k.FullUsername(), "# My first post\n prev was the header. this is the content.")
-	createStories(h2, 5, a2.GetName(), u2k.FullUsername(), "# My first post\n prev was the header. this is the content.")
+	createStories(h0, 5, a0.GetName(), u0k, "# My first post\n prev was the header. this is the content.")
+	createStories(h1, 5, a1.GetName(), u1k, "# My first post\n prev was the header. this is the content.")
+	createStories(h2, 5, a2.GetName(), u2k, "# My first post\n prev was the header. this is the content.")
 
 	peersNexus0 := n.NewPeersNexus()
 	peersNexus0.RegisterPeerManager(n.NewPeerManagerDummy(h1))
@@ -44,8 +42,8 @@ func init() {
 	uni2 = n.NewUniverse(h2, peersNexus2)
 }
 
-func createStories(h n.HistoryFullIface, m int, age string, authorFUsername string, text string) {
+func createStories(h n.HistoryFullIface, m int, age string, author n.UserPublicIface, text string) {
 	for i := 0; i < m; i++ {
-		h.CreateStory(age, n.NewCreateStory(authorFUsername, fmt.Sprintf("%v"+text, i)))
+		h.CreateStory(age, author, n.StoryContent{Title: "title", Content: "content 123"})
 	}
 }

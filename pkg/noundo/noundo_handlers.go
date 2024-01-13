@@ -33,9 +33,8 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
-	r.URL.Query().Get("")
 	params := mux.Vars(r)
-	age := (string)(params["age"])
+	age := params["age"]
 	self := n.Self()
 	storiesIface, err := self.GetStories(
 		[]string{age},
@@ -61,7 +60,8 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 
 	ExecTemplHtmxSensitive(tmpl, w, r, "age", "/age/"+age, &PageAgeValues{
 		Name:        age,
-		Description: "TODO description is hadrdcoded rn.",
+		WriteStory:  CompWriteStory{HxPost: "/age/" + age + "/create-story"},
+		Description: "TODO, description is hadrdcoded rn.",
 		Stories:     stories,
 	})
 }

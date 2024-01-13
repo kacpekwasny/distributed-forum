@@ -50,7 +50,7 @@ type HistoryPrivateIface interface {
 	CreateUser(email string, username string, password string) (UserPublicIface, error)
 
 	// Create a new story within
-	CreateStory(ageName string, story CreateStoryIface) (StoryIface, error)
+	CreateStory(ageName string, author UserPublicIface, story StoryContent) (StoryIface, error)
 
 	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
 	CreateAge(owner UserPublicIface, ageName string) (AgeIface, error)

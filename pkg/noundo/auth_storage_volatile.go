@@ -26,7 +26,7 @@ func (va *volatileAuthStorage) CreateUserOrErr(email, username string, password 
 	if _, ok := (*va.usernameUsers)[username]; ok {
 		return UsernameInUse
 	}
-	u := &UserStruct{
+	u := &User{
 		email:      email,
 		username:   username,
 		passwdHash: password,

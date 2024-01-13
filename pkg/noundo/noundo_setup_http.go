@@ -15,6 +15,7 @@ func (n *NoUndo) setupRouter() {
 
 	r.HandleFunc("/", n.HandleHome).Methods("GET")
 	r.HandleFunc("/a/{age}", n.HandleAge).Methods("GET")
+	r.HandleFunc("/a/{age}/create-story", n.HandleCreateStory).Methods("POST")
 
 	// TODO - substitute these function for methods of NoUndo
 	r.HandleFunc("/index", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainComponentURL: "welcome"})).Methods("GET")

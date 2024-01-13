@@ -83,7 +83,7 @@ func (h *HistoryVolatile) GetUser(username string) (UserPublicIface, error) {
 func (h *HistoryVolatile) CreateUser(email string, username string, password string) (UserPublicIface, error) {
 	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
 	if r.Ok {
-		u := (h.auth.GetUserByEmail(username)).(*UserStruct)
+		u := (h.auth.GetUserByEmail(username)).(*User)
 		u.parentServerName = h.GetName()
 		return u, nil
 	}
@@ -117,14 +117,14 @@ func (h *HistoryVolatile) GetAge(name string) (AgeIface, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (h *HistoryVolatile) CreateStory(ageName string, story CreateStoryIface) (StoryIface, error) {
+func (h *HistoryVolatile) CreateStory(ageName string, author UserPublicIface, story StoryContent) (StoryIface, error) {
 	_, exists := h.ages[ageName]
 	if !exists {
 		return nil, errors.New("age with ageName: '" + ageName + "' doesnt exist")
 	}
 
 	id := NewRandId()
-	storyInternal := NewStoryVolatile(story.AuthorFUsername(), id, story.Content())
+	storyInternal := NewStoryVolatile(author.FullUsername(), id, story.Content)
 	h.stories[id] = storyInternal
 	return storyInternal, nil
 }

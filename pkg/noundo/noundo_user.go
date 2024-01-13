@@ -1,7 +1,7 @@
 package noundo
 
-func NewUserStruct(email, username, parentServerName string, passwdHash []byte) *UserStruct {
-	return &UserStruct{
+func NewUserStruct(email, username, parentServerName string, passwdHash []byte) *User {
+	return &User{
 		email:            email,
 		username:         username,
 		passwdHash:       passwdHash,
@@ -9,7 +9,7 @@ func NewUserStruct(email, username, parentServerName string, passwdHash []byte) 
 	}
 }
 
-type UserStruct struct {
+type User struct {
 	email            string
 	username         string
 	passwdHash       []byte
@@ -56,24 +56,24 @@ type UserAuthIface interface {
 	PasswdhashIface
 }
 
-func (u *UserStruct) Email() string {
+func (u *User) Email() string {
 	return u.email
 }
 
-func (u *UserStruct) Username() string {
+func (u *User) Username() string {
 	return u.username
 }
 
-func (u *UserStruct) PasswdHash() []byte {
+func (u *User) PasswdHash() []byte {
 	return u.passwdHash
 }
 
 // Domain of the server that is the parent for this account
-func (u *UserStruct) ParentServerName() string {
+func (u *User) ParentServerName() string {
 	return u.parentServerName
 }
 
 // Username() + "@" + ParentServerName()`
-func (u *UserStruct) FullUsername() string {
+func (u *User) FullUsername() string {
 	return u.Username() + "@" + u.ParentServerName()
 }
