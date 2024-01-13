@@ -1,5 +1,21 @@
 package noundo
 
+func NewUserStruct(email, username, parentServerName string, passwdHash []byte) *UserStruct {
+	return &UserStruct{
+		email:            email,
+		username:         username,
+		passwdHash:       passwdHash,
+		parentServerName: parentServerName,
+	}
+}
+
+type UserStruct struct {
+	email            string
+	username         string
+	passwdHash       []byte
+	parentServerName string
+}
+
 type EmailIface interface {
 	// Email is the string that the user will use to authenticated themselves, Email is unique in context of History
 	Email() string
@@ -38,13 +54,6 @@ type UserAuthIface interface {
 	EmailIface
 	UsernameIface
 	PasswdhashIface
-}
-
-type UserStruct struct {
-	email            string
-	username         string
-	passwdHash       []byte
-	parentServerName string
 }
 
 func (u *UserStruct) Email() string {
