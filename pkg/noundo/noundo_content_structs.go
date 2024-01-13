@@ -27,6 +27,7 @@ type Reactionable struct {
 }
 
 type Story struct {
+	Title string
 	Postable
 	Reactionable
 }
