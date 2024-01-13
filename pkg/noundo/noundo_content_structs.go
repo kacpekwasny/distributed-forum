@@ -16,8 +16,8 @@ type Postable struct {
 }
 
 type Reaction struct {
-	userFUsername string
-	reactType     enums.ReactionType
+	UserFUsername string
+	ReactType     enums.ReactionType
 
 	TimeStampable
 }
