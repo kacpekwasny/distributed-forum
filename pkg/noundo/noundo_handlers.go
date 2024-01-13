@@ -58,9 +58,9 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	ExecTemplHtmxSensitive(tmpl, w, r, "age", "/age/"+age, &PageAgeValues{
+	ExecTemplHtmxSensitive(tmpl, w, r, "age", "/a/"+age, &PageAgeValues{
 		Name:        age,
-		WriteStory:  CompWriteStory{HxPost: "/age/" + age + "/create-story"},
+		WriteStory:  CompWriteStory{HxPost: "/a/" + age + "/create-story"},
 		Description: "TODO, description is hadrdcoded rn.",
 		Stories:     stories,
 	})
