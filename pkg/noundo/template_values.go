@@ -51,8 +51,13 @@ type HistoryInfo struct {
 
 type PageAgeValues struct {
 	Name        string
+	WriteStory  CompWriteStory
 	Description string
 	Stories     []CompStoryValues
+}
+
+type CompWriteStory struct {
+	HxPost string
 }
 
 type CompStoryValues struct {

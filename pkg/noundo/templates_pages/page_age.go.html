@@ -4,11 +4,11 @@
     <h1>{{ .Name }}</h1>
     <p>{{ .Description }}</p>
 
-    {{ template "write_story" . }}
+    {{ template "write_story" .WriteStory }}
 
-    <ul>
+    <ul class="mt-4">
     {{ range .Stories }}
-        <li>
+        <li class="pr-0 pb-3 pl-3">
             {{ template "post" . }}
         </li>
     {{ end }}
