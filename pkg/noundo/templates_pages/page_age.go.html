@@ -3,6 +3,9 @@
 <div>
     <h1>{{ .Name }}</h1>
     <p>{{ .Description }}</p>
+
+    {{ template "write_story" . }}
+
     <ul>
     {{ range .Stories }}
         <li>
