@@ -32,15 +32,14 @@ type Story struct {
 	Reactionable
 }
 
+type StoryContent struct {
+	Title   string `json:"title"`
+	Content string `json:"content"`
+}
+
 type Answer struct {
 	PostId Id
 
 	Postable
 	Reactionable
-}
-
-// TODO remove
-type User struct {
-	Id       Id
-	Username string
 }
