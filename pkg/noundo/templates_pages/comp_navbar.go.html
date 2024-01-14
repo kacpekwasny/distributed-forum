@@ -1,0 +1,71 @@
+{{ block "navbar" . }}
+<!-- 
+>{{ .HistoryName }}</a
+{{ if .BrowsingHistoryName }}
+<a
+class="navbar-brand"
+href="{{ .BrowsingHistoryURL }}"
+hx-target="#id-base-div-2"
+>{{ .BrowsingHistoryName }}</a
+>
+{{ end }} -->
+
+<nav
+  id="id-navbar-1"
+  class="p-1 navbar navbar-expand-lg sticky-top bg-dark border-bottom border-body"
+  data-bs-theme="dark"
+>
+  <div class="container-fluid">
+
+    <a class="navbar-brand position-relative" href="/">
+        UHN{{ .UsingHistoryName }}
+            
+            <span style="font-size: .55rem;" class="position-absolute top-0 start-100 badge rounded-pill bg-info">
+                BHN{{ .BrowsingHistoryName }}
+                <span class="visually-hidden">currently browsing</span>
+            </span>
+            {{ if .BrowsingHistoryName }}
+        {{ end }}
+      </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="bi bi-list"></i>
+    </button>
+
+    <div id="navbarSupportedContent" class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+      </ul>
+
+      <div class="d-flex" role="search">
+        <input
+          class="form-control form-control-sm me-2"
+          type="search"
+          placeholder="Story, Age, History..."
+          aria-label="Search"
+        />
+        <button
+          class="btn btn-sm btn-outline-success input-group-text"
+          type="submit"
+        >
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+{{ end }}
