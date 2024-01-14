@@ -3,6 +3,14 @@ package noundo
 type BaseValues struct {
 	Title            string
 	MainComponentURL string
+	Navbar           NavbarValues
+}
+
+type NavbarValues struct {
+	UsingHistoryName    string
+	BrowsingHistoryName string
+	BrowsingHistoryURL  string
+	UserProfile         bool
 }
 
 type IsUser struct {
@@ -54,6 +62,7 @@ type PageAgeValues struct {
 	WriteStory  CompWriteStory
 	Description string
 	Stories     []CompStoryValues
+	NavbarValues
 }
 
 type CompWriteStory struct {

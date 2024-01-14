@@ -69,5 +69,11 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 		WriteStory:  CreateCompWriteStory("/a/" + age + "/create-story"),
 		Description: "TODO, description is hadrdcoded rn.",
 		Stories:     stories,
+		NavbarValues: NavbarValues{
+			UsingHistoryName:    n.Self().GetName(),
+			BrowsingHistoryName: historyName,
+			BrowsingHistoryURL:  history.GetURL(),
+			UserProfile:         GetJWTFieldsFromContext(r.Context()) != nil,
+		},
 	})
 }

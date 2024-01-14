@@ -15,6 +15,21 @@
     {{ end }}
     </div>
 </div>
+<script>
+var UsingHistoryName = document.getElementById("Navbar.UsingHistoryName");
+var BrowsingHistoryName = document.getElementById("Navbar.BrowsingHistoryName");
+
+UsingHistoryName.innerText = "{{ .UsingHistoryName }}";
+
+
+{{ if .BrowsingHistoryName }} 
+    BrowsingHistoryName.style.visibility = 'visable' ;
+    BrowsingHistoryName.innerText = "{{ .BrowsingHistoryName }}";
+{{ else }} 
+    BrowsingHistoryName.style.visibility = 'hidden';
+{{ end }}
+
+</script>
 {{ end }}
 
 {{ template "baseend" }}

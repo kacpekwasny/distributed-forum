@@ -59,15 +59,15 @@ func ComponentGetFactory(template string, v any) func(w http.ResponseWriter, r *
 	}
 }
 
-func PageHandlerFactory(pageName string, pushUrl string) func(w http.ResponseWriter, r *http.Request) {
+func PageHandlerFactory(pageName string, pushURL string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ExecTemplHtmxSensitive(tmpl, w, r, pageName, pushUrl, nil)
+		ExecTemplHtmxSensitive(tmpl, w, r, pageName, pushURL, nil)
 	}
 }
 
-func ExecTemplHtmxSensitiveExplicitBase(tmpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pageNameBase string, pushUrl string, data any) {
+func ExecTemplHtmxSensitiveExplicitBase(tmpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pageNameBase string, pushURL string, data any) {
 	if r.Header.Get("hx-request") == "true" {
-		w.Header().Set("HX-Push-Url", pushUrl)
+		w.Header().Set("HX-Push-Url", pushURL)
 		utils.ExecTemplLogErr(tmpl, w, pageName, data)
 		return
 	}

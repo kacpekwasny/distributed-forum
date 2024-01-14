@@ -1,14 +1,4 @@
 {{ block "navbar" . }}
-<!-- 
->{{ .HistoryName }}</a
-{{ if .BrowsingHistoryName }}
-<a
-class="navbar-brand"
-href="{{ .BrowsingHistoryURL }}"
-hx-target="#id-base-div-2"
->{{ .BrowsingHistoryName }}</a
->
-{{ end }} -->
 
 <nav
   id="id-navbar-1"
@@ -16,17 +6,10 @@ hx-target="#id-base-div-2"
   data-bs-theme="dark"
 >
   <div class="container-fluid">
-
-    <a class="navbar-brand position-relative" href="/">
-        UHN{{ .UsingHistoryName }}
-            
-            <span style="font-size: .55rem;" class="position-absolute top-0 start-100 badge rounded-pill bg-info">
-                BHN{{ .BrowsingHistoryName }}
-                <span class="visually-hidden">currently browsing</span>
-            </span>
-            {{ if .BrowsingHistoryName }}
-        {{ end }}
-      </a>
+    <a class="navbar-brand position-relative" href="/" id="navbar-using-history">
+        <div id="Navbar.UsingHistoryName">{{ .UsingHistoryName }}</div>
+        <a   id="Navbar.BrowsingHistoryName"   href="{{ .BrowsingHistoryURL }}"   style="font-size: 0.55rem"   class="position-absolute top-0 start-100 badge rounded-pill bg-info">{{ .BrowsingHistoryName }}</a>
+    </a>
     <button
       class="navbar-toggler"
       type="button"
@@ -42,8 +25,7 @@ hx-target="#id-base-div-2"
     <div id="navbarSupportedContent" class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">
-          </a>
+          <a class="nav-link active" aria-current="page" href="/"> </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Link</a>
@@ -64,8 +46,24 @@ hx-target="#id-base-div-2"
           Search
         </button>
       </div>
+      {{ if .UserProfile }}
+      <button
+        class="ms-0 ms-lg-2 my-2 my-lg-0 btn btn-sm btn-light rounded-circle"
+        href="/profile"
+      >
+        <i class="bi bi-person-fill"></i>
+      </button>
+      {{ end }}
     </div>
   </div>
 </nav>
+
+<script>
+
+//   var UsingHistoryName = document.getElementById("Navbar.UsingHistoryName");
+//   var BrowsingHistoryName = document.getElementById("Navbar.BrowsingHistoryName");
+
+//   BrowsingHistoryName.style.visibility = {{ if .BrowsingHistoryName }} 'visable' {{ else }} 'hidden' {{ end }};
+</script>
 
 {{ end }}
