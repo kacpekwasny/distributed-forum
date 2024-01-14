@@ -34,9 +34,15 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 
 func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
+	historyName := params["history"]
 	age := params["age"]
-	self := n.Self()
-	storiesIface, err := self.GetStories(
+	history, err := n.uni.GetHistoryByName(historyName)
+	if err != nil {
+		Handle404(w, r)
+		return
+	}
+
+	storiesIface, err := history.GetStories(
 		[]string{age},
 		int(utils.GetQueryParamInt(r, "start", 0)),
 		int(utils.GetQueryParamInt(r, "end", 50)),

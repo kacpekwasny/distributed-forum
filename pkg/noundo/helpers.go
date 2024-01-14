@@ -65,16 +65,16 @@ func PageHandlerFactory(pageName string, pushUrl string) func(w http.ResponseWri
 	}
 }
 
-func ExecTemplHtmxSensitiveExplicitBase(tpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pageNameBase string, pushUrl string, data any) {
+func ExecTemplHtmxSensitiveExplicitBase(tmpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pageNameBase string, pushUrl string, data any) {
 	if r.Header.Get("hx-request") == "true" {
 		w.Header().Set("HX-Push-Url", pushUrl)
-		utils.ExecTemplLogErr(tpl, w, pageName, data)
+		utils.ExecTemplLogErr(tmpl, w, pageName, data)
 		return
 	}
 
-	utils.ExecTemplLogErr(tpl, w, pageNameBase, data)
+	utils.ExecTemplLogErr(tmpl, w, pageNameBase, data)
 }
 
-func ExecTemplHtmxSensitive(tpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pushUrl string, data any) {
-	ExecTemplHtmxSensitiveExplicitBase(tpl, w, r, pageName, "page_"+pageName+".go.html", pushUrl, data)
+func ExecTemplHtmxSensitive(tmpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pushUrl string, data any) {
+	ExecTemplHtmxSensitiveExplicitBase(tmpl, w, r, pageName, "page_"+pageName+".go.html", pushUrl, data)
 }

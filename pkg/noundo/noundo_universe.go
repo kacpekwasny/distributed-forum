@@ -9,26 +9,33 @@ type UniverseIface interface {
 	Peers() []HistoryPublicIface
 }
 
-func NewUniverse(self HistoryFullIface, peersNexus_ PeersNexusIface) UniverseIface {
-	return &universe{
+func NewUniverse(self HistoryFullIface, peersNexus_ PeersNexusIface) *Universe {
+	return &Universe{
 		self:       self,
 		peersNexus: peersNexus_,
 	}
 }
 
-type universe struct {
+type Universe struct {
 	self       HistoryFullIface
 	peersNexus PeersNexusIface
 }
 
-func (u *universe) Self() HistoryFullIface {
+func (u *Universe) Self() HistoryFullIface {
 	return u.self
 }
 
-func (u *universe) Peers() []HistoryPublicIface {
+func (u *Universe) Peers() []HistoryPublicIface {
 	return u.peersNexus.AlivePeers()
 }
 
-func (u *universe) Authenticator() AuthenticatorIface {
+func (u *Universe) Authenticator() AuthenticatorIface {
 	return u.self.Authenticator()
+}
+
+func (u *Universe) GetHistoryByName(name string) (HistoryPublicIface, error) {
+	if u.self.GetName() == name {
+		return u.self, nil
+	}
+	return u.peersNexus.GetHistory(name)
 }

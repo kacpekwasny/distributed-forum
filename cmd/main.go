@@ -7,7 +7,7 @@ import (
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
-func runUniverse(wg *sync.WaitGroup, uni noundo.UniverseIface, addr string) {
+func runUniverse(wg *sync.WaitGroup, uni *noundo.Universe, addr string) {
 	utils.Loge(noundo.NewNoUndo(uni).ListenAndServe(addr))
 	wg.Done()
 }

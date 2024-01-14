@@ -14,12 +14,9 @@ func (n *NoUndo) setupRouter() {
 	r.Use(httpLogger())
 
 	r.HandleFunc("/", n.HandleHome).Methods("GET")
-	r.HandleFunc("/a/{age}", n.HandleAge).Methods("GET")
-	r.HandleFunc("/a/{age}/create-story", n.HandleCreateStory).Methods("POST")
-
-	// TODO - substitute these function for methods of NoUndo
-	r.HandleFunc("/index", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainComponentURL: "welcome"})).Methods("GET")
-	r.HandleFunc("/welcome", BaseGetFactory(BaseValues{Title: "Welcome, to the internet!", MainComponentURL: "welcome"})).Methods("GET")
+	r.HandleFunc("/a/{history}/{age}", n.HandleAge).Methods("GET")
+	r.HandleFunc("/a/{history}/{age}/create-story", n.HandleCreateStory).Methods("POST")
+	// todo r.HandleFunc("/a/{history}/{age}/story/{story-id}/{title}", n.HandleCreateStory).Methods("POST")
 
 	r.HandleFunc("/signin", n.HandleSignInGet).Methods("GET")
 	r.HandleFunc("/signin", n.HandleSignInPost).Methods("POST")
@@ -28,6 +25,8 @@ func (n *NoUndo) setupRouter() {
 
 	r.HandleFunc("/signup", n.HandleSignUpGet).Methods("GET")
 	r.HandleFunc("/signup", n.HandleSignUpPost).Methods("POST")
+
+	r.NotFoundHandler = r.NewRoute().HandlerFunc(Handle404).GetHandler()
 
 	n.r = r
 }

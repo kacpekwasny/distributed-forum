@@ -4,9 +4,9 @@ import (
 	n "github.com/kacpekwasny/noundo/pkg/noundo"
 )
 
-var uni0 n.UniverseIface
-var uni1 n.UniverseIface
-var uni2 n.UniverseIface
+var uni0 *n.Universe
+var uni1 *n.Universe
+var uni2 *n.Universe
 
 func init() {
 	h0 := n.NewHistoryVolatile("localhost:8080")

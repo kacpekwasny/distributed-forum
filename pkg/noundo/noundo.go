@@ -8,11 +8,11 @@ import (
 )
 
 type NoUndo struct {
-	uni UniverseIface
+	uni *Universe
 	r   *mux.Router
 }
 
-func NewNoUndo(uni UniverseIface) *NoUndo {
+func NewNoUndo(uni *Universe) *NoUndo {
 	n := &NoUndo{
 		uni: uni,
 	}

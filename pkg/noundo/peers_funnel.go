@@ -50,7 +50,7 @@ func (p *PeersNexus) GetHistory(name string) (HistoryPublicIface, error) {
 
 func (p *PeersNexus) RegisterPeerManager(pm PeerManagerIface) {
 	p.peerManagers = append(p.peerManagers, pm)
-	p.historyNamePeer[pm.HistoryURL()] = pm
+	p.historyNamePeer[pm.HistoryName()] = pm
 }
 
 func (p *PeersNexus) UnregisterPeerManager(historyName string) {
