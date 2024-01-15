@@ -1,0 +1,94 @@
+{{ block "navbar" . }}
+
+<nav
+  id="id-navbar-1"
+  class="p-1 navbar navbar-expand-lg sticky-top bg-dark border-bottom border-body"
+  data-bs-theme="dark"
+>
+  <div class="container-fluid">
+    <div class="navbar-brand position-relative">
+      <a
+        id="Navbar.UsingHistoryName"
+        hx-get="/"
+        hx-target="#id-base-div-2"
+        class="text-white text-white btn p-0 fs-4"
+      >
+      <!-- placeholder for values filled with JS -->
+      </a>
+      <a
+        id="Navbar.BrowsingHistoryName"
+        href="" 
+        style="
+          font-size: 0.55rem;
+          position: absolute;
+          top: 0.2em;
+          left: 15em;
+          padding: 2px;
+          max-width: 15em;
+          overflow: hidden;
+        "
+        class="btn text-white badge rounded-pill bg-info"
+      >
+      <!-- placeholder for values filled with JS -->
+      </a>
+    </div>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="bi bi-list"></i>
+    </button>
+
+    <div id="navbarSupportedContent" class="collapse navbar-collapse">
+      <div class="d-flex ms-auto" role="search">
+        <input
+          class="form-control form-control-sm me-2"
+          type="search"
+          placeholder="Story, Age, History..."
+          aria-label="Search"
+        />
+        <button
+          class="btn btn-sm btn-outline-success input-group-text"
+          type="submit"
+        >
+          Search
+        </button>
+      </div>
+      {{ if .UserProfile }}
+      <button
+        class="ms-0 ms-lg-2 my-2 my-lg-0 btn btn-sm btn-light rounded-circle"
+        href="/profile"
+      >
+        <i class="bi bi-person-fill"></i>
+      </button>
+      {{ end }}
+    </div>
+  </div>
+</nav>
+
+<script>
+  var UsingHistoryName = document.getElementById("Navbar.UsingHistoryName");
+  var BrowsingHistoryName = document.getElementById(
+    "Navbar.BrowsingHistoryName"
+  );
+
+  function setUsingBrowsingHistoryName(usingName, browsingName, browsingURL) {
+    UsingHistoryName.innerText = usingName;
+    if (usingName === browsingName) {
+      BrowsingHistoryName.style.visibility = "hidden";
+      return;
+    }
+    BrowsingHistoryName.style.visibility = "visible";
+    BrowsingHistoryName.innerText = browsingName;
+    BrowsingHistoryName.href = browsingURL;
+  }
+setUsingBrowsingHistoryName("{{ .UsingHistoryName }}", "{{ .BrowsingHistoryName }}", "{{ .BrowsingHistoryURL }}");
+
+</script>
+
+{{ end }}

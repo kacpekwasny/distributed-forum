@@ -1,0 +1,36 @@
+{{ block "write_story" . }}
+
+<div class="write-story">
+    <!-- TODO add a bootrap collapse -->
+    <form method="POST" hx-post="{{ .HxPost }}" hx-ext="json-enc" hx-target="#id-base-div-2" class="d-flex flex-column collapse">
+      <div class="d-flex flex-row my-1">
+        <label for="title-input" class="col-sm-2 col-lg-1 col-form-label">Title:</label>
+        <input
+          id="title-input"
+          class="w-100"
+          name="title"
+          type="text"
+          minlength="{{ .TitleLenMin }}"
+          maxlength="{{ .TitleLenMax }}"
+        />
+      </div>
+      <div class="d-flex flex-row my-1">
+        <label for="content-input" class="col-sm-2 col-lg-1 col-form-label">Story:</label>
+        <textarea
+          id="content-input"
+          class="w-100"
+          name="content"
+          type="text"
+          rows="5"
+          minlength="{{ .ContentLenMin }}"
+          maxlength="{{ .ContentLenMax }}"
+        ></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary ms-auto">
+        Create story
+      </button>
+
+    </form>
+</div>
+
+{{ end }}

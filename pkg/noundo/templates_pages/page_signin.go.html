@@ -1,0 +1,75 @@
+{{ template "basestart" }}
+{{ block "signin" . }}
+<script>
+  document.title = "Sign In";
+</script>
+<div class="my-5"></div>
+<div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+  <div class="card shadow-lg">
+    <div class="card-body p-5">
+      <h1 class="fs-4 card-title fw-bold mb-4">Sign In</h1>
+      {{ if .CurrentUsername }}
+      {{ template "signed_in" .CurrentUsername }}
+      {{ else }}
+      <form hx-post="signin" hx-target="#id-base-div-2" autocomplete="off">
+        <div class="mb-3">
+          <label class="mb-2 text-muted" for="email">Email</label>
+          <input
+            id="email"
+            class="form-control"
+            name="Email"
+            value="{{ getf . "Email" "" }}"
+            required
+            autofocus
+          />
+        </div>
+
+        <div class="mb-3">
+          <input
+            id="password"
+            type="password"
+            class="form-control"
+            name="Password"
+            required
+          />
+          <div class="mb-2 w-100">
+            <label class="text-muted" for="password">Password</label>
+          </div>
+        </div>
+        {{ if hasField . "Err" }}
+        <div class="text-danger">{{ .Err }}</div>
+        {{ end }}
+        <div class="d-flex align-items-center">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              name="remember"
+              id="remember"
+              class="form-check-input"
+            />
+            <label for="remember" class="form-check-label">Remember Me</label>
+          </div>
+          <button type="submit" class="btn btn-primary ms-auto">Sign In</button>
+        </div>
+      </form>
+      {{ end }}
+    </div>
+    <div class="card-footer py-3 border-0">
+      <div class="d-flex justify-content-center align-items-center">
+        <div>
+          Don't have an account?
+        </div>
+        <button
+          hx-get="signup"
+          hx-target="#id-base-div-2"
+          class="text-dark btn btn-info btn-sm"
+          style="margin-left: .5rem;"
+        >
+          Create one
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}
+{{ template "baseend" }}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "github.com/kacpekwasny/noundo/pkg/peer";
+
+package peer;
+
+
+service HelloService {
+    rpc SayHello (HelloRequest) returns (HelloResponse);
+}
+  
+message HelloRequest {
+    string greeting = 1;
+}
+  
+message HelloResponse {
+    string reply = 1;
+}
+
