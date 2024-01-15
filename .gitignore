@@ -19,3 +19,8 @@
 
 # Go workspace file
 go.work
+
+
+### MY EDIT ###
+tmp/
+.VSCodeCounter
