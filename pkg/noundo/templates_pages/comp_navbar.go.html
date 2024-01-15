@@ -13,11 +13,11 @@
         hx-target="#id-base-div-2"
         class="text-white text-white btn p-0 fs-4"
       >
-      <!-- placeholder for values filled with JS -->
+        <!-- placeholder for values filled with JS -->
       </a>
       <a
         id="Navbar.BrowsingHistoryName"
-        href="" 
+        href=""
         style="
           font-size: 0.55rem;
           position: absolute;
@@ -29,7 +29,7 @@
         "
         class="btn text-white badge rounded-pill bg-info"
       >
-      <!-- placeholder for values filled with JS -->
+        <!-- placeholder for values filled with JS -->
       </a>
     </div>
     <button
@@ -59,14 +59,23 @@
           Search
         </button>
       </div>
-      {{ if .UserProfile }}
       <button
+        id="Navbar.UserProfile"
         class="ms-0 ms-lg-2 my-2 my-lg-0 btn btn-sm btn-light rounded-circle"
-        href="/profile"
+        hx-get="/profile"
+        hx-target="#id-base-div-2"
+        style="display: none;"
       >
         <i class="bi bi-person-fill"></i>
       </button>
-      {{ end }}
+      <button
+        id="Navbar.UserSignIn"
+        class="ms-0 ms-lg-2 my-2 my-lg-0 btn btn-sm btn-light rounded-circle"
+        href="/signin"
+        style="display: none;"
+      >
+        <i class="bi bi-box-arrow-in-right"></i>
+      </button>
     </div>
   </div>
 </nav>
@@ -76,19 +85,37 @@
   var BrowsingHistoryName = document.getElementById(
     "Navbar.BrowsingHistoryName"
   );
+  var Profile = document.getElementById("Navbar.UserProfile");
+  var SignIn = document.getElementById("Navbar.UserSignIn");
 
   function setUsingBrowsingHistoryName(usingName, browsingName, browsingURL) {
     UsingHistoryName.innerText = usingName;
     if (usingName === browsingName) {
       BrowsingHistoryName.style.visibility = "hidden";
       return;
-    }
+    };
     BrowsingHistoryName.style.visibility = "visible";
     BrowsingHistoryName.innerText = browsingName;
     BrowsingHistoryName.href = browsingURL;
   }
-setUsingBrowsingHistoryName("{{ .UsingHistoryName }}", "{{ .BrowsingHistoryName }}", "{{ .BrowsingHistoryURL }}");
 
+  function profileOrSignIn(signedIn) {
+    if (signedIn) {
+      SignIn.style.display = 'none';
+      Profile.style.display = 'block';
+    } else {
+      SignIn.style.display = 'none';
+      Profile.style.display = 'block';
+    }
+  }
+
+  setUsingBrowsingHistoryName(
+    "{{ .UsingHistoryName }}",
+    "{{ .BrowsingHistoryName }}",
+    "{{ .BrowsingHistoryURL }}"
+  );
+
+  profileOrSignIn({{ .UserProfile }});
 </script>
 
 {{ end }}
