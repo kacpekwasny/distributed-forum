@@ -23,7 +23,7 @@ func WriteJson(w http.ResponseWriter, marshallable any) error {
 	if err != nil {
 		return err
 	}
-	json.NewEncoder(w).Encode(jsonResp)
+	w.Write(jsonResp)
 	return nil
 }
 

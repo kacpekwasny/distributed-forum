@@ -39,10 +39,14 @@ func (n *NoUndo) HandleCreateStory(w http.ResponseWriter, r *http.Request) {
 		utils.WriteJsonWithStatus(w, utils.Ms{"info": "invalid_story"}, http.StatusBadRequest)
 		return
 	}
-
-	_, err = n.Self().CreateStory(v["age"], &User{username: strings.Split(jwt.Username, "@")[0]}, story)
+	history, err := n.uni.GetHistoryByName(v["history"])
 	if err != nil {
-		utils.WriteJsonWithStatus(w, utils.Ms{"info": "error_during_create_story"}, http.StatusInternalServerError)
+		utils.WriteJsonWithStatus(w, utils.Ms{"info": "error_during_create_story"}, http.StatusNotFound)
+		return
+	}
+	_, err = history.CreateStory(v["age"], &User{username: strings.Split(jwt.Username, "@")[0]}, story)
+	if err != nil {
+		utils.WriteJsonWithStatus(w, utils.Ms{"info": "error_during_create_story"}, http.StatusNotFound)
 		return
 	}
 	// TODO - template for a single Story

@@ -76,9 +76,10 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// TODO - if not peered with this history -> no option to create story, write answers,
 	ExecTemplHtmxSensitive(tmpl, w, r, "age", utils.LeftLogRight(url.JoinPath("/a", historyName, ageName)), &PageAgeValues{
 		Name:        ageName,
-		WriteStory:  CreateCompWriteStory("/a/" + ageName + "/create-story"),
+		WriteStory:  CreateCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
 		Description: "TODO, description is hadrdcoded rn.",
 		Stories:     stories,
 		NavbarValues: NavbarValues{

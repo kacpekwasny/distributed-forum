@@ -37,6 +37,9 @@ type HistoryPublicIface interface {
 	// Retrive all user info by supplying a username
 	GetUser(username string) (UserPublicIface, error)
 
+	// Create a new story within
+	CreateStory(ageName string, author UserPublicIface, story StoryContent) (StoryIface, error)
+
 	// TODO:
 	// GetAges that user joined,
 	// GetStories first n stories of user ordered by (maybe merge with the first method???)
@@ -48,9 +51,6 @@ type HistoryPrivateIface interface {
 
 	// Create a new user
 	CreateUser(email string, username string, password string) (UserPublicIface, error)
-
-	// Create a new story within
-	CreateStory(ageName string, author UserPublicIface, story StoryContent) (StoryIface, error)
 
 	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
 	CreateAge(owner UserPublicIface, ageName string) (AgeIface, error)
