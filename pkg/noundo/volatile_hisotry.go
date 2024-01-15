@@ -114,7 +114,7 @@ func (h *HistoryVolatile) Authenticator() AuthenticatorIface {
 
 // Single age
 func (h *HistoryVolatile) GetAge(name string) (AgeIface, error) {
-	panic("not implemented") // TODO: Implement
+	return utils.MapGetErr[string, AgeIface](h.ages, name)
 }
 
 func (h *HistoryVolatile) CreateStory(ageName string, author UserPublicIface, story StoryContent) (StoryIface, error) {

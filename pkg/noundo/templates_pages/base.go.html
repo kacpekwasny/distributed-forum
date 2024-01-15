@@ -1,4 +1,4 @@
-{{define "basestart"}}
+{{ block "basestart" . }}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +16,7 @@
 
 <body hx-ext="head-support">
 
-	{{ template "navbar" .Navbar }}
+	{{ template "navbar" .NavbarValues }}
 	  
 	<section class="h-100">
 		<div class="container h-100">
@@ -27,7 +27,7 @@
 					
 					
 					
-{{define "baseend"}}
+{{ block "baseend" . }}
 				</div>
 			</div>
 		</div>

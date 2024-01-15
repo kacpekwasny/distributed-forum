@@ -29,6 +29,10 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 				},
 			),
 			Peers: utils.Map(n.Peers(), CreateHistoryInfo),
+			NavbarValues: NavbarValues{
+				UsingHistoryName:    self.GetName(),
+				BrowsingHistoryName: self.GetName(),
+			},
 		},
 	)
 }
@@ -39,7 +43,14 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	ageName := params["age"]
 	history, err := n.uni.GetHistoryByName(historyName)
 	if err != nil {
-		Handle404(w, r)
+		n.Handle404(w, r)
+		return
+	}
+
+	_, err = history.GetAge(ageName)
+	if err != nil {
+		// TODO (create Age page)
+		n.Handle404(w, r)
 		return
 	}
 
@@ -80,5 +91,5 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 }
 
 func (n *NoUndo) HandleAgeShortcut(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, utils.LeftLogRight(url.JoinPath("/a", n.Self().GetName(), mux.Vars(r)["age"])), 302)
+	http.Redirect(w, r, utils.LeftLogRight(url.JoinPath("/a", n.Self().GetName(), mux.Vars(r)["age"])), http.StatusPermanentRedirect)
 }

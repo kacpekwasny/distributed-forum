@@ -30,6 +30,10 @@
         </p>
     </div>
 </div>
+<script>
+// function defined in 'comp_navbar';
+setUsingBrowsingHistoryName("{{ .UsingHistoryName }}", "{{ .BrowsingHistoryName }}", "{{ .BrowsingHistoryURL }}");
+</script>
 {{ end }}
 
 {{ template "baseend" }}

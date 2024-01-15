@@ -1,4 +1,4 @@
-{{ template "basestart" }}
+{{ template "basestart" . }}
 
 {{ block "404" . }}
 
@@ -9,10 +9,10 @@
         <p class="lead">
             The page you’re looking for doesn’t exist.
           </p>
-        <a href="/" class="btn btn-primary">Go Home</a>
+        <a hx-get="/" hx-target="#id-base-div-2" class="btn btn-primary">Go Home</a>
     </div>
 </div>
 
 {{ end }}
 
-{{ template "baseend" }}
+{{ template "baseend" . }}

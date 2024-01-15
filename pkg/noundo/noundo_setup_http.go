@@ -27,7 +27,7 @@ func (n *NoUndo) setupRouter() {
 	r.HandleFunc("/signup", n.HandleSignUpGet).Methods("GET")
 	r.HandleFunc("/signup", n.HandleSignUpPost).Methods("POST")
 
-	r.NotFoundHandler = r.NewRoute().HandlerFunc(Handle404).GetHandler()
+	r.NotFoundHandler = r.NewRoute().HandlerFunc(n.Handle404).GetHandler()
 
 	n.r = r
 }

@@ -3,7 +3,7 @@ package noundo
 type BaseValues struct {
 	Title            string
 	MainComponentURL string
-	Navbar           NavbarValues
+	NavbarValues
 }
 
 type NavbarValues struct {
@@ -45,6 +45,7 @@ type HomeValues struct {
 	DisplayName string
 	LocalAges   []AgeLink
 	Peers       []HistoryInfo
+	NavbarValues
 }
 
 type AgeLink struct {

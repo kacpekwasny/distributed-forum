@@ -13,15 +13,23 @@
         hx-target="#id-base-div-2"
         class="text-white text-white btn p-0 fs-4"
       >
-        {{ .UsingHistoryName }}
+      <!-- placeholder for values filled with JS -->
       </a>
       <a
         id="Navbar.BrowsingHistoryName"
-        href="{{ .BrowsingHistoryURL }}"
-        style="font-size: 0.55rem; position: absolute; top: .2em; left: 15em; padding: 2px; max-width: 15em; overflow: hidden;"
+        href="" 
+        style="
+          font-size: 0.55rem;
+          position: absolute;
+          top: 0.2em;
+          left: 15em;
+          padding: 2px;
+          max-width: 15em;
+          overflow: hidden;
+        "
         class="btn text-white badge rounded-pill bg-info"
       >
-        {{ .BrowsingHistoryName }}
+      <!-- placeholder for values filled with JS -->
       </a>
     </div>
     <button
@@ -37,16 +45,7 @@
     </button>
 
     <div id="navbarSupportedContent" class="collapse navbar-collapse">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/"> </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-      </ul>
-
-      <div class="d-flex" role="search">
+      <div class="d-flex ms-auto" role="search">
         <input
           class="form-control form-control-sm me-2"
           type="search"
@@ -73,19 +72,23 @@
 </nav>
 
 <script>
-    var UsingHistoryName = document.getElementById("Navbar.UsingHistoryName");
-    var BrowsingHistoryName = document.getElementById("Navbar.BrowsingHistoryName");
+  var UsingHistoryName = document.getElementById("Navbar.UsingHistoryName");
+  var BrowsingHistoryName = document.getElementById(
+    "Navbar.BrowsingHistoryName"
+  );
 
-    function setUsingBrowsingHistoryName(usingName, browsingName, browsingURL) {
-      UsingHistoryName.innerText = usingName;
-      if (usingName === browsingName) {
-        BrowsingHistoryName.style.visibility = 'hidden';
-        return
-      }
-      BrowsingHistoryName.style.visibility = 'visible';
-      BrowsingHistoryName.innerText = browsingName;
-      BrowsingHistoryName.href = browsingURL;
+  function setUsingBrowsingHistoryName(usingName, browsingName, browsingURL) {
+    UsingHistoryName.innerText = usingName;
+    if (usingName === browsingName) {
+      BrowsingHistoryName.style.visibility = "hidden";
+      return;
     }
+    BrowsingHistoryName.style.visibility = "visible";
+    BrowsingHistoryName.innerText = browsingName;
+    BrowsingHistoryName.href = browsingURL;
+  }
+setUsingBrowsingHistoryName("{{ .UsingHistoryName }}", "{{ .BrowsingHistoryName }}", "{{ .BrowsingHistoryURL }}");
+
 </script>
 
 {{ end }}
