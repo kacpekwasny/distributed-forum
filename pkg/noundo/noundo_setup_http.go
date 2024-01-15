@@ -14,6 +14,7 @@ func (n *NoUndo) setupRouter() {
 	r.Use(httpLogger())
 
 	r.HandleFunc("/", n.HandleHome).Methods("GET")
+	r.HandleFunc("/a/{age}", n.HandleAgeShortcut).Methods("GET")
 	r.HandleFunc("/a/{history}/{age}", n.HandleAge).Methods("GET")
 	r.HandleFunc("/a/{history}/{age}/create-story", n.HandleCreateStory).Methods("POST")
 	// todo r.HandleFunc("/a/{history}/{age}/story/{story-id}/{title}", n.HandleCreateStory).Methods("POST")

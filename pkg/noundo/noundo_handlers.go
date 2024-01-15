@@ -2,6 +2,7 @@ package noundo
 
 import (
 	"net/http"
+	"net/url"
 
 	"github.com/gorilla/mux"
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -24,7 +25,7 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 			LocalAges: utils.Map(
 				ages,
 				func(a AgeIface) AgeLink {
-					return CreateAgeInfo("/", a)
+					return CreateAgeInfo("/", n.Self().GetName(), a.GetName())
 				},
 			),
 			Peers: utils.Map(n.Peers(), CreateHistoryInfo),
@@ -35,7 +36,7 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	historyName := params["history"]
-	age := params["age"]
+	ageName := params["age"]
 	history, err := n.uni.GetHistoryByName(historyName)
 	if err != nil {
 		Handle404(w, r)
@@ -43,7 +44,7 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	}
 
 	storiesIface, err := history.GetStories(
-		[]string{age},
+		[]string{ageName},
 		int(utils.GetQueryParamInt(r, "start", 0)),
 		int(utils.GetQueryParamInt(r, "end", 50)),
 		nil, nil,
@@ -64,9 +65,9 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	ExecTemplHtmxSensitive(tmpl, w, r, "age", "/a/"+age, &PageAgeValues{
-		Name:        age,
-		WriteStory:  CreateCompWriteStory("/a/" + age + "/create-story"),
+	ExecTemplHtmxSensitive(tmpl, w, r, "age", utils.LeftLogRight(url.JoinPath("/a", historyName, ageName)), &PageAgeValues{
+		Name:        ageName,
+		WriteStory:  CreateCompWriteStory("/a/" + ageName + "/create-story"),
 		Description: "TODO, description is hadrdcoded rn.",
 		Stories:     stories,
 		NavbarValues: NavbarValues{
@@ -76,4 +77,8 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 			UserProfile:         GetJWTFieldsFromContext(r.Context()) != nil,
 		},
 	})
+}
+
+func (n *NoUndo) HandleAgeShortcut(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, utils.LeftLogRight(url.JoinPath("/a", n.Self().GetName(), mux.Vars(r)["age"])), 302)
 }

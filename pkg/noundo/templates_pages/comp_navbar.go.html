@@ -6,10 +6,24 @@
   data-bs-theme="dark"
 >
   <div class="container-fluid">
-    <a class="navbar-brand position-relative" href="/" id="navbar-using-history">
-        <div id="Navbar.UsingHistoryName">{{ .UsingHistoryName }}</div>
-        <a   id="Navbar.BrowsingHistoryName"   href="{{ .BrowsingHistoryURL }}"   style="font-size: 0.55rem"   class="position-absolute top-0 start-100 badge rounded-pill bg-info">{{ .BrowsingHistoryName }}</a>
-    </a>
+    <div class="navbar-brand position-relative">
+      <a
+        id="Navbar.UsingHistoryName"
+        hx-get="/"
+        hx-target="#id-base-div-2"
+        class="text-white text-white btn p-0 fs-4"
+      >
+        {{ .UsingHistoryName }}
+      </a>
+      <a
+        id="Navbar.BrowsingHistoryName"
+        href="{{ .BrowsingHistoryURL }}"
+        style="font-size: 0.55rem; position: absolute; top: .2em; left: 15em; padding: 2px; max-width: 15em; overflow: hidden;"
+        class="btn text-white badge rounded-pill bg-info"
+      >
+        {{ .BrowsingHistoryName }}
+      </a>
+    </div>
     <button
       class="navbar-toggler"
       type="button"
@@ -59,11 +73,19 @@
 </nav>
 
 <script>
+    var UsingHistoryName = document.getElementById("Navbar.UsingHistoryName");
+    var BrowsingHistoryName = document.getElementById("Navbar.BrowsingHistoryName");
 
-//   var UsingHistoryName = document.getElementById("Navbar.UsingHistoryName");
-//   var BrowsingHistoryName = document.getElementById("Navbar.BrowsingHistoryName");
-
-//   BrowsingHistoryName.style.visibility = {{ if .BrowsingHistoryName }} 'visable' {{ else }} 'hidden' {{ end }};
+    function setUsingBrowsingHistoryName(usingName, browsingName, browsingURL) {
+      UsingHistoryName.innerText = usingName;
+      if (usingName === browsingName) {
+        BrowsingHistoryName.style.visibility = 'hidden';
+        return
+      }
+      BrowsingHistoryName.style.visibility = 'visible';
+      BrowsingHistoryName.innerText = browsingName;
+      BrowsingHistoryName.href = browsingURL;
+    }
 </script>
 
 {{ end }}

@@ -6,11 +6,10 @@ import (
 
 // ~~~~~~  home.go.html ~~~~~~
 
-func CreateAgeInfo(parentDomainURL string, age AgeIface) AgeLink {
-	name := age.GetName()
-	href, _ := url.JoinPath(parentDomainURL, "a", name)
+func CreateAgeInfo(parentDomainURL string, historyName string, ageName string) AgeLink {
+	href, _ := url.JoinPath(parentDomainURL, "a", historyName, ageName)
 	return AgeLink{
-		Name: name,
+		Name: ageName,
 		Href: href,
 	}
 }

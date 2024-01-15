@@ -72,7 +72,7 @@ func Right[L any, R any](_ L, r R) R {
 	return r
 }
 
-func LeftLogRight[L any, R any](l L, err error) L {
+func LeftLogRight[L any](l L, err error) L {
 	if err != nil {
 		log.Println(err)
 	}
