@@ -7,7 +7,7 @@ import (
 
 // ~~~~~~  home.go.html ~~~~~~
 
-func createAgeInfo(parentDomainURL string, historyName string, ageName string) AgeLink {
+func CreateAgeInfo(parentDomainURL string, historyName string, ageName string) AgeLink {
 	href, _ := url.JoinPath(parentDomainURL, "a", historyName, ageName)
 	return AgeLink{
 		Name: ageName,
@@ -15,7 +15,7 @@ func createAgeInfo(parentDomainURL string, historyName string, ageName string) A
 	}
 }
 
-func createHistoryInfo(his HistoryPublicIface) HistoryInfo {
+func CreateHistoryInfo(his HistoryPublicIface) HistoryInfo {
 	name := his.GetName()
 	href := his.GetURL()
 	return HistoryInfo{
@@ -24,7 +24,7 @@ func createHistoryInfo(his HistoryPublicIface) HistoryInfo {
 	}
 }
 
-func createCompWriteStory(hxPost string) CompWriteStory {
+func CreateCompWriteStory(hxPost string) CompWriteStory {
 	return CompWriteStory{
 		HxPost:        hxPost,
 		TitleLenMin:   TITLE_LEN_MIN,
@@ -34,7 +34,7 @@ func createCompWriteStory(hxPost string) CompWriteStory {
 	}
 }
 
-func createPageBaseValues(title string, using HistoryPublicIface, browsing HistoryPublicIface, r *http.Request) PageBaseValues {
+func CreatePageBaseValues(title string, using HistoryPublicIface, browsing HistoryPublicIface, r *http.Request) PageBaseValues {
 	return PageBaseValues{
 		Title: title,
 		CompNavbarValues: CompNavbarValues{

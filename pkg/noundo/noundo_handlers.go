@@ -26,11 +26,11 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 			LocalAges: utils.Map(
 				ages,
 				func(a AgeIface) AgeLink {
-					return createAgeInfo("/", n.Self().GetName(), a.GetName())
+					return CreateAgeInfo("/", n.Self().GetName(), a.GetName())
 				},
 			),
-			Peers:          utils.Map(n.Peers(), createHistoryInfo),
-			PageBaseValues: createPageBaseValues(n.Self().GetName(), n.Self(), n.Self(), r),
+			Peers:          utils.Map(n.Peers(), CreateHistoryInfo),
+			PageBaseValues: CreatePageBaseValues(n.Self().GetName(), n.Self(), n.Self(), r),
 		},
 	)
 }
@@ -77,10 +77,10 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	// TODO - if not peered with this history -> no option to create story, write answers,
 	ExecTemplHtmxSensitive(tmpl, w, r, "age", utils.LeftLogRight(url.JoinPath("/a", historyName, ageName)), &PageAgeValues{
 		Name:           ageName,
-		WriteStory:     createCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
+		WriteStory:     CreateCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
 		Description:    "TODO, description is hadrdcoded rn.",
 		Stories:        stories,
-		PageBaseValues: createPageBaseValues(ageName, n.Self(), history, r),
+		PageBaseValues: CreatePageBaseValues(ageName, n.Self(), history, r),
 	})
 }
 
@@ -104,7 +104,7 @@ func (n *NoUndo) HandleSelfProfile(w http.ResponseWriter, r *http.Request) {
 		AccountBirthDate: "todo birthdate",
 		AboutMe:          "todo - keep user aboutme - only editable thing",
 		SelfProfile:      true,
-		PageBaseValues:   createPageBaseValues("Title", n.Self(), n.Self(), r),
+		PageBaseValues:   CreatePageBaseValues("Title", n.Self(), n.Self(), r),
 	})
 }
 
@@ -123,6 +123,6 @@ func (n *NoUndo) HandleProfile(w http.ResponseWriter, r *http.Request) {
 		AccountBirthDate: "todo birthdate",
 		AboutMe:          "todo - keep user aboutme - only editable thing",
 		SelfProfile:      false,
-		PageBaseValues:   createPageBaseValues("Profile", n.Self(), n.Self(), r),
+		PageBaseValues:   CreatePageBaseValues("Profile", n.Self(), n.Self(), r),
 	})
 }
