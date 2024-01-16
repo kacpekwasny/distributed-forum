@@ -1,6 +1,7 @@
 package noundo
 
 import (
+	"log/slog"
 	"net/http"
 	"net/url"
 
@@ -20,7 +21,7 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 
 	ExecTemplHtmxSensitive(
 		tmpl, w, r, "home", "/",
-		HomeValues{
+		PageHomeValues{
 			DisplayName: self.GetName(),
 			LocalAges: utils.Map(
 				ages,
@@ -29,9 +30,13 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 				},
 			),
 			Peers: utils.Map(n.Peers(), CreateHistoryInfo),
-			NavbarValues: NavbarValues{
-				UsingHistoryName:    self.GetName(),
-				BrowsingHistoryName: self.GetName(),
+			PageBaseValues: PageBaseValues{
+				Title: "Welcome :)",
+				CompNavbarValues: CompNavbarValues{
+					UsingHistoryName:    self.GetName(),
+					BrowsingHistoryName: self.GetName(),
+					UserProfile:         GetJWTFieldsFromContext(r.Context()) != nil,
+				},
 			},
 		},
 	)
@@ -82,15 +87,69 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 		WriteStory:  CreateCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
 		Description: "TODO, description is hadrdcoded rn.",
 		Stories:     stories,
-		NavbarValues: NavbarValues{
-			UsingHistoryName:    n.Self().GetName(),
-			BrowsingHistoryName: historyName,
-			BrowsingHistoryURL:  history.GetURL(),
-			UserProfile:         GetJWTFieldsFromContext(r.Context()) != nil,
+		PageBaseValues: PageBaseValues{
+			Title: ageName,
+			CompNavbarValues: CompNavbarValues{
+				UsingHistoryName:    n.Self().GetName(),
+				BrowsingHistoryName: historyName,
+				BrowsingHistoryURL:  history.GetURL(),
+				UserProfile:         GetJWTFieldsFromContext(r.Context()) != nil,
+			},
 		},
 	})
 }
 
 func (n *NoUndo) HandleAgeShortcut(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, utils.LeftLogRight(url.JoinPath("/a", n.Self().GetName(), mux.Vars(r)["age"])), http.StatusPermanentRedirect)
+}
+
+func (n *NoUndo) HandleSelfProfile(w http.ResponseWriter, r *http.Request) {
+	userJWT := GetJWTFieldsFromContext(r.Context())
+	if userJWT == nil {
+		n.HandleSignInGet(w, r)
+		return
+	}
+	user, err := n.Self().GetUser(userJWT.Username)
+	if err != nil {
+		slog.Error("cannot get user, but is logged in", userJWT.Username, userJWT.UserFUsername)
+	}
+	ExecTemplHtmxSensitive(tmpl, w, r, "profile", "/profile", PageProfileValues{
+		Username:         userJWT.Username,
+		ParentServerName: "@" + user.ParentServerName(),
+		AccountBirthDate: "todo birthdate",
+		AboutMe:          "todo - keep user aboutme - only editable thing",
+		SelfProfile:      true,
+		PageBaseValues: PageBaseValues{
+			Title: "Profile",
+			CompNavbarValues: CompNavbarValues{
+				UsingHistoryName:    n.Self().GetName(),
+				BrowsingHistoryName: n.Self().GetName(),
+			},
+		},
+	})
+}
+
+func (n *NoUndo) HandleProfile(w http.ResponseWriter, r *http.Request) {
+	username := mux.Vars(r)["username"]
+
+	user, err := n.Self().GetUser(username)
+	if err != nil {
+		n.Handle404(w, r)
+		return
+	}
+
+	ExecTemplHtmxSensitive(tmpl, w, r, "profile", utils.LeftLogRight(url.JoinPath("/profile", username)), PageProfileValues{
+		Username:         user.Username(),
+		ParentServerName: "@" + user.ParentServerName(),
+		AccountBirthDate: "todo birthdate",
+		AboutMe:          "todo - keep user aboutme - only editable thing",
+		SelfProfile:      false,
+		PageBaseValues: PageBaseValues{
+			Title: "Profile",
+			CompNavbarValues: CompNavbarValues{
+				UsingHistoryName:    n.Self().GetName(),
+				BrowsingHistoryName: n.Self().GetName(),
+			},
+		},
+	})
 }

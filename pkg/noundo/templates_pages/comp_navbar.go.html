@@ -64,17 +64,19 @@
         class="ms-0 ms-lg-2 my-2 my-lg-0 btn btn-sm btn-light rounded-circle"
         hx-get="/profile"
         hx-target="#id-base-div-2"
-        style="display: none;"
+        style="display: none"
       >
         <i class="bi bi-person-fill"></i>
       </button>
       <button
         id="Navbar.UserSignIn"
-        class="ms-0 ms-lg-2 my-2 my-lg-0 btn btn-sm btn-light rounded-circle"
-        href="/signin"
-        style="display: none;"
+        class="ms-0 ms-lg-2 my-2 my-lg-0 btn btn-sm btn-light"
+        hx-get="/signin"
+        hx-target="#id-base-div-2"
+        style="display: none"
       >
-        <i class="bi bi-box-arrow-in-right"></i>
+      Sign In
+      <i class="bi bi-door-open"></i>
       </button>
     </div>
   </div>
@@ -100,12 +102,15 @@
   }
 
   function profileOrSignIn(signedIn) {
+    console.log(signedIn, typeof signedIn);
     if (signedIn) {
       SignIn.style.display = 'none';
       Profile.style.display = 'block';
+      console.log('if', SignIn.style.display, Profile.style.display);
     } else {
-      SignIn.style.display = 'none';
-      Profile.style.display = 'block';
+      SignIn.style.display = 'block';
+      Profile.style.display = 'none';
+      console.log('else', SignIn.style.display, Profile.style.display);
     }
   }
 
@@ -115,7 +120,7 @@
     "{{ .BrowsingHistoryURL }}"
   );
 
-  profileOrSignIn({{ .UserProfile }});
+  profileOrSignIn({{ if .UserProfile }} true {{ else }} false {{ end }});
 </script>
 
 {{ end }}

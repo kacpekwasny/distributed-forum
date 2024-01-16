@@ -70,5 +70,5 @@ func (n *NoUndo) HandleSignUpPost(w http.ResponseWriter, r *http.Request) {
 // ~~ Sign Out ~~
 func (n *NoUndo) HandleSignOut(w http.ResponseWriter, r *http.Request) {
 	SignOutUser(w)
-	n.HandleHome(w, r)
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

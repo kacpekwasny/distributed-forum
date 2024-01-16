@@ -46,7 +46,7 @@ func RenderStory(w http.ResponseWriter, p *Story) {
 	utils.Pife(err)
 }
 
-func BaseGetFactory(baseValues BaseValues) func(http.ResponseWriter, *http.Request) {
+func BaseGetFactory(baseValues PageBaseValues) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, _ *http.Request) {
 		utils.ExecTemplLogErr(tmpl, w, "base.go.html", baseValues)
 	}

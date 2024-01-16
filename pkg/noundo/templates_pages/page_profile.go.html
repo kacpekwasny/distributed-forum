@@ -1,0 +1,53 @@
+{{ template "basestart" . }} {{ block "profile" . }}
+<!-- https://github.com/mdbootstrap/bootstrap-profiles/blob/main/profiles-5.html -->
+
+<div class="my-5 row d-flex justify-content-center align-items-center h-100">
+  <div class="col col-lg-10 mb-4 mb-lg-0">
+    <div class="card mb-3" style="border-radius: 0.5rem">
+      <div class="row g-0">
+        <div
+          class="col-md-4 text-center d-flex justify-content-center align-items-center px-2 py-4"
+          style="
+            border-top-left-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
+          "
+        >
+        <div class="d-flex justify-content-center align-items-center flex-wrap my-4">
+            <p class="fs-4 text-break">{{ .Username }}</p>
+            <p class="fs-5 text-break">{{ .ParentServerName }}</p>
+        </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card-body px-2 py-4">
+            <h6>Information</h6>
+            <hr class="mt-0 mb-4" />
+            <div class="row pt-1">
+              <div class="col-6 mb-3">
+                <h6>Account birth date:</h6>
+                <p class="text-muted">{{ .AccountBirthDate }}</p>
+              </div>
+              <!-- <div class="col-6 mb-3">
+                <h6>Phone</h6>
+                <p class="text-muted">123 456 789</p>
+              </div> -->
+            </div>
+            <h6>About me:</h6>
+            <hr class="mt-0 mb-2" />
+            <div class="row pt-1">
+              <p class="text-muted">
+                {{ .AboutMe }} About me some text, I am kacper, im form poland,
+                i like bikes and cars.
+              </p>
+            </div>
+          </div>
+        </div>
+        {{ if .SelfProfile }}
+        <div class="d-flex justify-content-end p-3 pt-0">
+          <a class="btn btn-warning" href="/signout">Sign Out</a>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }} {{ template "baseend" . }}

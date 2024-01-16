@@ -1,12 +1,11 @@
 package noundo
 
-type BaseValues struct {
-	Title            string
-	MainComponentURL string
-	NavbarValues
+type PageBaseValues struct {
+	Title string
+	CompNavbarValues
 }
 
-type NavbarValues struct {
+type CompNavbarValues struct {
 	UsingHistoryName    string
 	BrowsingHistoryName string
 	BrowsingHistoryURL  string
@@ -34,18 +33,13 @@ type SignUpFormValues struct {
 	Err string
 }
 
-type WelcomeValues struct {
-	Username string
-	Msg      string
-}
-
 // ~~~~~~  home.go.html ~~~~~~
 
-type HomeValues struct {
+type PageHomeValues struct {
 	DisplayName string
 	LocalAges   []AgeLink
 	Peers       []HistoryInfo
-	NavbarValues
+	PageBaseValues
 }
 
 type AgeLink struct {
@@ -63,7 +57,7 @@ type PageAgeValues struct {
 	WriteStory  CompWriteStory
 	Description string
 	Stories     []CompStoryValues
-	NavbarValues
+	PageBaseValues
 }
 
 type CompWriteStory struct {
@@ -80,4 +74,13 @@ type CompStoryValues struct {
 	Content         string
 
 	// TODO answers
+}
+
+type PageProfileValues struct {
+	Username         string
+	ParentServerName string
+	AccountBirthDate string
+	AboutMe          string
+	SelfProfile      bool
+	PageBaseValues
 }
