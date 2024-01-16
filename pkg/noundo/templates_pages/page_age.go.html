@@ -5,7 +5,9 @@
     <h1>{{ .Name }}</h1>
     <p>{{ .Description }}</p>
 
+    {{ if .UserInfo.SignedIn }}
     {{ template "write_story" .WriteStory }}
+    {{ end }}
 
     <div class="mt-4">
     {{ range .Stories }}

@@ -10,18 +10,18 @@ import (
 
 func (n *NoUndo) HandleSignInGet(w http.ResponseWriter, r *http.Request) {
 	// todo SignIn oauth2
-	jwt := GetJWTFieldsFromContext(r.Context())
-	if jwt == nil {
-		ExecTemplHtmxSensitive(tmpl, w, r, "signin", "signin", nil)
-		return
-	}
-	ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", SignInFormValues{IsUser: IsUser{jwt.Username}})
+	ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", PageSignInValues{
+		PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
+	})
 }
 
 func (n *NoUndo) HandleSignInPost(w http.ResponseWriter, r *http.Request) {
 	err := SignInUser(n.Self().Authenticator(), w, r)
 	if err != nil {
-		ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", SignInFormValues{Err: "Sign In Failed :c"})
+		ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", PageSignInValues{
+			PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
+			Err:            "Sign In Failed :c",
+		})
 		return
 	}
 	n.HandleHome(w, r)
@@ -32,10 +32,10 @@ func (n *NoUndo) HandleSignInPost(w http.ResponseWriter, r *http.Request) {
 func (n *NoUndo) HandleSignUpGet(w http.ResponseWriter, r *http.Request) {
 	jwt := GetJWTFieldsFromContext(r.Context())
 	if jwt == nil {
-		ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", nil)
+		ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", CreatePageBaseValues("Sign In", n.Self(), n.Self(), r))
 		return
 	}
-	ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", SignUpFormValues{IsUser: IsUser{jwt.Username}})
+	ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", SignUpFormValues{UserInfo: UserInfo{Username: jwt.Username}})
 }
 
 func (n *NoUndo) HandleSignUpPost(w http.ResponseWriter, r *http.Request) {

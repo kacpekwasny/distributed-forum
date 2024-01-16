@@ -3,6 +3,12 @@ package noundo
 type PageBaseValues struct {
 	Title string
 	CompNavbarValues
+	UserInfo
+}
+
+type UserInfo struct {
+	Username string
+	SignedIn bool
 }
 
 type CompNavbarValues struct {
@@ -12,17 +18,14 @@ type CompNavbarValues struct {
 	SignedIn            bool
 }
 
-type IsUser struct {
-	CurrentUsername string
-}
-
-type SignInFormValues struct {
-	IsUser
-	Err string
+type PageSignInValues struct {
+	PageBaseValues
+	Email string
+	Err   string
 }
 
 type SignUpFormValues struct {
-	IsUser
+	UserInfo
 	Email    string
 	Username string
 
