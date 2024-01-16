@@ -9,6 +9,7 @@ import (
 // ~~ SignIn ~~
 
 func (n *NoUndo) HandleSignInGet(w http.ResponseWriter, r *http.Request) {
+	// todo SignIn oauth2
 	jwt := GetJWTFieldsFromContext(r.Context())
 	if jwt == nil {
 		ExecTemplHtmxSensitive(tmpl, w, r, "signin", "signin", nil)

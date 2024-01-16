@@ -52,6 +52,7 @@
           placeholder="Story, Age, History..."
           aria-label="Search"
         />
+        <!-- TODO search -->
         <button
           class="btn btn-sm btn-outline-success input-group-text"
           type="submit"
@@ -120,7 +121,7 @@
     "{{ .BrowsingHistoryURL }}"
   );
 
-  profileOrSignIn({{ if .UserProfile }} true {{ else }} false {{ end }});
+  profileOrSignIn({{ if .SignedIn }} true {{ else }} false {{ end }});
 </script>
 
 {{ end }}

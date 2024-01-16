@@ -9,7 +9,7 @@ type CompNavbarValues struct {
 	UsingHistoryName    string
 	BrowsingHistoryName string
 	BrowsingHistoryURL  string
-	UserProfile         bool
+	SignedIn            bool
 }
 
 type IsUser struct {

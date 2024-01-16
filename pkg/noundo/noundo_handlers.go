@@ -26,18 +26,11 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 			LocalAges: utils.Map(
 				ages,
 				func(a AgeIface) AgeLink {
-					return CreateAgeInfo("/", n.Self().GetName(), a.GetName())
+					return createAgeInfo("/", n.Self().GetName(), a.GetName())
 				},
 			),
-			Peers: utils.Map(n.Peers(), CreateHistoryInfo),
-			PageBaseValues: PageBaseValues{
-				Title: "Welcome :)",
-				CompNavbarValues: CompNavbarValues{
-					UsingHistoryName:    self.GetName(),
-					BrowsingHistoryName: self.GetName(),
-					UserProfile:         GetJWTFieldsFromContext(r.Context()) != nil,
-				},
-			},
+			Peers:          utils.Map(n.Peers(), createHistoryInfo),
+			PageBaseValues: createPageBaseValues(n.Self().GetName(), n.Self(), n.Self(), r),
 		},
 	)
 }
@@ -83,19 +76,11 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 
 	// TODO - if not peered with this history -> no option to create story, write answers,
 	ExecTemplHtmxSensitive(tmpl, w, r, "age", utils.LeftLogRight(url.JoinPath("/a", historyName, ageName)), &PageAgeValues{
-		Name:        ageName,
-		WriteStory:  CreateCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
-		Description: "TODO, description is hadrdcoded rn.",
-		Stories:     stories,
-		PageBaseValues: PageBaseValues{
-			Title: ageName,
-			CompNavbarValues: CompNavbarValues{
-				UsingHistoryName:    n.Self().GetName(),
-				BrowsingHistoryName: historyName,
-				BrowsingHistoryURL:  history.GetURL(),
-				UserProfile:         GetJWTFieldsFromContext(r.Context()) != nil,
-			},
-		},
+		Name:           ageName,
+		WriteStory:     createCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
+		Description:    "TODO, description is hadrdcoded rn.",
+		Stories:        stories,
+		PageBaseValues: createPageBaseValues(ageName, n.Self(), history, r),
 	})
 }
 
@@ -119,13 +104,7 @@ func (n *NoUndo) HandleSelfProfile(w http.ResponseWriter, r *http.Request) {
 		AccountBirthDate: "todo birthdate",
 		AboutMe:          "todo - keep user aboutme - only editable thing",
 		SelfProfile:      true,
-		PageBaseValues: PageBaseValues{
-			Title: "Profile",
-			CompNavbarValues: CompNavbarValues{
-				UsingHistoryName:    n.Self().GetName(),
-				BrowsingHistoryName: n.Self().GetName(),
-			},
-		},
+		PageBaseValues:   createPageBaseValues("Title", n.Self(), n.Self(), r),
 	})
 }
 
@@ -144,12 +123,6 @@ func (n *NoUndo) HandleProfile(w http.ResponseWriter, r *http.Request) {
 		AccountBirthDate: "todo birthdate",
 		AboutMe:          "todo - keep user aboutme - only editable thing",
 		SelfProfile:      false,
-		PageBaseValues: PageBaseValues{
-			Title: "Profile",
-			CompNavbarValues: CompNavbarValues{
-				UsingHistoryName:    n.Self().GetName(),
-				BrowsingHistoryName: n.Self().GetName(),
-			},
-		},
+		PageBaseValues:   createPageBaseValues("Profile", n.Self(), n.Self(), r),
 	})
 }
