@@ -9,24 +9,40 @@
   }
 </style>
 
-<a hx-get="{{ .URL }}" class="card" style="text-decoration: none;">
+<a hx-get="{{ .URL }}" class="card" style="text-decoration: none">
   <div class="card-header">
-    <figure class="w-100 d-flex justify-content-between m-0">
+    <figure class="w-100 d-flex justify-content-between align-items-center m-0">
       <blockquote class="blockquote m-0">
         <p>{{ .Title }}</p>
       </blockquote>
-      <figcaption class="blockquote-footer m-0 self-align-end">
+      <figcaption class="blockquote-footer m-0">
         <cite title="Author of the Story.">{{ .Author }}</cite>
       </figcaption>
     </figure>
   </div>
   <div class="card-body">
-    <p class="overflow-auto text-break line-clamp-4" id="story-content-{{.Id}}" background-color="primary">{{ .Content }}</p>
-    <button class="btn btn-sm btn-outline-info p-1" onclick="document.querySelector('#story-content-{{.Id}}').classList.add('line-clamp-4')">Read less...</button>
-    <button class="btn btn-sm btn-outline-warning p-1" onclick="document.querySelector('#story-content-{{.Id}}').classList.remove('line-clamp-4')">Read more...</button>
+    <p
+      class="px-2 rounded overflow-auto text-break line-clamp-4"
+      id="story-content-{{.Id}}"
+      background-color="primary"
+    >
+      {{ .Content }}
+    </p>
+    <button
+      class="btn btn-sm btn-outline-info p-1"
+      onclick="document.querySelector('#story-content-{{.Id}}').classList.add('line-clamp-4')"
+    >
+      Read less...
+    </button>
+    <button
+      class="btn btn-sm btn-outline-warning p-1"
+      onclick="document.querySelector('#story-content-{{.Id}}').classList.remove('line-clamp-4')"
+    >
+      Read more...
+    </button>
   </div>
 </a>
 
-  <!-- TODO comments -->
+<!-- TODO comments -->
 
 {{ end }}
