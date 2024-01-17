@@ -78,7 +78,3 @@ func ExecTemplHtmxSensitiveExplicitBase(tmpl *template.Template, w http.Response
 func ExecTemplHtmxSensitive(tmpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pushUrl string, data any) {
 	ExecTemplHtmxSensitiveExplicitBase(tmpl, w, r, pageName, "page_"+pageName+".go.html", pushUrl, data)
 }
-
-func jwtInCtx(r *http.Request) bool {
-	return GetJWTFieldsFromContext(r.Context()) != nil
-}
