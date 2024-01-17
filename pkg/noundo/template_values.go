@@ -1,9 +1,10 @@
 package noundo
 
 type PageBaseValues struct {
-	Title string
 	CompNavbarValues
 	UserInfo
+
+	Title string
 }
 
 type UserInfo struct {
@@ -19,12 +20,14 @@ type CompNavbarValues struct {
 
 type PageSignInValues struct {
 	PageBaseValues
+
 	Email string
 	Err   string
 }
 
-type SignUpFormValues struct {
-	UserInfo
+type PageSignUpValues struct {
+	PageBaseValues
+
 	Email    string
 	Username string
 

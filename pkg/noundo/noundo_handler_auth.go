@@ -2,8 +2,6 @@ package noundo
 
 import (
 	"net/http"
-
-	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
 // ~~ SignIn ~~
@@ -31,12 +29,9 @@ func (n *NoUndo) HandleSignInPost(w http.ResponseWriter, r *http.Request) {
 // ~~ SignUp ~~
 
 func (n *NoUndo) HandleSignUpGet(w http.ResponseWriter, r *http.Request) {
-	jwt := GetJWTFieldsFromContext(r.Context())
-	if jwt == nil {
-		ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", CreatePageBaseValues("Sign In", n.Self(), n.Self(), r))
-		return
-	}
-	ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", SignUpFormValues{UserInfo: UserInfo{Username: jwt.Username}})
+	ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", PageSignUpValues{
+		PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
+	})
 }
 
 func (n *NoUndo) HandleSignUpPost(w http.ResponseWriter, r *http.Request) {
@@ -49,7 +44,7 @@ func (n *NoUndo) HandleSignUpPost(w http.ResponseWriter, r *http.Request) {
 		regResp = n.uni.Authenticator().SignUpUser(signUp)
 	}
 
-	var rfv SignUpFormValues
+	var rfv PageSignUpValues
 
 	if !regResp.Ok {
 		switch regResp.MsgCode {
@@ -66,7 +61,10 @@ func (n *NoUndo) HandleSignUpPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("HX-Push-Url", "/signin")
-	ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", utils.Ms{"Email": signUp.Email})
+	ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", PageSignInValues{
+		PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
+		Email:          signUp.Email,
+	})
 }
 
 // ~~ Sign Out ~~

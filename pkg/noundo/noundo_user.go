@@ -52,7 +52,7 @@ type UserFullIface interface {
 
 type UserAuthIface interface {
 	EmailIface
-	UsernameIface
+	UserPublicIface
 	PasswdhashIface
 }
 

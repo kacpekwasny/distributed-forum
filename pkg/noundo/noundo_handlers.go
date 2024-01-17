@@ -96,7 +96,9 @@ func (n *NoUndo) HandleSelfProfile(w http.ResponseWriter, r *http.Request) {
 	}
 	user, err := n.Self().GetUser(userJWT.Username)
 	if err != nil {
-		slog.Error("cannot get user, but is logged in", userJWT.Username, userJWT.UserFUsername)
+		slog.Error("cannot retrieve user from database, but has valid JWT", "username", userJWT.Username, "parent server", userJWT.ParentServer)
+		utils.WriteJsonWithStatus(w, "my apologies, you don't exist", http.StatusInternalServerError)
+		return
 	}
 	ExecTemplHtmxSensitive(tmpl, w, r, "profile", "/profile", PageProfileValues{
 		Username:         userJWT.Username,

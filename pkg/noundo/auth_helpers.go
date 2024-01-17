@@ -6,9 +6,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/schema"
+	"golang.org/x/exp/slog"
 )
 
 var jwtCookieKey string
@@ -46,22 +48,26 @@ func GetSignInRequest(r *http.Request) (*SignInRequest, error) {
 func SignInUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request) error {
 	authMe, err := GetSignInRequest(r)
 	if err != nil {
-		log.Printf("parse Credentials from request: %s\n", err)
+		slog.Error("parse credentials from request: %s\n", err)
 		return err
 	}
 
 	err = auth.ValidateAuthMe(authMe)
 	if err != nil {
-		log.Printf("validate Credentials: %s\n", err)
+		slog.Info("validate credentials: %s\n", err)
 		return err
 	}
 
 	user := auth.GetUserByEmail(authMe.Email)
-
+	newJwt := JWTFields{
+		Username:           user.Username(),
+		ParentServer:       user.ParentServerName(),
+		JWTIssuedTimestamp: time.Now().Unix(),
+	}
 	// TODO: currently unsecure
 	token := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
-		newJWTMapClaims(JWTFields{Username: user.Username()}),
+		newJWTMapClaims(newJwt),
 	)
 
 	tokenString, err := token.SignedString(hmacSecret)
@@ -76,6 +82,8 @@ func SignInUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request)
 		HttpOnly: true,
 		SameSite: http.SameSiteDefaultMode, // TODO: Unsecure?
 	})
+
+	*r = *AddJWTtoCtx(r, newJwt)
 
 	return nil
 }
