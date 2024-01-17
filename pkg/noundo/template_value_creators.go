@@ -42,7 +42,6 @@ func CreatePageBaseValues(title string, using HistoryPublicIface, browsing Histo
 			UsingHistoryName:    using.GetName(),
 			BrowsingHistoryName: browsing.GetName(),
 			BrowsingHistoryURL:  browsing.GetURL(),
-			SignedIn:            jwtInCtx(r),
 		},
 	}
 }

@@ -115,6 +115,13 @@
     }
   }
 
+</script>
+{{ template "navbar_js" . }}
+
+{{ end }}
+
+{{ block "navbar_js" . }}
+<script>
   setUsingBrowsingHistoryName(
     "{{ .UsingHistoryName }}",
     "{{ .BrowsingHistoryName }}",
@@ -123,5 +130,4 @@
 
   profileOrSignIn({{ if .SignedIn }} true {{ else }} false {{ end }});
 </script>
-
 {{ end }}

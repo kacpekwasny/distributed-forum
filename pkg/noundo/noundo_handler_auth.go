@@ -24,6 +24,7 @@ func (n *NoUndo) HandleSignInPost(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	// http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 	n.HandleHome(w, r)
 }
 

@@ -15,7 +15,6 @@ type CompNavbarValues struct {
 	UsingHistoryName    string
 	BrowsingHistoryName string
 	BrowsingHistoryURL  string
-	SignedIn            bool
 }
 
 type PageSignInValues struct {
