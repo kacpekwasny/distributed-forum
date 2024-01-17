@@ -25,7 +25,7 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	storiesIface, err := history.GetStories(
+	stories, err := history.GetStories(
 		[]string{ageName},
 		int(utils.GetQueryParamInt(r, "start", 0)),
 		int(utils.GetQueryParamInt(r, "end", 50)),
@@ -38,12 +38,14 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stories := make([]CompStoryValues, len(storiesIface))
-	for i, s := range storiesIface {
-		stories[i] = CompStoryValues{
-			Id:              string(s.Id()),
-			AuthorFUsername: s.AuthorFUsername(),
-			Content:         s.Content(),
+	storiesForTmpl := make([]CompStoryValues, len(stories))
+	for i, s := range stories {
+		storiesForTmpl[i] = CompStoryValues{
+			Id:      s.Id(),
+			Author:  s.AuthorFUsername(),
+			Title:   s.Title,
+			Content: s.Contents,
+			URL:     utils.LeftLogRight[string](url.JoinPath("/a", historyName, ageName, s.Id(), s.Title)),
 		}
 	}
 
@@ -52,7 +54,7 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 		Name:           ageName,
 		WriteStory:     CreateCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
 		Description:    "TODO, description is hadrdcoded rn.",
-		Stories:        stories,
+		Stories:        storiesForTmpl,
 		PageBaseValues: CreatePageBaseValues(ageName, n.Self(), history, r),
 	})
 }

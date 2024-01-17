@@ -74,9 +74,11 @@ type CompWriteStory struct {
 }
 
 type CompStoryValues struct {
-	Id              string
-	AuthorFUsername string
-	Content         string
+	Id      string
+	Title   string
+	Author  string
+	Content string
+	URL     string
 
 	// TODO answers
 }

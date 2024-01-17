@@ -1,22 +1,31 @@
 {{ block "post" . }}
 
-  <style>
-    .line-clamp-4 {
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      /* truncate to 4 lines */
-      -webkit-line-clamp: 4;
-    }
-  </style>
+<style>
+  .line-clamp-4 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+</style>
 
-  <div class="p-1 container align-center border border-primary">
-    <p class="">Story ID: {{ .Id }}</p>
-    <p class="overflow-auto">Author username: {{ .AuthorFUsername }}</p>
+<a hx-get="{{ .URL }}" class="card" style="text-decoration: none;">
+  <div class="card-header">
+    <figure class="w-100 d-flex justify-content-between m-0">
+      <blockquote class="blockquote m-0">
+        <p>{{ .Title }}</p>
+      </blockquote>
+      <figcaption class="blockquote-footer m-0 self-align-end">
+        <cite title="Author of the Story.">{{ .Author }}</cite>
+      </figcaption>
+    </figure>
+  </div>
+  <div class="card-body">
     <p class="overflow-auto text-break line-clamp-4" id="story-content-{{.Id}}" background-color="primary">{{ .Content }}</p>
     <button class="btn btn-sm btn-outline-info p-1" onclick="document.querySelector('#story-content-{{.Id}}').classList.add('line-clamp-4')">Read less...</button>
     <button class="btn btn-sm btn-outline-warning p-1" onclick="document.querySelector('#story-content-{{.Id}}').classList.remove('line-clamp-4')">Read more...</button>
   </div>
+</a>
 
   <!-- TODO comments -->
 
