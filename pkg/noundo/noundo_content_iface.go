@@ -7,6 +7,7 @@ import "github.com/kacpekwasny/noundo/pkg/enums"
 type StoryIface interface {
 	PostableIface
 	AnswerableIface
+	Title() string
 }
 
 type AnswerIface interface {

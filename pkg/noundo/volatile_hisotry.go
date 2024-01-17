@@ -3,6 +3,7 @@ package noundo
 import (
 	"errors"
 	"sort"
+	"time"
 
 	"github.com/kacpekwasny/noundo/pkg/utils"
 	"golang.org/x/exp/maps"
@@ -14,9 +15,9 @@ import (
 type HistoryVolatile struct {
 	name    string
 	url     string
-	ages    map[string]AgeIface
-	stories map[Id]StoryIface
-	answers map[Id]AnswerIface
+	ages    map[string]*AgeVolatile
+	stories map[string]*Story
+	answers map[string]*Answer
 	auth    AuthenticatorIface
 
 	// email: UserIface
@@ -29,9 +30,9 @@ func NewHistoryVolatile(domain string) HistoryFullIface {
 	return &HistoryVolatile{
 		name:    domain,
 		url:     "http://" + domain,
-		ages:    make(map[string]AgeIface),
-		stories: make(map[Id]StoryIface),
-		answers: make(map[Id]AnswerIface),
+		ages:    make(map[string]*AgeVolatile),
+		stories: make(map[string]*Story),
+		answers: make(map[string]*Answer),
 		auth:    NewAuthenticator(NewVolatileAuthStorage(&usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST),
 		users:   usersUsername,
 	}
@@ -49,20 +50,20 @@ func (h *HistoryVolatile) CreateAge(owner UserPublicIface, name string) (AgeIfac
 	return age, nil
 }
 
-func (h *HistoryVolatile) GetStory(id Id) (StoryIface, error) {
+func (h *HistoryVolatile) GetStory(id string) (Story, error) {
 	s, ok := h.stories[id]
-	return s, utils.ErrIfNotOk(ok, "id not found")
+	return *s, utils.ErrIfNotOk(ok, "id not found")
 }
 
 // Get answer from anywhere in
-func (h *HistoryVolatile) GetAnswer(id Id) (AnswerIface, error) {
+func (h *HistoryVolatile) GetAnswer(id string) (Answer, error) {
 	s, ok := h.answers[id]
-	return s, utils.ErrIfNotOk(ok, "id not found")
+	return *s, utils.ErrIfNotOk(ok, "id not found")
 }
 
 // GetFirst n stories ordered by different atributes, from []ages,
-func (h *HistoryVolatile) GetStories(ageNames []string, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
-	stories := []StoryIface{}
+func (h *HistoryVolatile) GetStories(ageNames []string, start int, end int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error) {
+	stories := []*Story{}
 	for _, story := range h.stories {
 		if filter == nil || filter.Keep(story) {
 			stories = append(stories, story)
@@ -101,7 +102,11 @@ func (h *HistoryVolatile) GetURL() string {
 }
 
 func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error) {
-	return maps.Values(h.ages), nil
+	ages := []AgeIface{}
+	for _, a := range maps.Values(h.ages) {
+		ages = append(ages, a)
+	}
+	return ages, nil
 }
 
 func (h *HistoryVolatile) GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
@@ -114,17 +119,31 @@ func (h *HistoryVolatile) Authenticator() AuthenticatorIface {
 
 // Single age
 func (h *HistoryVolatile) GetAge(name string) (AgeIface, error) {
-	return utils.MapGetErr[string, AgeIface](h.ages, name)
+	return utils.MapGetErr[string, *AgeVolatile](h.ages, name)
 }
 
-func (h *HistoryVolatile) CreateStory(ageName string, author UserPublicIface, story StoryContent) (StoryIface, error) {
+func (h *HistoryVolatile) CreateStory(ageName string, author UserPublicIface, story StoryContent) (Story, error) {
 	_, exists := h.ages[ageName]
 	if !exists {
-		return nil, errors.New("age with ageName: '" + ageName + "' doesnt exist")
+		return Story{}, errors.New("age with ageName: '" + ageName + "' doesnt exist")
 	}
 
 	id := NewRandId()
-	storyInternal := NewStoryVolatile(author.FullUsername(), id, story.Content)
-	h.stories[id] = storyInternal
+
+	storyInternal := Story{
+		Title: story.Title,
+		Postable: Postable{
+			Id:            id,
+			UserFUsername: author.FullUsername(),
+			Contents:      story.Content,
+			TimeStampable: TimeStampable{
+				Timestamp: time.Now().Unix(),
+			},
+		},
+		Reactionable: Reactionable{
+			Reactions: []Reaction{},
+		},
+	}
+	h.stories[id] = &storyInternal
 	return storyInternal, nil
 }

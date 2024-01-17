@@ -1,7 +1,7 @@
 package noundo
 
 type AgeIface interface {
-	GetId() Id
+	GetId() string
 	GetName() string
 	SetName(name string) error
 

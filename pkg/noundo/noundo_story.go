@@ -1,8 +1,6 @@
 package noundo
 
 import (
-	"time"
-
 	"github.com/kacpekwasny/noundo/pkg/enums"
 )
 
@@ -31,29 +29,29 @@ func (s *CreateStory) Content() string {
 	return s.content
 }
 
-func NewStoryVolatile(authorFullUsername string, id Id, content string) StoryIface {
-	return &Story{
-		Postable: Postable{
-			id:            id,
-			userFUsername: authorFullUsername,
-			contents:      content,
-			TimeStampable: TimeStampable{
-				timestamp: uint64(time.Now().Unix()),
-			},
-		},
-	}
-}
+// func NewStoryVolatile(authorFullUsername string, id Id, content string) StoryIface {
+// 	return &Story{
+// 		Postable: Postable{
+// 			Id:            id,
+// 			UserFUsername: authorFullUsername,
+// 			Contents:      content,
+// 			TimeStampable: TimeStampable{
+// 				Timestamp: uint64(time.Now().Unix()),
+// 			},
+// 		},
+// 	}
+// }
 
-func (s *Story) Id() Id {
-	return s.Postable.id
+func (s *Story) Id() string {
+	return s.Postable.Id
 }
 
 func (s *Story) Content() string {
-	return s.contents
+	return s.Contents
 }
 
 func (s *Story) AuthorFUsername() string {
-	return s.userFUsername
+	return s.UserFUsername
 }
 
 func (s *Story) ReactionStats() (map[enums.ReactionType]int, error) {

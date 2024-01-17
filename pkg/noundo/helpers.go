@@ -23,7 +23,7 @@ const (
 var src = rand.NewSource(time.Now().UnixNano())
 
 // https://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-go
-func NewRandId() Id {
+func NewRandId() string {
 	b := make([]byte, idLen)
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
 	for i, cache, remain := idLen-1, src.Int63(), letterIdxMax; i >= 0; {
@@ -38,7 +38,7 @@ func NewRandId() Id {
 		remain--
 	}
 
-	return Id(*(*string)(unsafe.Pointer(&b)))
+	return *(*string)(unsafe.Pointer(&b))
 }
 
 func RenderStory(w http.ResponseWriter, p *Story) {

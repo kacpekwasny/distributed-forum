@@ -23,22 +23,22 @@ type HistoryPublicIface interface {
 	GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error)
 
 	//
-	GetStory(id Id) (StoryIface, error)
+	GetStory(id string) (Story, error)
 
 	// Get answer from anywhere in
-	GetAnswer(id Id) (AnswerIface, error)
+	GetAnswer(id string) (Answer, error)
 
 	// GetFirst n stories ordered by different atributes, from []ages,
-	GetStories(ageNames []string, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error)
+	GetStories(ageNames []string, start int, end int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error)
 
 	//
-	GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error)
+	// GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[Story], filter FilterIface[Story]) ([]Story, error)
 
 	// Retrive all user info by supplying a username
 	GetUser(username string) (UserPublicIface, error)
 
 	// Create a new story within
-	CreateStory(ageName string, author UserPublicIface, story StoryContent) (StoryIface, error)
+	CreateStory(ageName string, author UserPublicIface, story StoryContent) (Story, error)
 
 	// TODO:
 	// GetAges that user joined,

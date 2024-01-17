@@ -3,14 +3,14 @@ package noundo
 // a *AgeVolatile AgeIface
 
 type AgeVolatile struct {
-	id              Id
+	id              string
 	name            string
 	ownerUsername   string
 	adminsUsernames []string
 	auth            AuthenticatorIface
 }
 
-func (a *AgeVolatile) GetId() Id {
+func (a *AgeVolatile) GetId() string {
 	return a.id
 }
 
