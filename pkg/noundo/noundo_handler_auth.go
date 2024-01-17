@@ -7,10 +7,12 @@ import (
 // ~~ SignIn ~~
 
 func (n *NoUndo) HandleSignInGet(w http.ResponseWriter, r *http.Request) {
-	// todo SignIn oauth2
-	ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", PageSignInValues{
-		PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
-	})
+	ExecTemplHtmxSensitive(tmpl, w, r, "signin",
+		"/signin",
+		PageSignInValues{
+			PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
+		},
+	)
 }
 
 func (n *NoUndo) HandleSignInPost(w http.ResponseWriter, r *http.Request) {

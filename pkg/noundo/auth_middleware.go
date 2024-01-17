@@ -11,7 +11,7 @@ type privCtxType string
 const ctxJWTkey privCtxType = "username"
 
 // If request not authenticated - return error
-func GetJWTFieldsFromContext(ctx context.Context) *JWTFields {
+func GetJWT(ctx context.Context) *JWTFields {
 	v := ctx.Value(ctxJWTkey)
 	if v == nil {
 		return nil
@@ -23,14 +23,14 @@ func GetJWTFieldsFromContext(ctx context.Context) *JWTFields {
 	return &jwtfields
 }
 
-func HttpAuthenticator(h http.Handler) http.Handler {
+func HttpAuthenticator(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		jwt, err := JWTCheckAndParse(r)
 		if err == nil {
 			slog.Debug("request from an authenticated user", "username", jwt.Username)
 			*r = *AddJWTtoCtx(r, jwt)
 		}
-		h.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
 	})
 }
 

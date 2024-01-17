@@ -9,7 +9,7 @@
       {{ if .UserInfo.SignedIn }}
       {{ template "signed_in" .UserInfo.Username }}
       {{ else }}
-      <form hx-post="signin" hx-target="#id-base-div-2" autocomplete="off">
+      <form hx-post="/signin" hx-target="#id-base-div-2" autocomplete="off">
         <div class="mb-3">
           <label class="mb-2 text-muted" for="email">Email</label>
           <input

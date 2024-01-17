@@ -19,17 +19,17 @@ func validStory(story StoryContent) bool {
 		(TITLE_LEN_MIN <= len(story.Title)) && (len(story.Title) <= TITLE_LEN_MAX))
 }
 
-func (n *NoUndo) HandleCreateStory(w http.ResponseWriter, r *http.Request) {
+func (n *NoUndo) HandleCreateStoryPost(w http.ResponseWriter, r *http.Request) {
 	var story StoryContent
+	jwt := GetJWT(r.Context())
+	if jwt == nil {
+		utils.WriteJsonWithStatus(w, utils.Ms{"info": "unauthorized"}, http.StatusUnauthorized)
+		return
+	}
 
 	err := json.NewDecoder(r.Body).Decode(&story)
 	if err != nil {
 		utils.WriteJsonWithStatus(w, utils.Ms{"info": "json_decode_fail"}, http.StatusBadRequest)
-		return
-	}
-	jwt := GetJWTFieldsFromContext(r.Context())
-	if jwt == nil {
-		utils.WriteJsonWithStatus(w, utils.Ms{"info": "unauthorized"}, http.StatusUnauthorized)
 		return
 	}
 

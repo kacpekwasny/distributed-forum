@@ -78,3 +78,14 @@ func ExecTemplHtmxSensitiveExplicitBase(tmpl *template.Template, w http.Response
 func ExecTemplHtmxSensitive(tmpl *template.Template, w http.ResponseWriter, r *http.Request, pageName string, pushUrl string, data any) {
 	ExecTemplHtmxSensitiveExplicitBase(tmpl, w, r, pageName, "page_"+pageName+".go.html", pushUrl, data)
 }
+
+func AddQueryParamsToURL(url string, keysAndValues map[string]string) string {
+	if url[len(url)-1] != '?' {
+		url += "?"
+	}
+	for k, v := range keysAndValues {
+		url += k + "=" + v + "&"
+	}
+	// idk if trailing "&" does any harm
+	return url
+}

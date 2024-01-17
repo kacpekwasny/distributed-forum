@@ -89,7 +89,7 @@ func (n *NoUndo) HandleAgeShortcut(w http.ResponseWriter, r *http.Request) {
 }
 
 func (n *NoUndo) HandleSelfProfile(w http.ResponseWriter, r *http.Request) {
-	userJWT := GetJWTFieldsFromContext(r.Context())
+	userJWT := GetJWT(r.Context())
 	if userJWT == nil {
 		http.Redirect(w, r, "/signin", http.StatusTemporaryRedirect)
 		return

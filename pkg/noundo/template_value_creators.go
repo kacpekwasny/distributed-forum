@@ -47,7 +47,7 @@ func CreatePageBaseValues(title string, using HistoryPublicIface, browsing Histo
 }
 
 func CreateUserInfo(r *http.Request) UserInfo {
-	jwt := GetJWTFieldsFromContext(r.Context())
+	jwt := GetJWT(r.Context())
 	if jwt == nil {
 		return UserInfo{
 			SignedIn: false,

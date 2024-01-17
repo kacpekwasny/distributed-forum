@@ -89,3 +89,8 @@ type PageProfileValues struct {
 	SelfProfile      bool
 	PageBaseValues
 }
+
+type Page401Values struct {
+	RequestedPath string
+	PageBaseValues
+}
