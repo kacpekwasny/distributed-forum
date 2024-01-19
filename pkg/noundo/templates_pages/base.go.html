@@ -14,11 +14,11 @@
 	<script src="https://unpkg.com/htmx.org/dist/ext/head-support.js"></script>
 </head>
 
-<body hx-ext="head-support">
+<body hx-ext="head-support" data-bs-theme="dark">
 
 	{{ template "navbar" . }}
 	  
-	<section class="h-100">
+	<section class="h-100" style="min-height: 90vh;">
 		<div class="container h-100">
 			<div id="id-base-div-1" class="row justify-content-sm-center h-100">
 				<div id="id-base-div-2" class="row justify-content-sm-center h-100">
@@ -32,6 +32,9 @@
 			</div>
 		</div>
 	</section>
+
+	{{ template "footer" . }}
+
 </body>
 </html>
 {{end}}
