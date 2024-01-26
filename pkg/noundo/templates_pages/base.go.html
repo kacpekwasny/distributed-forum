@@ -32,6 +32,9 @@
 		  -webkit-box-orient: vertical;
 		  -webkit-line-clamp: 4;
 		}
+    .read {
+      max-width: 1000px;
+    }
 	  </style>
 </head>
 
@@ -47,8 +50,9 @@
         </div>
       </div>
     </section>
-
-    {{ template "footer" . }}
+    <div style="margin-top: 8em;">
+      {{ template "footer" . }}
+    </div>
   </body>
 </html>
 {{end}}
