@@ -54,8 +54,9 @@ func createStories(h n.HistoryFullIface, m int, age string, author n.UserPublicI
 			Title:   lorGen.Words(5),
 			Content: lorGen.Sentences(rint(30)),
 		})
-		a, _ := h.CreateAnswer(author, s.Id(), lorGen.Words(5+rint(30)))
-		h.CreateAnswer(author, a.PostableId, lorGen.Words(5+rint(30)))
+		a1, _ := h.CreateAnswer(author, s.Id(), lorGen.Words(5+rint(30)))
+		a12, _ := h.CreateAnswer(author, a1.PostableId, lorGen.Words(5+rint(30)))
+		h.CreateAnswer(author, a12.PostableId, lorGen.Words(5+rint(30)))
 		h.CreateAnswer(author, s.Id(), lorGen.Words(5+rint(30)))
 	}
 }

@@ -29,8 +29,8 @@ func CreateCompWriteStory(hxPost string) CompWriteStory {
 		HxPost:        hxPost,
 		TitleLenMin:   TITLE_LEN_MIN,
 		TitleLenMax:   TITLE_LEN_MAX,
-		ContentLenMin: CONTENT_LEN_MIN,
-		ContentLenMax: CONTENT_LEN_MAX,
+		ContentLenMin: STORY_LEN_MIN,
+		ContentLenMax: STORY_LEN_MAX,
 	}
 }
 

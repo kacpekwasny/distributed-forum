@@ -1,14 +1,15 @@
 {{ block "answer_tree_node" . }}
-<div>
-  <div class="answers">
+  <div class="answers mt-2">
     {{ template "answer" . }}
-    <div class="more-answ">
-      {{ if .Answerable.Answers }}
+    {{ if .Answerable.Answers }}
+    <div class="d-flex flex-row">
+      <div class="p-0 me-3" style="width: 1px; background-color: beige; flex-shrink: 0;"></div>
+      <div>
         {{ range .Answerable.Answers }} 
-            {{ template "answer_tree_node" . }} 
+          {{ template "answer_tree_node" . }} 
         {{ end }} 
+      </div>
+      </div>
       {{ end }}
-    </div>
   </div>
-</div>
 {{ end }}

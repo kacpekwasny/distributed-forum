@@ -1,6 +1,5 @@
 {{ block "answers_section" . }}
 <div>
-    {{ template "write_answer" . }}
     <div>
         {{ range .Answerable.Answers }}
             {{ template "answer_tree_node" . }}

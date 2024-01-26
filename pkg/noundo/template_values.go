@@ -81,6 +81,13 @@ type CompWriteStory struct {
 	ContentLenMax int
 }
 
+type CompAnswerWrite struct {
+	AnswerToId         string
+	WriteAnswerPostURL string
+	ContentLenMin      int
+	ContentLenMax      int
+}
+
 type CompStoryValues struct {
 	Story Story
 	// StoryId      string
@@ -97,6 +104,7 @@ type PageStoryValues struct {
 	PageBaseValues
 	CompStoryValues
 	CompAgeHeaderValues
+	CompAnswerWrite
 }
 
 // TODO - struct UserIdentity - Username, ParnetServer, FUsername,

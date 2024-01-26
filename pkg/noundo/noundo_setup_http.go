@@ -27,6 +27,9 @@ func (n *NoUndo) setupRouter() {
 	r.HandleFunc("/a/{history}/{age}/create-story", n.HandleCreateStoryPost).Methods("POST")
 	r.HandleFunc("/a/{history}/story/{story-id}", n.HandleStoryGet).Methods("GET")
 
+	r.HandleFunc("/write-answer-box/{postable-id}", n.HandleCreateAnswerGet).Methods("GET")
+	r.HandleFunc("/write-answer/{history}/{postable-id}", n.HandleCreateAnswerPost).Methods("POST")
+
 	r.HandleFunc("/profile", n.HandleSelfProfile).Methods("GET")
 	r.HandleFunc("/profile/{username}", n.HandleProfile).Methods("GET")
 
