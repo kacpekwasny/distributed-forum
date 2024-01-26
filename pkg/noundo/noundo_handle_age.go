@@ -41,21 +41,20 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	storiesForTmpl := make([]CompStoryValues, len(stories))
 	for i, s := range stories {
 		storiesForTmpl[i] = CompStoryValues{
-			Id:      s.Id(),
-			Author:  s.AuthorFUsername(),
-			Title:   s.Title,
-			Content: s.Contents,
-			URL:     utils.LeftLogRight[string](url.JoinPath("/a", historyName, ageName, s.Id(), s.Title)),
+			StoryId:      s.Id(),
+			StoryAuthor:  s.AuthorFUsername(),
+			StoryTitle:   s.Title,
+			StoryContent: s.Contents,
+			StoryURL:     utils.LeftLogRight[string](url.JoinPath("/a", historyName, "story", s.Id())),
 		}
 	}
 
 	// TODO - if not peered with this history -> no option to create story, write answers,
 	ExecTemplHtmxSensitive(tmpl, w, r, "age", utils.LeftLogRight(url.JoinPath("/a", historyName, ageName)), &PageAgeValues{
-		Name:           ageName,
-		WriteStory:     CreateCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
-		Description:    "TODO, description is hadrdcoded rn.",
-		Stories:        storiesForTmpl,
-		PageBaseValues: CreatePageBaseValues(ageName, n.Self(), history, r),
+		CompAgeHeaderValues: CreateAgeHeader(historyName, ageName),
+		WriteStory:          CreateCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
+		Stories:             storiesForTmpl,
+		PageBaseValues:      CreatePageBaseValues(ageName, n.Self(), history, r),
 	})
 }
 

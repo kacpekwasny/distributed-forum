@@ -1,0 +1,10 @@
+{{ template "basestart" . }} {{ template "age_header" . }}
+<!-- <div class="py-4"> -->
+<div id="id-main-age">
+  {{ block "story_page" . }}
+  <div class="mt-5">{{ template "story" .CompStoryValues }}</div>
+  {{ end }}
+</div>
+<!-- </div> -->
+
+{{ template "baseend" . }}

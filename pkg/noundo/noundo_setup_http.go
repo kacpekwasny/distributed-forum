@@ -17,17 +17,17 @@ func (n *NoUndo) setupRouter() {
 	// otherwise, they will return 404
 	// if more personalized unauth handling is required
 	// user router r, and then handle it yourself with 'GetJWT'
-	p := r.NewRoute().Subrouter()
-	p.Use(n.AuthOr401)
+	// p := r.NewRoute().Subrouter()
+	// p.Use(n.AuthOr401)
 
 	r.HandleFunc("/", n.HandleHome).Methods("GET")
 	r.HandleFunc("/a/{age}", n.HandleAgeShortcut).Methods("GET")
 	r.HandleFunc("/a/{history}/{age}", n.HandleAge).Methods("GET")
 
-	p.HandleFunc("/a/{history}/{age}/create-story", n.HandleCreateStoryPost).Methods("POST")
-	// todo r.HandleFunc("/a/{history}/{age}/story/{story-id}/{title}", n.HandleStoryGet).Methods("GET")
+	r.HandleFunc("/a/{history}/{age}/create-story", n.HandleCreateStoryPost).Methods("POST")
+	r.HandleFunc("/a/{history}/story/{story-id}", n.HandleStoryGet).Methods("GET")
 
-	p.HandleFunc("/profile", n.HandleSelfProfile).Methods("GET")
+	r.HandleFunc("/profile", n.HandleSelfProfile).Methods("GET")
 	r.HandleFunc("/profile/{username}", n.HandleProfile).Methods("GET")
 
 	r.HandleFunc("/signin", n.HandleSignInGet).Methods("GET")

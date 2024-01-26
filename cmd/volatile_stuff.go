@@ -2,11 +2,13 @@ package main
 
 import (
 	n "github.com/kacpekwasny/noundo/pkg/noundo"
+	lor "gopkg.in/loremipsum.v1"
 )
 
 var uni0 *n.Universe
 var uni1 *n.Universe
 var uni2 *n.Universe
+var lorGen = lor.New()
 
 func init() {
 	h0 := n.NewHistoryVolatile("localhost:8080")
@@ -44,6 +46,9 @@ func init() {
 
 func createStories(h n.HistoryFullIface, m int, age string, author n.UserPublicIface, text string) {
 	for i := 0; i < m; i++ {
-		h.CreateStory(age, author, n.StoryContent{Title: "title", Content: "content 123"})
+		h.CreateStory(age, author, n.StoryContent{
+			Title:   lorGen.Words(5),
+			Content: lorGen.Sentences(3),
+		})
 	}
 }

@@ -1,22 +1,22 @@
 {{ template "basestart" . }}
 
 {{ block "age" . }}
-<div>
-    <h1>{{ .Name }}</h1>
-    <p>{{ .Description }}</p>
-
-    {{ if .UserInfo.SignedIn }}
-    {{ template "write_story" .WriteStory }}
-    {{ end }}
-
-    <div class="mt-4">
-    {{ range .Stories }}
-        <div class="my-4">
-            {{ template "post" . }}
+    {{ template "age_header" . }}
+    <div id="id-main-age">
+        {{ if .UserInfo.SignedIn }}
+        {{ template "write_story" .WriteStory }}
+        {{ end }}
+        <div class="mt-5">
+        {{ range .Stories }}
+            <div class="mb-4">
+                {{ template "story" . }}
+            </div>
+        {{ end }}
+        <!-- TODO more posts, next page button (no infinite scroll) -->
         </div>
-    {{ end }}
+
     </div>
-</div>
+
 <script>
 // function defined in 'comp_navbar';
 setUsingBrowsingHistoryName("{{ .UsingHistoryName }}", "{{ .BrowsingHistoryName }}", "{{ .BrowsingHistoryURL }}");

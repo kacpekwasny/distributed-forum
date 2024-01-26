@@ -4,7 +4,7 @@ type PageBaseValues struct {
 	CompNavbarValues
 	UserInfo
 
-	Title string
+	PageTitle string
 }
 
 type UserInfo struct {
@@ -58,11 +58,17 @@ type HistoryInfo struct {
 }
 
 type PageAgeValues struct {
-	Name        string
-	WriteStory  CompWriteStory
-	Description string
-	Stories     []CompStoryValues
 	PageBaseValues
+	CompAgeHeaderValues
+
+	WriteStory CompWriteStory
+	Stories    []CompStoryValues
+}
+
+type CompAgeHeaderValues struct {
+	AgeName     string
+	AgeURL      string
+	Description string
 }
 
 type CompWriteStory struct {
@@ -74,22 +80,29 @@ type CompWriteStory struct {
 }
 
 type CompStoryValues struct {
-	Id      string
-	Title   string
-	Author  string
-	Content string
-	URL     string
+	StoryId      string
+	StoryTitle   string
+	StoryAuthor  string
+	StoryContent string
+	StoryURL     string
 
 	// TODO answers
 }
 
+type PageStoryValues struct {
+	PageBaseValues
+	CompStoryValues
+	CompAgeHeaderValues
+}
+
 type PageProfileValues struct {
+	PageBaseValues
+
 	Username         string
 	ParentServerName string
 	AccountBirthDate string
 	AboutMe          string
 	SelfProfile      bool
-	PageBaseValues
 }
 
 type Page401Values struct {

@@ -11,7 +11,9 @@ type Postable struct {
 	TimeStampable
 }
 type Story struct {
-	Title string
+	Title       string
+	AgeName     string
+	HistoryName string
 
 	Postable
 	Reactionable

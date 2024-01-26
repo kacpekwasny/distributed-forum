@@ -52,7 +52,10 @@ func (h *HistoryVolatile) CreateAge(owner UserPublicIface, name string) (AgeIfac
 
 func (h *HistoryVolatile) GetStory(id string) (Story, error) {
 	s, ok := h.stories[id]
-	return *s, utils.ErrIfNotOk(ok, "id not found")
+	if ok {
+		return *s, nil
+	}
+	return Story{}, utils.ErrIfNotOk(ok, "id not found")
 }
 
 // Get answer from anywhere in
@@ -131,7 +134,9 @@ func (h *HistoryVolatile) CreateStory(ageName string, author UserPublicIface, st
 	id := NewRandId()
 
 	storyInternal := Story{
-		Title: story.Title,
+		Title:       story.Title,
+		AgeName:     ageName,
+		HistoryName: h.name,
 		Postable: Postable{
 			Id:            id,
 			UserFUsername: author.FullUsername(),

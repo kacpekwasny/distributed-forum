@@ -1,22 +1,12 @@
-{{ block "post" . }}
-
-<style>
-  .line-clamp-4 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-  }
-</style>
-
-<a hx-get="{{ .URL }}" class="card" style="text-decoration: none">
+{{ block "story" . }}
+<a hx-get="{{ .StoryURL }}" hx-target="#id-main-age" class="card" style="text-decoration: none">
   <div class="card-header">
     <figure class="w-100 d-flex justify-content-between align-items-center m-0">
       <blockquote class="blockquote m-0">
-        <p>{{ .Title }}</p>
+        <p>{{ .StoryTitle }}</p>
       </blockquote>
       <figcaption class="blockquote-footer m-0">
-        <cite title="Author of the Story.">{{ .Author }}</cite>
+        <cite title="Author of the Story.">{{ .StoryAuthor }}</cite>
       </figcaption>
     </figure>
   </div>
@@ -24,20 +14,20 @@
     <!-- TODO content at first has like up to 1000 chars, and only when clicked read more does it request the whole length -->
     <p
       class="px-2 rounded overflow-auto text-break line-clamp-4"
-      id="story-content-{{.Id}}"
+      id="story-content-{{.StoryId}}"
       background-color="primary"
     >
-      {{ .Content }}
+      {{ .StoryContent }}
     </p>
     <button
       class="btn btn-sm btn-outline-info p-1"
-      onclick="document.querySelector('#story-content-{{.Id}}').classList.add('line-clamp-4')"
+      onclick="document.querySelector('#story-content-{{.StoryId}}').classList.add('line-clamp-4')"
     >
       Read less...
     </button>
     <button
       class="btn btn-sm btn-outline-warning p-1"
-      onclick="document.querySelector('#story-content-{{.Id}}').classList.remove('line-clamp-4')"
+      onclick="document.querySelector('#story-content-{{.StoryId}}').classList.remove('line-clamp-4')"
     >
       Read more...
     </button>

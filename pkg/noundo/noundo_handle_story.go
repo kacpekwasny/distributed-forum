@@ -54,3 +54,35 @@ func (n *NoUndo) HandleCreateStoryPost(w http.ResponseWriter, r *http.Request) {
 	// ExecTemplHtmxSensitive(tmpl, w, r, "story", nil)
 	n.HandleAge(w, r)
 }
+
+func (n *NoUndo) HandleStoryGet(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	historyName := vars["history"]
+	storyId := vars["story-id"]
+
+	histIface, err := n.uni.GetHistoryByName(historyName)
+	if err != nil {
+		n.Handle404(w, r)
+		return
+	}
+
+	story, err := histIface.GetStory(storyId)
+	if err != nil {
+		n.Handle404(w, r)
+		return
+	}
+
+	// histIface.GetAge(story.AgeName)
+
+	ExecTemplHtmxSensitive(tmpl, w, r, "story_page", r.URL.Path, &PageStoryValues{
+		PageBaseValues:      CreatePageBaseValues(story.Title, n.Self(), histIface, r),
+		CompAgeHeaderValues: CreateAgeHeader(historyName, story.AgeName),
+		CompStoryValues: CompStoryValues{
+			StoryId:      story.Id(),
+			StoryTitle:   story.Title,
+			StoryAuthor:  story.AuthorFUsername(),
+			StoryContent: story.Content(),
+			StoryURL:     r.URL.Path,
+		},
+	})
+}
