@@ -4,7 +4,8 @@
   <div id="id-main-age">
 
     {{ block "story_page" . }}
-    <div class="mt-5">{{ template "story" .CompStoryValues }}</div>
+    <div class="my-5">{{ template "story" .CompStoryValues }}</div>
+    {{ template "answers_section" . }}
     {{ end }}
 
   </div>

@@ -1,0 +1,8 @@
+{{ block "answer_tree_node" . }}
+<div>
+    {{ template "answer" . }}
+    {{ if "true" }}
+        {{ template "answer_tree_node" . }}
+    {{ end }}
+</div>
+{{ end }}
