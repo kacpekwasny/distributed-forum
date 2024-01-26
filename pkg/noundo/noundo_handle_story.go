@@ -82,7 +82,8 @@ func (n *NoUndo) HandleStoryGet(w http.ResponseWriter, r *http.Request) {
 			StoryTitle:   story.Title,
 			StoryAuthor:  story.AuthorFUsername(),
 			StoryContent: story.Content(),
-			StoryURL:     r.URL.Path,
+			ClampContent: false,
+			// StoryURL:     "", No story URL, because we dont want people to click on the title and make unnecesary requests to server
 		},
 	})
 }

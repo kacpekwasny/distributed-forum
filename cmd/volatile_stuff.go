@@ -1,7 +1,11 @@
 package main
 
 import (
+	"crypto/rand"
+	"math/big"
+
 	n "github.com/kacpekwasny/noundo/pkg/noundo"
+	"github.com/kacpekwasny/noundo/pkg/utils"
 	lor "gopkg.in/loremipsum.v1"
 )
 
@@ -48,7 +52,7 @@ func createStories(h n.HistoryFullIface, m int, age string, author n.UserPublicI
 	for i := 0; i < m; i++ {
 		h.CreateStory(age, author, n.StoryContent{
 			Title:   lorGen.Words(5),
-			Content: lorGen.Sentences(3),
+			Content: lorGen.Sentences(int(utils.LeftLogRight(rand.Int(rand.Reader, big.NewInt(30))).Int64())),
 		})
 	}
 }

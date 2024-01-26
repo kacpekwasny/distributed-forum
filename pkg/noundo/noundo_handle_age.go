@@ -46,6 +46,7 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 			StoryTitle:   s.Title,
 			StoryContent: s.Contents,
 			StoryURL:     utils.LeftLogRight[string](url.JoinPath("/a", historyName, "story", s.Id())),
+			ClampContent: true,
 		}
 	}
 

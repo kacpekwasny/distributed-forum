@@ -85,7 +85,7 @@ type CompStoryValues struct {
 	StoryAuthor  string
 	StoryContent string
 	StoryURL     string
-
+	ClampContent bool
 	// TODO answers
 }
 

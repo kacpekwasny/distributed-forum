@@ -3,8 +3,10 @@
   <div class="card-header">
     <figure class="w-100 d-flex justify-content-between align-items-center m-0">
       <a
+      {{ if .StoryURL }}
         hx-get="{{ .StoryURL }}"
         hx-target="#id-main-age"
+        {{ end }}
         style="text-decoration: none"
       >
         <blockquote class="blockquote m-0">
@@ -19,12 +21,13 @@
   <div class="card-body">
     <!-- TODO content at first has like up to 1000 chars, and only when clicked read more does it request the whole length -->
     <p
-      class="px-2 rounded overflow-auto text-break line-clamp-4"
+      class="px-2 rounded overflow-auto text-break {{ if .ClampContent }} line-clamp-4 {{ end }}"
       id="story-content-{{.StoryId}}"
       background-color="primary"
     >
       {{ .StoryContent }}
     </p>
+    {{ if .ClampContent }}
     <button
       class="btn btn-sm btn-outline-info p-1"
       onclick="document.querySelector('#story-content-{{.StoryId}}').classList.add('line-clamp-4')"
@@ -37,6 +40,7 @@
     >
       Read more...
     </button>
+    {{ end }}
   </div>
 </div>
 
