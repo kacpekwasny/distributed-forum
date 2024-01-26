@@ -1,6 +1,6 @@
 {{ block "answer_write" . }}
   <div class="d-flex flex-start w-100">
-    <form class="w-100" hx-post="{{ .WriteAnswerPostURL }}" hx-ext="json-enc">
+    <form class="w-100" hx-post="{{ .WriteAnswerPostURL }}" hx-ext="json-enc" hx-target="#answers-for-{{ .AnswerToId }}" hx-swap="afterbegin" hx-on::after-request="this.reset()">
       <div class="form-outline">
         <textarea name="content" id="write-answer-{{ .AnswerToId  }}" class="form-control" rows="4" minlength="{{ .ContentLenMin }}" maxlength="{{ .ContentLenMax }}"></textarea>
       </div>

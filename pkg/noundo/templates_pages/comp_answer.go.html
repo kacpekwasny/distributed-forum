@@ -1,5 +1,5 @@
 {{ block "answer" . }}
-<div class="pa-1">
+<div id="answer-{{ .PostableId }}" class="pa-1">
   <cite title="Author of the Answer." class="blockquote-footer">{{ .Author.FUsername }}</cite>
     <!-- TODO date and time of post -->
   <p class="m-0">{{ .Contents }}</p>

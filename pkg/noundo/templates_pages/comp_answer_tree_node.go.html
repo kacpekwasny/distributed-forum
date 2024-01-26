@@ -4,7 +4,7 @@
     {{ if .Answerable.Answers }}
     <div class="d-flex flex-row">
       <div class="p-0 me-3" style="width: 1px; background-color: beige; flex-shrink: 0;"></div>
-      <div>
+      <div id="answers-for-{{ .Postable.PostableId }}">
         {{ range .Answerable.Answers }} 
           {{ template "answer_tree_node" . }} 
         {{ end }} 

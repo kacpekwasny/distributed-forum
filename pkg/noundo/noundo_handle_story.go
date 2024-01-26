@@ -162,5 +162,5 @@ func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) 
 		utils.WriteJsonWithStatus(w, "error_creating_answer", http.StatusInternalServerError)
 		return
 	}
-	utils.WriteJsonWithStatus(w, answer.Postable.Contents, http.StatusOK)
+	utils.ExecTemplLogErr(tmpl, w, "answer", answer)
 }
