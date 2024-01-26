@@ -26,6 +26,10 @@
     <script src="https://unpkg.com/htmx.org/dist/ext/head-support.js"></script>
 
 	<style>
+    html, body {
+      /* min-height: 70vh; */
+      height: 100%;
+    }
 		.line-clamp-4 {
 		  overflow: hidden;
 		  display: -webkit-box;
@@ -35,13 +39,16 @@
     .read {
       max-width: 1000px;
     }
+    .mh-70 {
+      min-height: 70%;
+    }
 	  </style>
 </head>
 
   <body hx-ext="head-support" data-bs-theme="dark">
     {{ template "navbar" . }}
 
-    <section class="h-100" style="min-height: 90vh">
+    <section class="mh-70">
       <div class="container h-100">
         <div id="id-base-div-1" class="row justify-content-sm-center h-100">
           <div id="id-base-div-2" class="row justify-content-sm-center h-100">

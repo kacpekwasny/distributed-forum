@@ -41,12 +41,9 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	storiesForTmpl := make([]CompStoryValues, len(stories))
 	for i, s := range stories {
 		storiesForTmpl[i] = CompStoryValues{
-			StoryId:      s.Id(),
-			StoryAuthor:  s.AuthorFUsername(),
-			StoryTitle:   s.Title,
-			StoryContent: s.Contents,
-			StoryURL:     utils.LeftLogRight[string](url.JoinPath("/a", historyName, "story", s.Id())),
+			Story:        *s,
 			ClampContent: true,
+			StoryURL:     StoryURL(s.HistoryName, s.Id()),
 		}
 	}
 

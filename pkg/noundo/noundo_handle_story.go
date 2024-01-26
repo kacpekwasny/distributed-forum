@@ -72,18 +72,13 @@ func (n *NoUndo) HandleStoryGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// histIface.GetAge(story.AgeName)
-
 	ExecTemplHtmxSensitive(tmpl, w, r, "story_page", r.URL.Path, &PageStoryValues{
 		PageBaseValues:      CreatePageBaseValues(story.Title, n.Self(), histIface, r),
 		CompAgeHeaderValues: CreateAgeHeader(historyName, story.AgeName),
 		CompStoryValues: CompStoryValues{
-			StoryId:      story.Id(),
-			StoryTitle:   story.Title,
-			StoryAuthor:  story.AuthorFUsername(),
-			StoryContent: story.Content(),
+			Story:        story,
 			ClampContent: false,
-			// StoryURL:     "", No story URL, because we dont want people to click on the title and make unnecesary requests to server
+			StoryURL:     "",
 		},
 	})
 }

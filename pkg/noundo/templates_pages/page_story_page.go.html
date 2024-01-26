@@ -5,7 +5,7 @@
 
     {{ block "story_page" . }}
     <div class="my-5">{{ template "story" .CompStoryValues }}</div>
-    {{ template "answers_section" . }}
+    {{ template "answers_section" .CompStoryValues.Story }}
     {{ end }}
 
   </div>

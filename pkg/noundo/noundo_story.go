@@ -43,7 +43,7 @@ func (s *CreateStory) Content() string {
 // }
 
 func (s *Story) Id() string {
-	return s.Postable.Id
+	return s.Postable.PostableId
 }
 
 func (s *Story) Content() string {
@@ -51,7 +51,7 @@ func (s *Story) Content() string {
 }
 
 func (s *Story) AuthorFUsername() string {
-	return s.UserFUsername
+	return s.Author.FUsername
 }
 
 func (s *Story) ReactionStats() (map[enums.ReactionType]int, error) {

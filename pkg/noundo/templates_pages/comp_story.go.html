@@ -10,11 +10,11 @@
         style="text-decoration: none"
       >
         <blockquote class="blockquote m-0">
-          <p>{{ .StoryTitle }}</p>
+          <p>{{ .Story.Title }}</p>
         </blockquote>
       </a>
       <figcaption class="blockquote-footer m-0">
-        <cite title="Author of the Story.">{{ .StoryAuthor }}</cite>
+        <cite title="Author of the Story.">{{ .Story.Author.FUsername }}</cite>
         <!-- TODO date and time of post -->
       </figcaption>
     </figure>
@@ -23,21 +23,21 @@
     <!-- TODO content at first has like up to 1000 chars, and only when clicked read more does it request the whole length -->
     <p
       class="px-2 rounded overflow-auto text-break {{ if .ClampContent }} line-clamp-4 {{ end }}"
-      id="story-content-{{.StoryId}}"
+      id="story-content-{{.Story.Id}}"
       background-color="primary"
     >
-      {{ .StoryContent }}
+      {{ .Story.Content }}
     </p>
     {{ if .ClampContent }}
     <button
       class="btn btn-sm btn-outline-info p-1"
-      onclick="document.querySelector('#story-content-{{.StoryId}}').classList.add('line-clamp-4')"
+      onclick="document.querySelector('#story-content-{{.Story.Id}}').classList.add('line-clamp-4')"
     >
       Read less...
     </button>
     <button
       class="btn btn-sm btn-outline-warning p-1"
-      onclick="document.querySelector('#story-content-{{.StoryId}}').classList.remove('line-clamp-4')"
+      onclick="document.querySelector('#story-content-{{.Story.Id}}').classList.remove('line-clamp-4')"
     >
       Read more...
     </button>

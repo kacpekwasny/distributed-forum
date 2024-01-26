@@ -50,9 +50,16 @@ func init() {
 
 func createStories(h n.HistoryFullIface, m int, age string, author n.UserPublicIface, text string) {
 	for i := 0; i < m; i++ {
-		h.CreateStory(age, author, n.StoryContent{
+		s, _ := h.CreateStory(age, author, n.StoryContent{
 			Title:   lorGen.Words(5),
-			Content: lorGen.Sentences(int(utils.LeftLogRight(rand.Int(rand.Reader, big.NewInt(30))).Int64())),
+			Content: lorGen.Sentences(rint(30)),
 		})
+		a, _ := h.CreateAnswer(author, s.Id(), lorGen.Words(5+rint(30)))
+		h.CreateAnswer(author, a.PostableId, lorGen.Words(5+rint(30)))
+		h.CreateAnswer(author, s.Id(), lorGen.Words(5+rint(30)))
 	}
+}
+
+func rint(n int64) int {
+	return int(utils.LeftLogRight(rand.Int(rand.Reader, big.NewInt(n))).Int64())
 }

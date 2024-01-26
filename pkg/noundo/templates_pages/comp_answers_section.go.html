@@ -2,8 +2,9 @@
 <div>
     {{ template "write_answer" . }}
     <div>
-        {{ template "answer_tree_node" . }}
-        {{ template "answer_tree_node" . }}
+        {{ range .Answerable.Answers }}
+            {{ template "answer_tree_node" . }}
+        {{ end }}
     </div>
 </div>
 {{ end }}

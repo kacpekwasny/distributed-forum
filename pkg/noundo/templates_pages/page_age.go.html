@@ -4,7 +4,7 @@
     <div class="read">
         {{ template "age_header" . }}
         <main id="id-main-age">
-            {{ if .UserInfo.SignedIn }}
+            {{ if .CurrentUserInfo.SignedIn }}
             {{ template "write_story" .WriteStory }}
             {{ end }}
             <div class="mt-5">

@@ -138,9 +138,13 @@ func (h *HistoryVolatile) CreateStory(ageName string, author UserPublicIface, st
 		AgeName:     ageName,
 		HistoryName: h.name,
 		Postable: Postable{
-			Id:            id,
-			UserFUsername: author.FullUsername(),
-			Contents:      story.Content,
+			PostableId: id,
+			Author: UserInfo{
+				Username:     author.Username(),
+				ParentServer: author.ParentServerName(),
+				FUsername:    author.FullUsername(),
+			},
+			Contents: story.Content,
 			TimeStampable: TimeStampable{
 				Timestamp: time.Now().Unix(),
 			},
@@ -151,4 +155,40 @@ func (h *HistoryVolatile) CreateStory(ageName string, author UserPublicIface, st
 	}
 	h.stories[id] = &storyInternal
 	return storyInternal, nil
+}
+
+// Create an Answer under a post or other Answer
+func (h *HistoryVolatile) CreateAnswer(author UserPublicIface, parentId string, answerContent string) (Answer, error) {
+	a, okA := h.answers[parentId]
+	s, okS := h.stories[parentId]
+	if !(okA || okS) {
+		return Answer{}, errors.New("no such parent id")
+	}
+	id := NewRandId()
+	answer := Answer{
+		ParentId: parentId,
+		Postable: &Postable{
+			PostableId:    id,
+			Author:        CreateUserInfo(author, h.GetName()),
+			Contents:      answerContent,
+			TimeStampable: CreateTimeStamp(),
+		},
+		Reactionable: &Reactionable{
+			Reactions: []Reaction{},
+		},
+		Answerable: &Answerable{
+			Answers: []Answer{},
+		},
+	}
+	var answers *[]Answer
+	if okA {
+		answers = &a.Answerable.Answers
+	}
+	if okS {
+		answers = &s.Answerable.Answers
+	}
+	*answers = append(*answers, answer)
+
+	h.answers[id] = &answer
+	return answer, nil
 }

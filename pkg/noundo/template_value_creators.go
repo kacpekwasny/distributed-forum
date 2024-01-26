@@ -36,8 +36,8 @@ func CreateCompWriteStory(hxPost string) CompWriteStory {
 
 func CreatePageBaseValues(title string, using HistoryPublicIface, browsing HistoryPublicIface, r *http.Request) PageBaseValues {
 	return PageBaseValues{
-		PageTitle: title,
-		UserInfo:  CreateUserInfo(r),
+		PageTitle:       title,
+		CurrentUserInfo: CreateCurrentUserInfo(r),
 		CompNavbarValues: CompNavbarValues{
 			UsingHistoryName:    using.GetName(),
 			BrowsingHistoryName: browsing.GetName(),
@@ -46,14 +46,14 @@ func CreatePageBaseValues(title string, using HistoryPublicIface, browsing Histo
 	}
 }
 
-func CreateUserInfo(r *http.Request) UserInfo {
+func CreateCurrentUserInfo(r *http.Request) CurrentUserInfo {
 	jwt := GetJWT(r.Context())
 	if jwt == nil {
-		return UserInfo{
+		return CurrentUserInfo{
 			SignedIn: false,
 		}
 	}
-	return UserInfo{
+	return CurrentUserInfo{
 		Username: jwt.Username,
 		SignedIn: true,
 	}

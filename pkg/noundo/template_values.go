@@ -1,13 +1,15 @@
 package noundo
 
+// TODO merge noundo_content structs with template_values
+
 type PageBaseValues struct {
 	CompNavbarValues
-	UserInfo
+	CurrentUserInfo
 
 	PageTitle string
 }
 
-type UserInfo struct {
+type CurrentUserInfo struct {
 	Username string
 	SignedIn bool
 }
@@ -80,12 +82,14 @@ type CompWriteStory struct {
 }
 
 type CompStoryValues struct {
-	StoryId      string
-	StoryTitle   string
-	StoryAuthor  string
-	StoryContent string
-	StoryURL     string
+	Story Story
+	// StoryId      string
+	// StoryTitle   string
+	// StoryAuthor  string
+	// StoryContent string
+	// StoryURL     string
 	ClampContent bool
+	StoryURL     string
 	// TODO answers
 }
 
@@ -95,6 +99,7 @@ type PageStoryValues struct {
 	CompAgeHeaderValues
 }
 
+// TODO - struct UserIdentity - Username, ParnetServer, FUsername,
 type PageProfileValues struct {
 	PageBaseValues
 

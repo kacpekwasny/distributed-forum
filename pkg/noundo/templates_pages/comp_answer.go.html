@@ -1,7 +1,7 @@
 {{ block "answer" . }}
 <div class="card mb-4">
     <div class="card-body">
-      <p>Type your note, and hit enter to add it</p>
+      <p>{{ .Contents }}</p>
 
       <div class="d-flex justify-content-between">
         <div class="d-flex flex-row align-items-center">
@@ -11,7 +11,7 @@
             width="25"
             height="25"
           />
-          <p class="small mb-0 ms-2">Martha</p>
+          <p class="small mb-0 ms-2">{{ .Author.FUsername }} </p>
         </div>
         <div class="d-flex flex-row align-items-center">
           <p class="small text-muted mb-0">Upvote?</p>
