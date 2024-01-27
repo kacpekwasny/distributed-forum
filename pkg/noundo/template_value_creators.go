@@ -54,7 +54,7 @@ func CreateCurrentUserInfo(r *http.Request) CurrentUserInfo {
 		}
 	}
 	return CurrentUserInfo{
-		Username: jwt.Username,
+		Username: jwt.Username(),
 		SignedIn: true,
 	}
 }

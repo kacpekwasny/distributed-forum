@@ -14,7 +14,7 @@ func StoryURL(browsingHistoryName string, storyId string) string {
 	return JoinURL("/a", browsingHistoryName, "story", storyId)
 }
 
-func ProfileURL(user UserPublicIface, usingHistoryName string) string {
+func ProfileURL(user UserIdentityIface, usingHistoryName string) string {
 	if usingHistoryName == user.ParentServerName() {
 		return JoinURL("/profile", user.Username())
 	}

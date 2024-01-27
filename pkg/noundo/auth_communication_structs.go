@@ -30,9 +30,25 @@ type SignUpResponse struct {
 
 // TODO: UserFUsername field in JWT
 type JWTFields struct {
-	Username           string
-	ParentServer       string
-	JWTIssuedTimestamp int64
+	username           string
+	parentServerName   string
+	jwtIssuedTimestamp int64
+}
+
+func (jwt *JWTFields) Username() string {
+	return jwt.username
+}
+
+func (jwt *JWTFields) ParentServerName() string {
+	return jwt.parentServerName
+}
+
+func (jwt *JWTFields) FullUsername() string {
+	return jwt.username + "@" + jwt.parentServerName
+}
+
+func (jwt *JWTFields) IssuedAt() int64 {
+	return jwt.jwtIssuedTimestamp
 }
 
 type MsgEnum string

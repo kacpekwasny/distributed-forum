@@ -2,7 +2,7 @@ package noundo
 
 import "time"
 
-func CreateUserInfo(user UserPublicIface, usingHistoryName string) UserInfo {
+func CreateUserInfo(user UserIdentityIface, usingHistoryName string) UserInfo {
 	return UserInfo{
 		Username:       user.Username(),
 		FUsername:      user.FullUsername(),

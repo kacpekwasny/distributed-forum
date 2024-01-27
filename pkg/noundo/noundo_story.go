@@ -62,11 +62,11 @@ func (s *Story) Reactions() ([]ReactionIface, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (s *Story) React(user UserFullIface, reaction ReactionIface) error {
+func (s *Story) React(user UserIdentityIface, reaction ReactionIface) error {
 	panic("not implemented") // TODO: Implement
 }
 
-func (s *Story) AddAnswer(author UserFullIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error) {
+func (s *Story) AddAnswer(author UserIdentityIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error) {
 	panic("not implemented") // TODO: Implement
 }
 

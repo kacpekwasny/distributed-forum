@@ -21,25 +21,25 @@ type HistoryVolatile struct {
 	auth    AuthenticatorIface
 
 	// email: UserIface
-	users map[string]UserFullIface
+	users map[string]UserAllIface
 }
 
-func NewHistoryVolatile(domain string) HistoryFullIface {
-	usersUsername := make(map[string]UserFullIface)
-	usersEmail := make(map[string]UserFullIface)
+func NewHistoryVolatile(historyName string) HistoryFullIface {
+	usersUsername := make(map[string]UserAllIface)
+	usersEmail := make(map[string]UserAllIface)
 	return &HistoryVolatile{
-		name:    domain,
-		url:     "http://" + domain,
+		name:    historyName,
+		url:     "http://" + historyName,
 		ages:    make(map[string]*AgeVolatile),
 		stories: make(map[string]*Story),
 		answers: make(map[string]*Answer),
-		auth:    NewAuthenticator(NewVolatileAuthStorage(&usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST),
+		auth:    NewAuthenticator(NewVolatileAuthStorage(historyName, &usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST),
 		users:   usersUsername,
 	}
 }
 
 // Create a 'subreddit', but for the sake of naming, it will be called an `Age`
-func (h *HistoryVolatile) CreateAge(owner UserPublicIface, name string) (AgeIface, error) {
+func (h *HistoryVolatile) CreateAge(owner UserIdentityIface, name string) (AgeIface, error) {
 	age := &AgeVolatile{
 		id:              NewRandId(),
 		name:            name,
@@ -81,15 +81,13 @@ func (h *HistoryVolatile) GetStories(ageNames []string, start int, end int, orde
 }
 
 func (h *HistoryVolatile) GetUser(username string) (UserPublicIface, error) {
-	return utils.MapGetErr[string, UserFullIface](h.users, username)
+	return utils.MapGetErr(h.users, username)
 }
 
 func (h *HistoryVolatile) CreateUser(email string, username string, password string) (UserPublicIface, error) {
 	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
 	if r.Ok {
-		u := (h.auth.GetUserByEmail(username)).(*User)
-		u.parentServerName = h.GetName()
-		return u, nil
+		return h.auth.GetUserByEmail(username).(UserPublicIface), nil
 	}
 	return nil, errors.New(string(r.MsgCode))
 }
@@ -112,7 +110,7 @@ func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface[AgeIface]
 	return ages, nil
 }
 
-func (h *HistoryVolatile) GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
+func (h *HistoryVolatile) GetStoriesUserJoined(user UserIdentityIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
 	panic("not implemented") // TODO: Implement
 }
 
@@ -125,7 +123,7 @@ func (h *HistoryVolatile) GetAge(name string) (AgeIface, error) {
 	return utils.MapGetErr[string, *AgeVolatile](h.ages, name)
 }
 
-func (h *HistoryVolatile) CreateStory(ageName string, author UserPublicIface, story StoryContent) (Story, error) {
+func (h *HistoryVolatile) CreateStory(ageName string, author UserIdentityIface, story StoryContent) (Story, error) {
 	_, exists := h.ages[ageName]
 	if !exists {
 		return Story{}, errors.New("age with ageName: '" + ageName + "' doesnt exist")
@@ -158,7 +156,7 @@ func (h *HistoryVolatile) CreateStory(ageName string, author UserPublicIface, st
 }
 
 // Create an Answer under a post or other Answer
-func (h *HistoryVolatile) CreateAnswer(author UserPublicIface, parentId string, answerContent string) (Answer, error) {
+func (h *HistoryVolatile) CreateAnswer(author UserIdentityIface, parentId string, answerContent string) (Answer, error) {
 	a, okA := h.answers[parentId]
 	s, okS := h.stories[parentId]
 	if !(okA || okS) {

@@ -3,6 +3,7 @@ package noundo
 import (
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -40,19 +41,19 @@ func (n *NoUndo) HandleSelfProfile(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/signin", http.StatusTemporaryRedirect)
 		return
 	}
-	user, err := n.Self().GetUser(userJWT.Username)
+	user, err := n.Self().GetUser(userJWT.Username())
 	if err != nil {
-		slog.Error("cannot retrieve user from database, but has valid JWT", "username", userJWT.Username, "parent server", userJWT.ParentServer)
+		slog.Error("cannot retrieve user from database, but has valid JWT", "username", userJWT.Username, "parent server", userJWT.parentServerName)
 		utils.WriteJsonWithStatus(w, "my apologies, you don't exist", http.StatusInternalServerError)
 		return
 	}
 	ExecTemplHtmxSensitive(tmpl, w, r, "profile", "/profile", PageProfileValues{
-		Username:         userJWT.Username,
-		ParentServerName: "@" + user.ParentServerName(),
-		AccountBirthDate: "todo birthdate",
-		AboutMe:          "todo - keep user aboutme - only editable thing",
+		Username:         user.Username(),
+		ParentServerName: user.ParentServerName(),
+		AccountBirthDate: time.Unix(user.AccountBirthDate(), 0).Format(time.RFC3339),
+		AboutMe:          user.AboutMe(),
 		SelfProfile:      true,
-		PageBaseValues:   CreatePageBaseValues("Title", n.Self(), n.Self(), r),
+		PageBaseValues:   CreatePageBaseValues("My Profile", n.Self(), n.Self(), r),
 	})
 }
 

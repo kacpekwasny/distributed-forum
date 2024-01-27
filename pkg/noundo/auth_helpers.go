@@ -3,10 +3,8 @@ package noundo
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
-	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/schema"
@@ -52,7 +50,7 @@ func SignInUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request)
 		return err
 	}
 
-	err = auth.ValidateAuthMe(authMe)
+	err = auth.SignIn(authMe)
 	if err != nil {
 		slog.Info("validate credentials: %s\n", err)
 		return err
@@ -60,9 +58,9 @@ func SignInUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request)
 
 	user := auth.GetUserByEmail(authMe.Email)
 	newJwt := JWTFields{
-		Username:           user.Username(),
-		ParentServer:       user.ParentServerName(),
-		JWTIssuedTimestamp: time.Now().Unix(),
+		username:           user.Username(),
+		parentServerName:   user.ParentServerName(),
+		jwtIssuedTimestamp: UnixTimeNow(),
 	}
 	// TODO: currently unsecure
 	token := jwt.NewWithClaims(
@@ -72,7 +70,7 @@ func SignInUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request)
 
 	tokenString, err := token.SignedString(hmacSecret)
 	if err != nil {
-		log.Printf("signing token error: %s\n", err)
+		slog.Warn("signing token error: %s\n", err)
 		return err
 	}
 

@@ -2,6 +2,8 @@ package noundo
 
 import (
 	"net/http"
+
+	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
 // ~~ SignIn ~~
@@ -21,6 +23,7 @@ func (n *NoUndo) HandleSignInPost(w http.ResponseWriter, r *http.Request) {
 		ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", PageSignInValues{
 			PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
 			Err:            "Sign In Failed :c",
+			Email:          utils.LeftOr(GetSignInRequest(r))(&SignInRequest{}).Email,
 		})
 		return
 	}

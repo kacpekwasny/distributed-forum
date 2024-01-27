@@ -56,7 +56,7 @@ func (n *NoUndo) HandleCreateStoryPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = history.CreateStory(v["age"], &User{username: strings.Split(jwt.Username, "@")[0]}, story)
+	_, err = history.CreateStory(v["age"], jwt, story)
 	if err != nil {
 		utils.WriteJsonWithStatus(w, InternalError, http.StatusInternalServerError)
 		return
@@ -165,8 +165,7 @@ func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	history.GetUser(jwt.Username)
-	answer, err := history.CreateAnswer(&User{username: jwt.Username, parentServerName: jwt.ParentServer}, parentId, answerContent.Content)
+	answer, err := history.CreateAnswer(jwt, parentId, answerContent.Content)
 	if err != nil {
 		utils.WriteJsonWithStatus(w, InternalError, http.StatusInternalServerError)
 		return

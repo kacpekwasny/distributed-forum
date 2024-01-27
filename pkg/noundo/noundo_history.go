@@ -22,7 +22,7 @@ type HistoryPublicIface interface {
 	GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error)
 
 	// Create an Answer under a post or other Answer
-	CreateAnswer(author UserPublicIface, parentId string, answerContent string) (Answer, error)
+	CreateAnswer(author UserIdentityIface, parentId string, answerContent string) (Answer, error)
 	// Get answer from anywhere in
 	GetAnswer(id string) (Answer, error)
 	// Get tree of answers, to the specified postable with the specified depth
@@ -32,7 +32,7 @@ type HistoryPublicIface interface {
 	GetUser(username string) (UserPublicIface, error)
 
 	// Create a new story within
-	CreateStory(ageName string, author UserPublicIface, story StoryContent) (Story, error)
+	CreateStory(ageName string, author UserIdentityIface, story StoryContent) (Story, error)
 	// Get a single story
 	GetStory(id string) (Story, error)
 	// Get `n` stories ordered by different atributes, from []ages,
@@ -51,7 +51,7 @@ type HistoryPrivateIface interface {
 	CreateUser(email string, username string, password string) (UserPublicIface, error)
 
 	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
-	CreateAge(owner UserPublicIface, ageName string) (AgeIface, error)
+	CreateAge(owner UserIdentityIface, ageName string) (AgeIface, error)
 }
 
 type HistoryFullIface interface {
