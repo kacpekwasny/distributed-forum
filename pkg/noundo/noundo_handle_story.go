@@ -103,7 +103,8 @@ func (n *NoUndo) HandleStoryGet(w http.ResponseWriter, r *http.Request) {
 func (n *NoUndo) HandleCreateAnswerGet(w http.ResponseWriter, r *http.Request) {
 	jwt := GetJWT(r.Context())
 	if jwt == nil {
-		http.Redirect(w, r, "/sign-in", http.StatusTemporaryRedirect)
+		// TODO
+		http.Redirect(w, r, "/signin", http.StatusTemporaryRedirect)
 		return
 	}
 
@@ -135,7 +136,7 @@ func (n *NoUndo) HandleCreateAnswerGet(w http.ResponseWriter, r *http.Request) {
 func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) {
 	jwt := GetJWT(r.Context())
 	if jwt == nil {
-		http.Redirect(w, r, "/sign-in", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/signin", http.StatusTemporaryRedirect)
 		return
 	}
 	// TODO get the POST body of answer
