@@ -88,6 +88,15 @@ func LeftCallbackIfErr[L any](l L, err error) func(callback func(err error)) L {
 	}
 }
 
+func LeftOr[L any](l L, err error) func(or L) L {
+	return func(or L) L {
+		if err != nil {
+			return or
+		}
+		return l
+	}
+}
+
 func MapGetDef[K comparable, V any](map_ map[K]V, key K, def V) V {
 	v, ok := map_[key]
 	if ok {

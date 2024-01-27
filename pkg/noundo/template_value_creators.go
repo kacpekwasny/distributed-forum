@@ -1,6 +1,7 @@
 package noundo
 
 import (
+	"net/http"
 	"net/url"
 )
 
@@ -28,7 +29,40 @@ func CreateCompWriteStory(hxPost string) CompWriteStory {
 		HxPost:        hxPost,
 		TitleLenMin:   TITLE_LEN_MIN,
 		TitleLenMax:   TITLE_LEN_MAX,
-		ContentLenMin: CONTENT_LEN_MIN,
-		ContentLenMax: CONTENT_LEN_MAX,
+		ContentLenMin: STORY_LEN_MIN,
+		ContentLenMax: STORY_LEN_MAX,
+	}
+}
+
+func CreatePageBaseValues(title string, using HistoryPublicIface, browsing HistoryPublicIface, r *http.Request) PageBaseValues {
+	return PageBaseValues{
+		PageTitle:       title,
+		CurrentUserInfo: CreateCurrentUserInfo(r),
+		CompNavbarValues: CompNavbarValues{
+			UsingHistoryName:    using.GetName(),
+			BrowsingHistoryName: browsing.GetName(),
+			BrowsingHistoryURL:  browsing.GetURL(),
+		},
+	}
+}
+
+func CreateCurrentUserInfo(r *http.Request) CurrentUserInfo {
+	jwt := GetJWT(r.Context())
+	if jwt == nil {
+		return CurrentUserInfo{
+			SignedIn: false,
+		}
+	}
+	return CurrentUserInfo{
+		Username: jwt.Username(),
+		SignedIn: true,
+	}
+}
+
+func CreateAgeHeader(browsingHistoryName string, ageName string) CompAgeHeaderValues {
+	return CompAgeHeaderValues{
+		AgeName:     ageName,
+		AgeURL:      AgeURL(browsingHistoryName, ageName),
+		Description: "todo description",
 	}
 }

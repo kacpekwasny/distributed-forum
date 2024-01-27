@@ -1,0 +1,8 @@
+{{ block "age_header" . }}
+<div>
+  <a hx-get="{{ .AgeURL }}" hx-target="#id-base-div-2">
+    <h1>{{ .AgeName }}</h1>
+  </a>
+  <p>{{ .Description }}</p>
+</div>
+{{ end }}

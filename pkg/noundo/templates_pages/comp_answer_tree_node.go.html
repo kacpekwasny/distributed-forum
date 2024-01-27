@@ -1,0 +1,15 @@
+{{ block "answer_tree_node" . }}
+  <div class="answers mt-2">
+    {{ template "answer" . }}
+    <div class="d-flex flex-row">
+      <div class="p-0 me-3" style="width: 1px; background-color: beige; flex-shrink: 0;"></div>
+      <div id="answers-for-{{ .Postable.PostableId }}">
+        {{ if .Answerable.Answers }}
+        {{ range .Answerable.Answers }} 
+          {{ template "answer_tree_node" . }} 
+        {{ end }} 
+        {{ end }}
+      </div>
+      </div>
+  </div>
+{{ end }}

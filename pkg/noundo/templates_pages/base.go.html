@@ -1,37 +1,65 @@
 {{ block "basestart" . }}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>{{ .Title }}</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-	<!-- <script src="https://cdn.tailwindcss.com"></script> -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-	<script src="https://unpkg.com/htmx.org@1.9.8"></script>
-	<script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
-	<script src="https://unpkg.com/htmx.org/dist/ext/head-support.js"></script>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{{ .PageTitle }}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/head-support.js"></script>
+
+	<style>
+    html, body {
+      /* min-height: 70vh; */
+      height: 100%;
+    }
+		.line-clamp-4 {
+		  overflow: hidden;
+		  display: -webkit-box;
+		  -webkit-box-orient: vertical;
+		  -webkit-line-clamp: 4;
+		}
+    .read {
+      max-width: 1000px;
+    }
+    .mh-70 {
+      min-height: 70%;
+    }
+	  </style>
 </head>
 
-<body hx-ext="head-support">
+  <body hx-ext="head-support" data-bs-theme="dark">
+    {{ template "navbar" . }}
 
-	{{ template "navbar" .NavbarValues }}
-	  
-	<section class="h-100">
-		<div class="container h-100">
-			<div id="id-base-div-1" class="row justify-content-sm-center h-100">
-				<div id="id-base-div-2" class="row justify-content-sm-center h-100">
-
-{{end}}
-					
-					
-					
-{{ block "baseend" . }}
-				</div>
-			</div>
-		</div>
-	</section>
-</body>
+    <section class="mh-70">
+      <div class="container h-100">
+        <div id="id-base-div-1" class="row justify-content-sm-center h-100">
+          <div id="id-base-div-2" class="row justify-content-sm-center h-100">
+            {{end}} {{ block "baseend" . }}
+          </div>
+        </div>
+      </div>
+    </section>
+    <div style="margin-top: 8em;">
+      {{ template "footer" . }}
+    </div>
+  </body>
 </html>
 {{end}}

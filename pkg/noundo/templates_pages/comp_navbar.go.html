@@ -2,8 +2,7 @@
 
 <nav
   id="id-navbar-1"
-  class="p-1 navbar navbar-expand-lg sticky-top bg-dark border-bottom border-body"
-  data-bs-theme="dark"
+  class="p-1 navbar navbar-expand-lg sticky-top border-bottom border-body bg-success-subtle"
 >
   <div class="container-fluid">
     <div class="navbar-brand position-relative">
@@ -13,11 +12,11 @@
         hx-target="#id-base-div-2"
         class="text-white text-white btn p-0 fs-4"
       >
-      <!-- placeholder for values filled with JS -->
+        <!-- placeholder for values filled with JS -->
       </a>
       <a
         id="Navbar.BrowsingHistoryName"
-        href="" 
+        href=""
         style="
           font-size: 0.55rem;
           position: absolute;
@@ -29,7 +28,7 @@
         "
         class="btn text-white badge rounded-pill bg-info"
       >
-      <!-- placeholder for values filled with JS -->
+        <!-- placeholder for values filled with JS -->
       </a>
     </div>
     <button
@@ -52,6 +51,7 @@
           placeholder="Story, Age, History..."
           aria-label="Search"
         />
+        <!-- TODO search -->
         <button
           class="btn btn-sm btn-outline-success input-group-text"
           type="submit"
@@ -59,14 +59,25 @@
           Search
         </button>
       </div>
-      {{ if .UserProfile }}
       <button
+        id="Navbar.UserProfile"
         class="ms-0 ms-lg-2 my-2 my-lg-0 btn btn-sm btn-light rounded-circle"
-        href="/profile"
+        hx-get="/profile"
+        hx-target="#id-base-div-2"
+        style="display: none"
       >
         <i class="bi bi-person-fill"></i>
       </button>
-      {{ end }}
+      <button
+        id="Navbar.UserSignIn"
+        class="ms-0 ms-lg-2 my-2 my-lg-0 btn btn-sm btn-light"
+        hx-get="/signin"
+        hx-target="#id-base-div-2"
+        style="display: none"
+      >
+      Sign In
+      <i class="bi bi-door-open"></i>
+      </button>
     </div>
   </div>
 </nav>
@@ -76,19 +87,46 @@
   var BrowsingHistoryName = document.getElementById(
     "Navbar.BrowsingHistoryName"
   );
+  var Profile = document.getElementById("Navbar.UserProfile");
+  var SignIn = document.getElementById("Navbar.UserSignIn");
 
   function setUsingBrowsingHistoryName(usingName, browsingName, browsingURL) {
     UsingHistoryName.innerText = usingName;
     if (usingName === browsingName) {
       BrowsingHistoryName.style.visibility = "hidden";
       return;
-    }
+    };
     BrowsingHistoryName.style.visibility = "visible";
     BrowsingHistoryName.innerText = browsingName;
     BrowsingHistoryName.href = browsingURL;
   }
-setUsingBrowsingHistoryName("{{ .UsingHistoryName }}", "{{ .BrowsingHistoryName }}", "{{ .BrowsingHistoryURL }}");
+
+  function profileOrSignIn(signedIn) {
+    console.log(signedIn, typeof signedIn);
+    if (signedIn) {
+      SignIn.style.display = 'none';
+      Profile.style.display = 'block';
+      console.log('if', SignIn.style.display, Profile.style.display);
+    } else {
+      SignIn.style.display = 'block';
+      Profile.style.display = 'none';
+      console.log('else', SignIn.style.display, Profile.style.display);
+    }
+  }
 
 </script>
+{{ template "navbar_js" . }}
 
+{{ end }}
+
+{{ block "navbar_js" . }}
+<script>
+  setUsingBrowsingHistoryName(
+    "{{ .UsingHistoryName }}",
+    "{{ .BrowsingHistoryName }}",
+    "{{ .BrowsingHistoryURL }}"
+  );
+
+  profileOrSignIn({{ if .SignedIn }} true {{ else }} false {{ end }});
+</script>
 {{ end }}

@@ -12,25 +12,15 @@ func NewUserStruct(email, username, parentServerName string, passwdHash []byte) 
 type User struct {
 	email            string
 	username         string
-	passwdHash       []byte
+	passwdHash       []byte // TODO remove, and do something with this object, make a UserIdentityObject, or make it the JWT
 	parentServerName string
+	aboutMe          string
 }
 
-type EmailIface interface {
-	// Email is the string that the user will use to authenticated themselves, Email is unique in context of History
-	Email() string
-}
-
-type UsernameIface interface {
+type UserIdentityIface interface {
 	// Username is the string that the user will go by, Username is unique in context of History
 	Username() string
-}
 
-type PasswdhashIface interface {
-	PasswdHash() []byte
-}
-
-type FullUsernameIface interface {
 	// Domain of the server that is the parent for this account
 	ParentServerName() string
 
@@ -38,22 +28,29 @@ type FullUsernameIface interface {
 	FullUsername() string
 }
 
-type UserPublicIface interface {
-	UsernameIface
-	FullUsernameIface
+type UserMoreInfoIface interface {
+	AboutMe() string
+	AccountBirthDate() int64
 }
 
-type UserFullIface interface {
-	EmailIface
-	UsernameIface
-	PasswdhashIface
-	FullUsernameIface
+type UserPublicIface interface {
+	UserIdentityIface
+	UserMoreInfoIface
 }
 
 type UserAuthIface interface {
-	EmailIface
-	UsernameIface
-	PasswdhashIface
+	UserIdentityIface
+
+	// Email is the string that the user will use to authenticated themselves, Email is unique in context of History
+	Email() string
+
+	// Password Hash - retrieve bytes from database and compare
+	PasswdHash() []byte
+}
+
+type UserAllIface interface {
+	UserPublicIface
+	UserAuthIface
 }
 
 func (u *User) Email() string {
@@ -76,4 +73,8 @@ func (u *User) ParentServerName() string {
 // Username() + "@" + ParentServerName()`
 func (u *User) FullUsername() string {
 	return u.Username() + "@" + u.ParentServerName()
+}
+
+func (u *User) AboutMe() string {
+	return u.aboutMe
 }

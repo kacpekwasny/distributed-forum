@@ -9,7 +9,7 @@ const DEFAULT_PASS_HASH_COST = 14
 
 type AuthenticatorIface interface {
 	// Validate if the passed in credentials are valid
-	ValidateAuthMe(*SignInRequest) error
+	SignIn(*SignInRequest) error
 
 	// Add User to the database of users
 	SignUpUser(*SignUpRequest) *SignUpResponse
@@ -29,7 +29,7 @@ func NewAuthenticator(as AuthenticatorStorageIface, PasswordHashCost int) Authen
 	return &Authenticator{as, PasswordHashCost}
 }
 
-func (a *Authenticator) ValidateAuthMe(am *SignInRequest) error {
+func (a *Authenticator) SignIn(am *SignInRequest) error {
 	user, err := a.authStorage.GetUserByEmail(am.Email)
 	if err != nil {
 		return err

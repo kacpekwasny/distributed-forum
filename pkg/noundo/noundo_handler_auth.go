@@ -9,18 +9,22 @@ import (
 // ~~ SignIn ~~
 
 func (n *NoUndo) HandleSignInGet(w http.ResponseWriter, r *http.Request) {
-	jwt := GetJWTFieldsFromContext(r.Context())
-	if jwt == nil {
-		ExecTemplHtmxSensitive(tmpl, w, r, "signin", "signin", nil)
-		return
-	}
-	ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", SignInFormValues{IsUser: IsUser{jwt.Username}})
+	ExecTemplHtmxSensitive(tmpl, w, r, "signin",
+		"/signin",
+		PageSignInValues{
+			PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
+		},
+	)
 }
 
 func (n *NoUndo) HandleSignInPost(w http.ResponseWriter, r *http.Request) {
 	err := SignInUser(n.Self().Authenticator(), w, r)
 	if err != nil {
-		ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", SignInFormValues{Err: "Sign In Failed :c"})
+		ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", PageSignInValues{
+			PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
+			Err:            "Sign In Failed :c",
+			Email:          utils.LeftOr(GetSignInRequest(r))(&SignInRequest{}).Email,
+		})
 		return
 	}
 	n.HandleHome(w, r)
@@ -29,12 +33,9 @@ func (n *NoUndo) HandleSignInPost(w http.ResponseWriter, r *http.Request) {
 // ~~ SignUp ~~
 
 func (n *NoUndo) HandleSignUpGet(w http.ResponseWriter, r *http.Request) {
-	jwt := GetJWTFieldsFromContext(r.Context())
-	if jwt == nil {
-		ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", nil)
-		return
-	}
-	ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", SignUpFormValues{IsUser: IsUser{jwt.Username}})
+	ExecTemplHtmxSensitive(tmpl, w, r, "signup", "/signup", PageSignUpValues{
+		PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
+	})
 }
 
 func (n *NoUndo) HandleSignUpPost(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +48,7 @@ func (n *NoUndo) HandleSignUpPost(w http.ResponseWriter, r *http.Request) {
 		regResp = n.uni.Authenticator().SignUpUser(signUp)
 	}
 
-	var rfv SignUpFormValues
+	var rfv PageSignUpValues
 
 	if !regResp.Ok {
 		switch regResp.MsgCode {
@@ -64,11 +65,14 @@ func (n *NoUndo) HandleSignUpPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("HX-Push-Url", "/signin")
-	ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", utils.Ms{"Email": signUp.Email})
+	ExecTemplHtmxSensitive(tmpl, w, r, "signin", "/signin", PageSignInValues{
+		PageBaseValues: CreatePageBaseValues("Sign In", n.Self(), n.Self(), r),
+		Email:          signUp.Email,
+	})
 }
 
 // ~~ Sign Out ~~
 func (n *NoUndo) HandleSignOut(w http.ResponseWriter, r *http.Request) {
 	SignOutUser(w)
-	n.HandleHome(w, r)
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

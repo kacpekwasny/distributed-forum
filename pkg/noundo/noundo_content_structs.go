@@ -3,16 +3,40 @@ package noundo
 import "github.com/kacpekwasny/noundo/pkg/enums"
 
 // ~~ Structs ~~
-type TimeStampable struct {
-	timestamp uint64
+
+type UserInfo struct {
+	Username       string
+	FUsername      string
+	ParentServer   string
+	UserProfileURL string
 }
 
 type Postable struct {
-	id            Id
-	userFUsername string
-	contents      string
+	PostableId string
+	Author     UserInfo
+	Contents   string
 
 	TimeStampable
+}
+type Story struct {
+	Title       string
+	AgeName     string
+	HistoryName string
+
+	Postable // TODO
+	Reactionable
+	Answerable
+}
+
+type Answer struct {
+	ParentId string
+	*Postable
+	*Reactionable
+	*Answerable
+}
+
+type Answerable struct {
+	Answers []Answer
 }
 
 type Reaction struct {
@@ -23,23 +47,19 @@ type Reaction struct {
 }
 
 type Reactionable struct {
-	reactions []Reaction
+	Reactions []Reaction
 }
 
-type Story struct {
-	Title string
-	Postable
-	Reactionable
+type TimeStampable struct {
+	Timestamp int64
 }
 
+// ~~ Structs ~~
 type StoryContent struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
 }
 
-type Answer struct {
-	PostId Id
-
-	Postable
-	Reactionable
+type AnswerContent struct {
+	Content string `json:"content"`
 }

@@ -1,7 +1,8 @@
-{{ template "basestart" }}
+{{ template "basestart" . }}
 
 {{ block "home" . }}
-<div>
+<title> {{ .PageTitle }}</title>
+<div class="mt-4">
     <h1>
         Welcome to {{ .DisplayName }}
     </h1>
@@ -30,10 +31,9 @@
         </p>
     </div>
 </div>
-<script>
-// function defined in 'comp_navbar';
-setUsingBrowsingHistoryName("{{ .UsingHistoryName }}", "{{ .BrowsingHistoryName }}", "{{ .BrowsingHistoryURL }}");
-</script>
+
+{{ template "navbar_js" . }}
+
 {{ end }}
 
 {{ template "baseend" }}

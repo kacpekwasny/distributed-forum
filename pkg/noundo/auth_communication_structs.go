@@ -30,9 +30,25 @@ type SignUpResponse struct {
 
 // TODO: UserFUsername field in JWT
 type JWTFields struct {
-	Username           string
-	UserFUsername      string // TODO add it in auth stuff
-	JWTIssuedTimestamp uint64
+	username           string
+	parentServerName   string
+	jwtIssuedTimestamp int64
+}
+
+func (jwt *JWTFields) Username() string {
+	return jwt.username
+}
+
+func (jwt *JWTFields) ParentServerName() string {
+	return jwt.parentServerName
+}
+
+func (jwt *JWTFields) FullUsername() string {
+	return jwt.username + "@" + jwt.parentServerName
+}
+
+func (jwt *JWTFields) IssuedAt() int64 {
+	return jwt.jwtIssuedTimestamp
 }
 
 type MsgEnum string
@@ -45,4 +61,10 @@ const (
 	EmailInUse      MsgEnum = "email_in_use"
 	UsernameInUse   MsgEnum = "username_in_use"
 	InvalidPassword MsgEnum = "invalid_pass"
+	Unauthorized    MsgEnum = "unauthorized"
+	InvalidValue    MsgEnum = "invalid_value"
+	InternalError   MsgEnum = "internal_error"
+	InvalidURL      MsgEnum = "invalid_url"
+	InvalidHeaders  MsgEnum = "invalid_headers"
+	NotFound        MsgEnum = "not_found"
 )

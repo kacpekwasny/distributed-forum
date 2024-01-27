@@ -1,29 +1,35 @@
 package noundo
 
-type BaseValues struct {
-	Title            string
-	MainComponentURL string
-	NavbarValues
+// TODO merge noundo_content structs with template_values
+
+type PageBaseValues struct {
+	CompNavbarValues
+	CurrentUserInfo
+
+	PageTitle string
 }
 
-type NavbarValues struct {
+type CurrentUserInfo struct {
+	Username string
+	SignedIn bool
+}
+
+type CompNavbarValues struct {
 	UsingHistoryName    string
 	BrowsingHistoryName string
 	BrowsingHistoryURL  string
-	UserProfile         bool
 }
 
-type IsUser struct {
-	CurrentUsername string
+type PageSignInValues struct {
+	PageBaseValues
+
+	Email string
+	Err   string
 }
 
-type SignInFormValues struct {
-	IsUser
-	Err string
-}
+type PageSignUpValues struct {
+	PageBaseValues
 
-type SignUpFormValues struct {
-	IsUser
 	Email    string
 	Username string
 
@@ -34,18 +40,13 @@ type SignUpFormValues struct {
 	Err string
 }
 
-type WelcomeValues struct {
-	Username string
-	Msg      string
-}
-
 // ~~~~~~  home.go.html ~~~~~~
 
-type HomeValues struct {
+type PageHomeValues struct {
 	DisplayName string
 	LocalAges   []AgeLink
 	Peers       []HistoryInfo
-	NavbarValues
+	PageBaseValues
 }
 
 type AgeLink struct {
@@ -59,11 +60,17 @@ type HistoryInfo struct {
 }
 
 type PageAgeValues struct {
-	Name        string
-	WriteStory  CompWriteStory
+	PageBaseValues
+	CompAgeHeaderValues
+
+	WriteStory CompWriteStory
+	Stories    []CompStoryValues
+}
+
+type CompAgeHeaderValues struct {
+	AgeName     string
+	AgeURL      string
 	Description string
-	Stories     []CompStoryValues
-	NavbarValues
 }
 
 type CompWriteStory struct {
@@ -74,10 +81,45 @@ type CompWriteStory struct {
 	ContentLenMax int
 }
 
-type CompStoryValues struct {
-	Id              string
-	AuthorFUsername string
-	Content         string
+type CompAnswerWrite struct {
+	AnswerToId         string
+	WriteAnswerPostURL string
+	ContentLenMin      int
+	ContentLenMax      int
+	HideAfterSend      bool
+}
 
+type CompStoryValues struct {
+	Story Story
+	// StoryId      string
+	// StoryTitle   string
+	// StoryAuthor  string
+	// StoryContent string
+	// StoryURL     string
+	ClampContent bool
+	StoryURL     string
 	// TODO answers
+}
+
+type PageStoryValues struct {
+	PageBaseValues
+	CompStoryValues
+	CompAgeHeaderValues
+	CompAnswerWrite
+}
+
+// TODO - struct UserIdentity - Username, ParnetServer, FUsername,
+type PageProfileValues struct {
+	PageBaseValues
+
+	Username         string
+	ParentServerName string
+	AccountBirthDate string
+	AboutMe          string
+	SelfProfile      bool
+}
+
+type Page401Values struct {
+	RequestedPath string
+	PageBaseValues
 }

@@ -1,30 +1,28 @@
-{{ template "basestart" }}
+{{ template "basestart" . }}
 {{ block "signup" . }}
-<script>
-  document.title = "Sign Up";
-</script>
+<title> {{ .PageTitle }} </title>
 <div class="my-5"></div>
 <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
   <div class="card shadow-lg">
     <div class="card-body p-5 pb-4">
       <h1 class="fs-4 card-title fw-bold mb-4">Sign Up</h1>
-      {{ if .CurrentUsername }}
-      {{ template "signed_in" .CurrentUsername }}
+      {{ if .Username }}
+      {{ template "signed_in" .Username }}
       {{ else }}
       <form hx-post="signup" hx-target="#id-base-div-2" autocomplete="off">
         <div class="mb-3">
           <label class="mb-2 text-muted" for="email">Email</label>
           <input id="email" type="text" class="form-control" name="Email"
-          value="{{ getf . "Email" ""}}" required autofocus /> {{ if hasField .
-          "ErrEmail" }}
+          value="{{ .Email }}" required autofocus />
+          {{ if .ErrEmail }}
           <div class="text-danger">{{ .ErrEmail }}</div>
           {{ end }}
         </div>
 
         <div class="mb-3">
           <label class="mb-2 text-muted" for="username">Username</label>
-          <input id="username" class="form-control" name="Username" value="{{
-          getf . "Username" "" }}" required /> {{ if hasField . "ErrUsername" }}
+          <input id="username" class="form-control" name="Username" value="{{ .Username }}" required /> 
+          {{ if hasField . "ErrUsername" }}
           <div class="text-danger">{{ .ErrUsername }}</div>
           {{ end }}
         </div>
@@ -38,7 +36,7 @@
             name="Password"
             required
           />
-          {{ if hasField . "ErrPassword" }}
+          {{ if .ErrPassword }}
           <div class="text-danger">{{ .ErrPassword }}</div>
           {{ end }}
         </div>
@@ -52,7 +50,7 @@
             Sign Up
           </button>
         </div>
-        {{ if hasField . "Err" }}
+        {{ if .Err }}
         <div class="text-danger">{{ .Err }}</div>
         {{ end }}
       </form>

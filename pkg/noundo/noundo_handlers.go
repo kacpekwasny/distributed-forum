@@ -1,8 +1,9 @@
 package noundo
 
 import (
+	"log/slog"
 	"net/http"
-	"net/url"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -20,7 +21,7 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 
 	ExecTemplHtmxSensitive(
 		tmpl, w, r, "home", "/",
-		HomeValues{
+		PageHomeValues{
 			DisplayName: self.GetName(),
 			LocalAges: utils.Map(
 				ages,
@@ -28,68 +29,50 @@ func (n *NoUndo) HandleHome(w http.ResponseWriter, r *http.Request) {
 					return CreateAgeInfo("/", n.Self().GetName(), a.GetName())
 				},
 			),
-			Peers: utils.Map(n.Peers(), CreateHistoryInfo),
-			NavbarValues: NavbarValues{
-				UsingHistoryName:    self.GetName(),
-				BrowsingHistoryName: self.GetName(),
-			},
+			Peers:          utils.Map(n.Peers(), CreateHistoryInfo),
+			PageBaseValues: CreatePageBaseValues(n.Self().GetName(), n.Self(), n.Self(), r),
 		},
 	)
 }
 
-func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	historyName := params["history"]
-	ageName := params["age"]
-	history, err := n.uni.GetHistoryByName(historyName)
-	if err != nil {
-		n.Handle404(w, r)
+func (n *NoUndo) HandleSelfProfile(w http.ResponseWriter, r *http.Request) {
+	userJWT := GetJWT(r.Context())
+	if userJWT == nil {
+		http.Redirect(w, r, "/signin", http.StatusTemporaryRedirect)
 		return
 	}
-
-	_, err = history.GetAge(ageName)
+	user, err := n.Self().GetUser(userJWT.Username())
 	if err != nil {
-		// TODO (create Age page)
-		n.Handle404(w, r)
+		slog.Error("cannot retrieve user from database, but has valid JWT", "username", userJWT.Username, "parent server", userJWT.parentServerName)
+		utils.WriteJsonWithStatus(w, "my apologies, you don't exist", http.StatusInternalServerError)
 		return
 	}
-
-	storiesIface, err := history.GetStories(
-		[]string{ageName},
-		int(utils.GetQueryParamInt(r, "start", 0)),
-		int(utils.GetQueryParamInt(r, "end", 50)),
-		nil, nil,
-	)
-
-	if err != nil {
-		// TODO, logging, user info, maybe CreateAge option?
-		n.HandleHome(w, r)
-		return
-	}
-
-	stories := make([]CompStoryValues, len(storiesIface))
-	for i, s := range storiesIface {
-		stories[i] = CompStoryValues{
-			Id:              string(s.Id()),
-			AuthorFUsername: s.AuthorFUsername(),
-			Content:         s.Content(),
-		}
-	}
-
-	ExecTemplHtmxSensitive(tmpl, w, r, "age", utils.LeftLogRight(url.JoinPath("/a", historyName, ageName)), &PageAgeValues{
-		Name:        ageName,
-		WriteStory:  CreateCompWriteStory("/a/" + ageName + "/create-story"),
-		Description: "TODO, description is hadrdcoded rn.",
-		Stories:     stories,
-		NavbarValues: NavbarValues{
-			UsingHistoryName:    n.Self().GetName(),
-			BrowsingHistoryName: historyName,
-			BrowsingHistoryURL:  history.GetURL(),
-			UserProfile:         GetJWTFieldsFromContext(r.Context()) != nil,
-		},
+	ExecTemplHtmxSensitive(tmpl, w, r, "profile", "/profile", PageProfileValues{
+		Username:         user.Username(),
+		ParentServerName: user.ParentServerName(),
+		AccountBirthDate: time.Unix(user.AccountBirthDate(), 0).Format(time.RFC3339),
+		AboutMe:          user.AboutMe(),
+		SelfProfile:      true,
+		PageBaseValues:   CreatePageBaseValues("My Profile", n.Self(), n.Self(), r),
 	})
 }
 
-func (n *NoUndo) HandleAgeShortcut(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, utils.LeftLogRight(url.JoinPath("/a", n.Self().GetName(), mux.Vars(r)["age"])), http.StatusPermanentRedirect)
+func (n *NoUndo) HandleProfile(w http.ResponseWriter, r *http.Request) {
+	username := mux.Vars(r)["username"]
+
+	user, err := n.Self().GetUser(username)
+	if err != nil {
+		n.Handle404(w, r)
+		return
+	}
+
+	// TODO Jwt handle more information and then change JoinURL for ProfileURL
+	ExecTemplHtmxSensitive(tmpl, w, r, "profile", JoinURL("/profile", username), PageProfileValues{
+		Username:         user.Username(),
+		ParentServerName: "@" + user.ParentServerName(),
+		AccountBirthDate: "todo birthdate",
+		AboutMe:          "todo - keep user aboutme - only editable thing",
+		SelfProfile:      false,
+		PageBaseValues:   CreatePageBaseValues("Profile", n.Self(), n.Self(), r),
+	})
 }

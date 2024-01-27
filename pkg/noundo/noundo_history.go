@@ -18,24 +18,25 @@ type HistoryPublicIface interface {
 
 	// Single age
 	GetAge(name string) (AgeIface, error)
-
 	// Get Ages
 	GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error)
 
-	//
-	GetStory(id Id) (StoryIface, error)
-
+	// Create an Answer under a post or other Answer
+	CreateAnswer(author UserIdentityIface, parentId string, answerContent string) (Answer, error)
 	// Get answer from anywhere in
-	GetAnswer(id Id) (AnswerIface, error)
-
-	// GetFirst n stories ordered by different atributes, from []ages,
-	GetStories(ageNames []string, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error)
-
-	//
-	GetStoriesUserJoined(user UserPublicIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error)
+	GetAnswer(id string) (Answer, error)
+	// Get tree of answers, to the specified postable with the specified depth
+	GetAnswers(postableId string, start int, end int, depth int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error)
 
 	// Retrive all user info by supplying a username
 	GetUser(username string) (UserPublicIface, error)
+
+	// Create a new story within
+	CreateStory(ageName string, author UserIdentityIface, story StoryContent) (Story, error)
+	// Get a single story
+	GetStory(id string) (Story, error)
+	// Get `n` stories ordered by different atributes, from []ages,
+	GetStories(ageNames []string, start int, end int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error)
 
 	// TODO:
 	// GetAges that user joined,
@@ -49,11 +50,8 @@ type HistoryPrivateIface interface {
 	// Create a new user
 	CreateUser(email string, username string, password string) (UserPublicIface, error)
 
-	// Create a new story within
-	CreateStory(ageName string, author UserPublicIface, story StoryContent) (StoryIface, error)
-
 	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
-	CreateAge(owner UserPublicIface, ageName string) (AgeIface, error)
+	CreateAge(owner UserIdentityIface, ageName string) (AgeIface, error)
 }
 
 type HistoryFullIface interface {

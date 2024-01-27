@@ -7,6 +7,7 @@ import "github.com/kacpekwasny/noundo/pkg/enums"
 type StoryIface interface {
 	PostableIface
 	AnswerableIface
+	Title() string
 }
 
 type AnswerIface interface {
@@ -22,14 +23,14 @@ type PostableIface interface {
 }
 
 type AnswerableIface interface {
-	AddAnswer(author UserFullIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error)
+	AddAnswer(author UserIdentityIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error)
 	Answers(start int, end int, depth int, order OrderIface[AnswerableIface], filter FilterIface[AnswerableIface], ages []AgeIface) ([]AnswerIface, error)
 }
 
 type ReactionableIface interface {
 	ReactionStats() (map[enums.ReactionType]int, error)
 	Reactions() ([]ReactionIface, error)
-	React(user UserFullIface, reaction ReactionIface) error
+	React(user UserIdentityIface, reaction ReactionIface) error
 }
 
 type ReactionIface interface {
