@@ -19,9 +19,9 @@ func init() {
 	h1 := n.NewHistoryVolatile("localhost:8081")
 	h2 := n.NewHistoryVolatile("localhost:8082")
 
-	u0k, _ := h0.CreateUser("k", "k", "k")
-	u1k, _ := h1.CreateUser("k", "k", "k")
-	u2k, _ := h2.CreateUser("k", "k", "k")
+	u0k, _ := h0.CreateUser("k", "k1", "k")
+	u1k, _ := h1.CreateUser("k", "k2", "k")
+	u2k, _ := h2.CreateUser("k", "k3", "k")
 
 	a0, _ := h0.CreateAge(u0k, "age0")
 	a1, _ := h1.CreateAge(u1k, "age1")

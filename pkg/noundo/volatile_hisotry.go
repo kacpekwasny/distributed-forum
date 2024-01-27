@@ -33,7 +33,7 @@ func NewHistoryVolatile(historyName string) HistoryFullIface {
 		ages:    make(map[string]*AgeVolatile),
 		stories: make(map[string]*Story),
 		answers: make(map[string]*Answer),
-		auth:    NewAuthenticator(NewVolatileAuthStorage(historyName, &usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST),
+		auth:    NewAuthenticator(NewVolatileAuthStorage(historyName, &usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST, []byte(historyName)),
 		users:   usersUsername,
 	}
 }
@@ -87,7 +87,7 @@ func (h *HistoryVolatile) GetUser(username string) (UserPublicIface, error) {
 func (h *HistoryVolatile) CreateUser(email string, username string, password string) (UserPublicIface, error) {
 	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
 	if r.Ok {
-		return h.auth.GetUserByEmail(username).(UserPublicIface), nil
+		return h.auth.GetUserByUsername(username).(UserPublicIface), nil
 	}
 	return nil, errors.New(string(r.MsgCode))
 }
