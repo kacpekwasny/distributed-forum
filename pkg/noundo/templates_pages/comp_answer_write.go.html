@@ -5,7 +5,7 @@
   hx-ext="json-enc"
   hx-target="#answers-for-{{ .AnswerToId }}"
   hx-swap="afterbegin"
-  hx-on::after-request="this.outerHTML=''"
+  {{ if .HideAfterSend }} hx-on::after-request="  this.outerHTML='' " {{ end }}
 >
   <div class="form-outline">
     <textarea

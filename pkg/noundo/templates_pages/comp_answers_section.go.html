@@ -1,9 +1,7 @@
 {{ block "answers_section" . }}
-<div>
-    <div>
+    <div id="answers-for-{{ .Postable.PostableId }}">
         {{ range .Answerable.Answers }}
             {{ template "answer_tree_node" . }}
         {{ end }}
     </div>
-</div>
 {{ end }}

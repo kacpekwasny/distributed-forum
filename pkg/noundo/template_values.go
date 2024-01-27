@@ -86,6 +86,7 @@ type CompAnswerWrite struct {
 	WriteAnswerPostURL string
 	ContentLenMin      int
 	ContentLenMax      int
+	HideAfterSend      bool
 }
 
 type CompStoryValues struct {

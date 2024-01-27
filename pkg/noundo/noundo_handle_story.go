@@ -2,6 +2,7 @@ package noundo
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
@@ -25,7 +26,7 @@ func validStory(story StoryContent) bool {
 }
 
 func validAnswer(answer AnswerContent) bool {
-	return (STORY_LEN_MIN <= len(answer.Content)) && (len(answer.Content) <= STORY_LEN_MAX)
+	return (ANSWER_LEN_MIN <= len(answer.Content)) && (len(answer.Content) <= ANSWER_LEN_MAX)
 }
 
 func (n *NoUndo) HandleCreateStoryPost(w http.ResponseWriter, r *http.Request) {
@@ -90,9 +91,11 @@ func (n *NoUndo) HandleStoryGet(w http.ResponseWriter, r *http.Request) {
 			StoryURL:     "",
 		},
 		CompAnswerWrite: CompAnswerWrite{
-			AnswerToId:    storyId,
-			ContentLenMin: STORY_LEN_MIN,
-			ContentLenMax: STORY_LEN_MAX,
+			AnswerToId:         storyId,
+			ContentLenMin:      STORY_LEN_MIN,
+			ContentLenMax:      STORY_LEN_MAX,
+			WriteAnswerPostURL: utils.LeftLogRight(url.JoinPath("/write-answer", historyName, storyId)),
+			HideAfterSend:      false,
 		},
 	})
 }
@@ -124,6 +127,7 @@ func (n *NoUndo) HandleCreateAnswerGet(w http.ResponseWriter, r *http.Request) {
 		ContentLenMin:      ANSWER_LEN_MIN,
 		ContentLenMax:      ANSWER_LEN_MAX,
 		WriteAnswerPostURL: utils.LeftLogRight(url.JoinPath("/write-answer", parts[2], postableId)),
+		HideAfterSend:      true,
 	})
 
 }
@@ -142,7 +146,8 @@ func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) 
 		utils.WriteJsonWithStatus(w, "parsing_body_failed", http.StatusBadRequest)
 		return
 	}
-	if validAnswer(answerContent) {
+	if !validAnswer(answerContent) {
+		slog.Debug("invalid_answer", "answerContent", answerContent)
 		utils.WriteJsonWithStatus(w, "invalid_answer", http.StatusBadRequest)
 		return
 	}
@@ -162,5 +167,5 @@ func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) 
 		utils.WriteJsonWithStatus(w, "error_creating_answer", http.StatusInternalServerError)
 		return
 	}
-	utils.ExecTemplLogErr(tmpl, w, "answer", answer)
+	utils.ExecTemplLogErr(tmpl, w, "answer_tree_node", answer)
 }
