@@ -10,7 +10,7 @@ import (
 func (n *NoUndo) setupRouter() {
 	r := mux.NewRouter()
 
-	r.Use(HttpAuthenticator)
+	r.Use(HttpAuthenticator(n.Self().Authenticator()))
 	r.Use(httpLogger())
 
 	// p - endpoints using Subrouter `p` require request to be authenticated
