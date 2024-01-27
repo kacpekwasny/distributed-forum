@@ -20,6 +20,10 @@ type HistoryReadIface interface {
 
 	// Retrive all user info by supplying a username
 	GetUser(username string) (UserPublicIface, error)
+
+	// get a single AgeIface
+	GetAge(name string) (AgeIface, error)
+	// Get ages ordered and filtered and sliced by the start & end integers
 	GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error)
 
 	// Get a single story
