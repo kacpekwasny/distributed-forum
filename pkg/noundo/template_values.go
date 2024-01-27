@@ -57,6 +57,7 @@ type AgeLink struct {
 type HistoryInfo struct {
 	DisplayName string
 	Href        string
+	Ages        []AgeLink
 }
 
 type PageAgeValues struct {
