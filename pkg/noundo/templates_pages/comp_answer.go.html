@@ -3,9 +3,9 @@
   <cite title="Author of the Answer." class="blockquote-footer">{{ .Author.FUsername }}</cite>
     <!-- TODO date and time of post -->
   <p class="m-0">{{ .Contents }}</p>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex flex-col justify-content-end">
     <!-- TODO hide answer -->
-    <a hx-get="/write-answer-box/{{ .PostableId }}" hx-swap="outerHTML">
+    <a hx-get="/write-answer-box/{{ .PostableId }}" hx-swap="afterend">
       <i class="bi bi-reply"></i>
     </a>
   </div>
