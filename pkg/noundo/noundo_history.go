@@ -25,6 +25,8 @@ type HistoryPublicIface interface {
 	CreateAnswer(author UserPublicIface, parentId string, answerContent string) (Answer, error)
 	// Get answer from anywhere in
 	GetAnswer(id string) (Answer, error)
+	// Get tree of answers, to the specified postable with the specified depth
+	GetAnswers(postableId string, start int, end int, depth int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error)
 
 	// Retrive all user info by supplying a username
 	GetUser(username string) (UserPublicIface, error)

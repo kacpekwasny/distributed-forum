@@ -45,4 +45,10 @@ const (
 	EmailInUse      MsgEnum = "email_in_use"
 	UsernameInUse   MsgEnum = "username_in_use"
 	InvalidPassword MsgEnum = "invalid_pass"
+	Unauthorized    MsgEnum = "unauthorized"
+	InvalidValue    MsgEnum = "invalid_value"
+	InternalError   MsgEnum = "internal_error"
+	InvalidURL      MsgEnum = "invalid_url"
+	InvalidHeaders  MsgEnum = "invalid_headers"
+	NotFound        MsgEnum = "not_found"
 )

@@ -3,7 +3,6 @@ package noundo
 import (
 	"log/slog"
 	"net/http"
-	"net/url"
 
 	"github.com/gorilla/mux"
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -66,7 +65,8 @@ func (n *NoUndo) HandleProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ExecTemplHtmxSensitive(tmpl, w, r, "profile", utils.LeftLogRight(url.JoinPath("/profile", username)), PageProfileValues{
+	// TODO Jwt handle more information and then change JoinURL for ProfileURL
+	ExecTemplHtmxSensitive(tmpl, w, r, "profile", JoinURL("/profile", username), PageProfileValues{
 		Username:         user.Username(),
 		ParentServerName: "@" + user.ParentServerName(),
 		AccountBirthDate: "todo birthdate",

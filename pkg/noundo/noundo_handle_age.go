@@ -1,8 +1,8 @@
 package noundo
 
 import (
+	"log/slog"
 	"net/http"
-	"net/url"
 
 	"github.com/gorilla/mux"
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -20,7 +20,6 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 
 	_, err = history.GetAge(ageName)
 	if err != nil {
-		// TODO (create Age page)
 		n.Handle404(w, r)
 		return
 	}
@@ -33,7 +32,7 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		// TODO, logging, user info, maybe CreateAge option?
+		slog.Debug("GetStories failed", "ageName", ageName, "err", err)
 		n.HandleHome(w, r)
 		return
 	}
@@ -48,14 +47,14 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO - if not peered with this history -> no option to create story, write answers,
-	ExecTemplHtmxSensitive(tmpl, w, r, "age", utils.LeftLogRight(url.JoinPath("/a", historyName, ageName)), &PageAgeValues{
+	ExecTemplHtmxSensitive(tmpl, w, r, "age", AgeURL(historyName, ageName), &PageAgeValues{
 		CompAgeHeaderValues: CreateAgeHeader(historyName, ageName),
-		WriteStory:          CreateCompWriteStory(utils.LeftLogRight(url.JoinPath("/a", historyName, ageName, "create-story"))),
+		WriteStory:          CreateCompWriteStory(WriteStoryURL(historyName, ageName)),
 		Stories:             storiesForTmpl,
 		PageBaseValues:      CreatePageBaseValues(ageName, n.Self(), history, r),
 	})
 }
 
 func (n *NoUndo) HandleAgeShortcut(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, utils.LeftLogRight(url.JoinPath("/a", n.Self().GetName(), mux.Vars(r)["age"])), http.StatusPermanentRedirect)
+	http.Redirect(w, r, AgeURL(n.Self().GetName(), mux.Vars(r)["age"]), http.StatusPermanentRedirect)
 }

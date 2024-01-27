@@ -7,7 +7,6 @@ type AgeVolatile struct {
 	name            string
 	ownerUsername   string
 	adminsUsernames []string
-	auth            AuthenticatorIface
 }
 
 func (a *AgeVolatile) GetId() string {

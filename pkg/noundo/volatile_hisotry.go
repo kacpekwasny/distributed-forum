@@ -192,3 +192,8 @@ func (h *HistoryVolatile) CreateAnswer(author UserPublicIface, parentId string, 
 	h.answers[id] = &answer
 	return answer, nil
 }
+
+// Get tree of answers, with the specified depth
+func (h *HistoryVolatile) GetAnswers(postableId string, start int, end int, depth int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error) {
+	panic("not implemented") // TODO: Implement
+}

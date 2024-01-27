@@ -33,32 +33,35 @@ func (n *NoUndo) HandleCreateStoryPost(w http.ResponseWriter, r *http.Request) {
 	var story StoryContent
 	jwt := GetJWT(r.Context())
 	if jwt == nil {
-		utils.WriteJsonWithStatus(w, utils.Ms{"info": "unauthorized"}, http.StatusUnauthorized)
+		utils.WriteJsonWithStatus(w, Unauthorized, http.StatusUnauthorized)
 		return
 	}
 
 	err := json.NewDecoder(r.Body).Decode(&story)
 	if err != nil {
-		utils.WriteJsonWithStatus(w, utils.Ms{"info": "json_decode_fail"}, http.StatusBadRequest)
+		utils.WriteJsonWithStatus(w, DecodeErr, http.StatusBadRequest)
+		return
+	}
+
+	if !validStory(story) {
+		utils.WriteJsonWithStatus(w, InvalidValue, http.StatusBadRequest)
 		return
 	}
 
 	v := mux.Vars(r)
-
-	if !validStory(story) {
-		utils.WriteJsonWithStatus(w, utils.Ms{"info": "invalid_story"}, http.StatusBadRequest)
-		return
-	}
 	history, err := n.uni.GetHistoryByName(v["history"])
+
 	if err != nil {
-		utils.WriteJsonWithStatus(w, utils.Ms{"info": "error_during_create_story"}, http.StatusNotFound)
+		utils.WriteJsonWithStatus(w, InternalError, http.StatusNotFound)
 		return
 	}
+
 	_, err = history.CreateStory(v["age"], &User{username: strings.Split(jwt.Username, "@")[0]}, story)
 	if err != nil {
-		utils.WriteJsonWithStatus(w, utils.Ms{"info": "error_during_create_story"}, http.StatusNotFound)
+		utils.WriteJsonWithStatus(w, InternalError, http.StatusInternalServerError)
 		return
 	}
+
 	// TODO - template for a single Story
 	// TODO - execute this template
 	// ExecTemplHtmxSensitive(tmpl, w, r, "story", nil)
@@ -94,7 +97,7 @@ func (n *NoUndo) HandleStoryGet(w http.ResponseWriter, r *http.Request) {
 			AnswerToId:         storyId,
 			ContentLenMin:      STORY_LEN_MIN,
 			ContentLenMax:      STORY_LEN_MAX,
-			WriteAnswerPostURL: utils.LeftLogRight(url.JoinPath("/write-answer", historyName, storyId)),
+			WriteAnswerPostURL: WriteAnswerURL(historyName, storyId),
 			HideAfterSend:      false,
 		},
 	})
@@ -111,12 +114,12 @@ func (n *NoUndo) HandleCreateAnswerGet(w http.ResponseWriter, r *http.Request) {
 	currURL := r.Header.Get("hx-current-url")
 	URL, err := url.Parse(currURL)
 	if err != nil {
-		utils.WriteJsonWithStatus(w, "headers_not_matching_requirements", http.StatusBadRequest)
+		utils.WriteJsonWithStatus(w, InvalidHeaders, http.StatusBadRequest)
 		return
 	}
 	parts := strings.Split(URL.Path, "/")
 	if len(parts) < 5 {
-		utils.WriteJsonWithStatus(w, "expected_url_to_contain_more_information", http.StatusBadRequest)
+		utils.WriteJsonWithStatus(w, InvalidURL, http.StatusBadRequest)
 		return
 	}
 
@@ -127,7 +130,7 @@ func (n *NoUndo) HandleCreateAnswerGet(w http.ResponseWriter, r *http.Request) {
 		AnswerToId:         mux.Vars(r)["postable-id"],
 		ContentLenMin:      ANSWER_LEN_MIN,
 		ContentLenMax:      ANSWER_LEN_MAX,
-		WriteAnswerPostURL: utils.LeftLogRight(url.JoinPath("/write-answer", parts[2], postableId)),
+		WriteAnswerPostURL: WriteAnswerURL(parts[2], postableId),
 		HideAfterSend:      true,
 	})
 
@@ -144,12 +147,12 @@ func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) 
 	var answerContent AnswerContent
 	err := json.NewDecoder(r.Body).Decode(&answerContent)
 	if err != nil {
-		utils.WriteJsonWithStatus(w, "parsing_body_failed", http.StatusBadRequest)
+		utils.WriteJsonWithStatus(w, InvalidValue, http.StatusBadRequest)
 		return
 	}
 	if !validAnswer(answerContent) {
 		slog.Debug("invalid_answer", "answerContent", answerContent)
-		utils.WriteJsonWithStatus(w, "invalid_answer", http.StatusBadRequest)
+		utils.WriteJsonWithStatus(w, InvalidValue, http.StatusBadRequest)
 		return
 	}
 
@@ -158,14 +161,14 @@ func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) 
 	parentId := vars["postable-id"]
 	history, err := n.uni.GetHistoryByName(historyName)
 	if err != nil {
-		utils.WriteJsonWithStatus(w, "history_not_found", http.StatusNotFound)
+		utils.WriteJsonWithStatus(w, NotFound, http.StatusNotFound)
 		return
 	}
 
 	history.GetUser(jwt.Username)
 	answer, err := history.CreateAnswer(&User{username: jwt.Username, parentServerName: jwt.ParentServer}, parentId, answerContent.Content)
 	if err != nil {
-		utils.WriteJsonWithStatus(w, "error_creating_answer", http.StatusInternalServerError)
+		utils.WriteJsonWithStatus(w, InternalError, http.StatusInternalServerError)
 		return
 	}
 	utils.ExecTemplLogErr(tmpl, w, "answer_tree_node", answer)
