@@ -123,7 +123,7 @@ func (h *HistoryVolatile) GetAge(name string) (AgeIface, error) {
 	return utils.MapGetErr[string, *AgeVolatile](h.ages, name)
 }
 
-func (h *HistoryVolatile) CreateStory(ageName string, author UserIdentityIface, story StoryContent) (Story, error) {
+func (h *HistoryVolatile) CreateStory(author UserIdentityIface, ageName string, story StoryContent) (Story, error) {
 	_, exists := h.ages[ageName]
 	if !exists {
 		return Story{}, errors.New("age with ageName: '" + ageName + "' doesnt exist")

@@ -50,7 +50,7 @@ func init() {
 
 func createStories(h n.HistoryFullIface, m int, age string, author n.UserPublicIface, text string) {
 	for i := 0; i < m; i++ {
-		s, _ := h.CreateStory(age, author, n.StoryContent{
+		s, _ := h.CreateStory(author, age, n.StoryContent{
 			Title:   lorGen.Words(5),
 			Content: lorGen.Sentences(rint(30)),
 		})

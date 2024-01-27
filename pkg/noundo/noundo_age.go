@@ -3,7 +3,6 @@ package noundo
 type AgeIface interface {
 	GetId() string
 	GetName() string
-	SetName(name string) error
 
 	GetOwner() (UserPublicIface, error)
 	ChangeOwner(user UserIdentityIface) error

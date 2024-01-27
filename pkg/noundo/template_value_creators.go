@@ -17,7 +17,7 @@ func CreateAgeInfo(parentDomainURL string, historyName string, ageName string) A
 	}
 }
 
-func CreateHistoryInfo(his HistoryPublicIface) HistoryInfo {
+func CreateHistoryInfo[T HistoryReadIface](his T) HistoryInfo {
 	name := his.GetName()
 	href := his.GetURL()
 	ages, _ := his.GetAges(0, 30, nil, nil)
@@ -43,7 +43,7 @@ func CreateCompWriteStory(hxPost string) CompWriteStory {
 	}
 }
 
-func CreatePageBaseValues(title string, using HistoryPublicIface, browsing HistoryPublicIface, r *http.Request) PageBaseValues {
+func CreatePageBaseValues(title string, using HistoryReadIface, browsing HistoryReadIface, r *http.Request) PageBaseValues {
 	return PageBaseValues{
 		PageTitle:       title,
 		CurrentUserInfo: CreateCurrentUserInfo(r),
