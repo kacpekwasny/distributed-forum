@@ -103,7 +103,7 @@ message Story {
 
 message Postable {
     string id = 1;
-    UserInfo author = 2;
+    UserIdentity author = 2;
     string content = 3;
     int64 timestamp = 4;
 }
