@@ -2,7 +2,6 @@ package noundo
 
 import (
 	"errors"
-	"sort"
 	"time"
 
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -65,18 +64,18 @@ func (h *HistoryVolatile) GetAnswer(id string) (Answer, error) {
 }
 
 // GetFirst n stories ordered by different atributes, from []ages,
-func (h *HistoryVolatile) GetStories(ageNames []string, start int, end int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error) {
+func (h *HistoryVolatile) GetStories(ageNames []string, start int, end int, order OrderIface, filter FilterIface) ([]*Story, error) {
 	stories := []*Story{}
 	for _, story := range h.stories {
-		if filter == nil || filter.Keep(story) {
-			stories = append(stories, story)
-		}
+		stories = append(stories, story)
+		// if filter == nil || filter.Keep(story) {
+		// }
 	}
-	if order != nil {
-		sort.SliceStable(stories, func(i, j int) bool {
-			return order.Less(stories[i], stories[j])
-		})
-	}
+	// if order != nil {
+	// 	sort.SliceStable(stories, func(i, j int) bool {
+	// 			return order.Less(stories[i], stories[j])
+	// 	})
+	// }
 	return stories, nil
 }
 
@@ -102,7 +101,7 @@ func (h *HistoryVolatile) GetURL() string {
 	return h.url
 }
 
-func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error) {
+func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error) {
 	ages := []AgeIface{}
 	for _, a := range maps.Values(h.ages) {
 		ages = append(ages, a)
@@ -110,9 +109,9 @@ func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface[AgeIface]
 	return ages, nil
 }
 
-func (h *HistoryVolatile) GetStoriesUserJoined(user UserIdentityIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
-	panic("not implemented") // TODO: Implement
-}
+// func (h *HistoryVolatile) GetStoriesUserJoined(user UserIdentityIface, start int, end int, order OrderIface, filter FilterIface) ([]StoryIface, error) {
+// 	panic("not implemented") // TODO: Implement
+// }
 
 func (h *HistoryVolatile) Authenticator() AuthenticatorIface {
 	return h.auth
@@ -192,6 +191,6 @@ func (h *HistoryVolatile) CreateAnswer(author UserIdentityIface, parentId string
 }
 
 // Get tree of answers, with the specified depth
-func (h *HistoryVolatile) GetAnswers(postableId string, start int, end int, depth int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error) {
+func (h *HistoryVolatile) GetAnswers(postableId string, start int, end int, depth int, order OrderIface, filter FilterIface) ([]*Story, error) {
 	panic("not implemented") // TODO: Implement
 }

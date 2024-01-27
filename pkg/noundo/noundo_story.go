@@ -1,9 +1,5 @@
 package noundo
 
-import (
-	"github.com/kacpekwasny/noundo/pkg/enums"
-)
-
 type CreateStory struct {
 	authorFUsername string
 	content         string
@@ -54,22 +50,22 @@ func (s *Story) AuthorFUsername() string {
 	return s.Author.FUsername
 }
 
-func (s *Story) ReactionStats() (map[enums.ReactionType]int, error) {
-	panic("not implemented") // TODO: Implement
-}
+// func (s *Story) ReactionStats() (map[enums.ReactionType]int, error) {
+// 	panic("not implemented") // TODO: Implement
+// }
 
-func (s *Story) Reactions() ([]ReactionIface, error) {
-	panic("not implemented") // TODO: Implement
-}
+// func (s *Story) Reactions() ([]ReactionIface, error) {
+// 	panic("not implemented") // TODO: Implement
+// }
 
-func (s *Story) React(user UserIdentityIface, reaction ReactionIface) error {
-	panic("not implemented") // TODO: Implement
-}
+// func (s *Story) React(user UserIdentityIface, reaction ReactionIface) error {
+// 	panic("not implemented") // TODO: Implement
+// }
 
-func (s *Story) AddAnswer(author UserIdentityIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error) {
-	panic("not implemented") // TODO: Implement
-}
+// func (s *Story) AddAnswer(author UserIdentityIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error) {
+// 	panic("not implemented") // TODO: Implement
+// }
 
-func (s *Story) Answers(start int, end int, depth int, order OrderIface[AnswerableIface], filter FilterIface[AnswerableIface], ages []AgeIface) ([]AnswerIface, error) {
-	panic("not implemented") // TODO: Implement
-}
+// func (s *Story) Answers(start int, end int, depth int, order OrderIface[AnswerableIface], filter FilterIface[AnswerableIface], ages []AgeIface) ([]AnswerIface, error) {
+// 	panic("not implemented") // TODO: Implement
+// }

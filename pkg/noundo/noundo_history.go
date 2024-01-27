@@ -20,17 +20,17 @@ type HistoryReadIface interface {
 
 	// Retrive all user info by supplying a username
 	GetUser(username string) (UserPublicIface, error)
-	GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error)
+	GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error)
 
 	// Get a single story
 	GetStory(id string) (Story, error)
 	// Get `n` stories ordered by different atributes, from []ages,
-	GetStories(ageNames []string, start int, end int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error)
+	GetStories(ageNames []string, start int, end int, order OrderIface, filter FilterIface) ([]*Story, error)
 
 	// Get answer from anywhere in
 	GetAnswer(id string) (Answer, error)
 	// Get tree of answers, to the specified postable with the specified depth
-	GetAnswers(postableId string, start int, end int, depth int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error)
+	GetAnswers(postableId string, start int, end int, depth int, order OrderIface, filter FilterIface) ([]*Story, error)
 
 	// todo later
 	// GetAgeOwner(name string) (UserIdentityIface, error)

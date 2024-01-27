@@ -51,11 +51,11 @@ func (a *AgeVolatile) GetMembersNumber() (int, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-// Create a Story written by an Author in a certain Age
-func (a *AgeVolatile) AddStory(author UserIdentityIface, age AgeIface, story StoryIface) (StoryIface, error) {
-	panic("not implemented") // TODO: Implement
-}
+// // Create a Story written by an Author in a certain Age
+// func (a *AgeVolatile) AddStory(author UserIdentityIface, age AgeIface, story StoryIface) (StoryIface, error) {
+// 	panic("not implemented") // TODO: Implement
+// }
 
-func (a *AgeVolatile) GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) []StoryIface {
-	panic("not implemented") // TODO: Implement
-}
+// func (a *AgeVolatile) GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) []StoryIface {
+// 	panic("not implemented") // TODO: Implement
+// }
