@@ -137,8 +137,8 @@ func (h *HistoryVolatile) CreateStory(author UserIdentityIface, ageName string, 
 		Postable: Postable{
 			PostableId: id,
 			Author: UserInfo{
-				Username:     author.Username(),
-				ParentServer: author.ParentServerName(),
+				username:     author.Username(),
+				parentServer: author.ParentServerName(),
 				FUsername:    author.FullUsername(),
 			},
 			Contents: story.Content,

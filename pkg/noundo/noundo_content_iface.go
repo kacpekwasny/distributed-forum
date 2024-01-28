@@ -38,3 +38,15 @@ package noundo
 // 	AuthorFUsername() string
 // 	Timestamp() uint64
 // }
+
+func (u *UserInfo) Username() string {
+	return u.username
+}
+
+func (u *UserInfo) ParentServerName() string {
+	return u.parentServer
+}
+
+func (u *UserInfo) FullUsername() string {
+	return u.username + "@" + u.parentServer
+}

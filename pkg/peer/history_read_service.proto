@@ -12,7 +12,7 @@ service HistoryReadService {
     rpc GetStory(StoryRequest) returns (Story);
     rpc GetStories(StoriesRequest) returns (StoryList);
     rpc GetAnswer(AnswerRequest) returns (Answer);
-    rpc GetAnswers(AnswersRequest) returns (StoryList);
+    rpc GetAnswers(AnswersRequest) returns (AnswerList);
 
     // todo later
     // rpc GetAgeOwner(AgeOwnerRequest) returns (UserIdentity);

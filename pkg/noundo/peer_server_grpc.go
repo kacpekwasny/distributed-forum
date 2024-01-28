@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/kacpekwasny/noundo/pkg/peer"
+	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
 type GrpcServer struct {
@@ -37,23 +38,54 @@ func (gs *GrpcServer) GetAge(_ context.Context, ar *peer.AgeRequest) (*peer.Age,
 }
 
 func (gs *GrpcServer) GetAges(_ context.Context, ar *peer.AgesRequest) (*peer.AgeList, error) {
-	gs.hr.GetAges(int(ar.Start), int(ar.End))
+	ages, err := gs.hr.GetAges(int(ar.Start), int(ar.End), ar.Order, ar.Filter)
+	if err != nil {
+		return nil, err
+	}
+	return &peer.AgeList{
+		Ages: utils.Map(ages, func(a AgeIface) *peer.Age {
+			return &peer.Age{
+				Name:        a.GetName(),
+				Description: a.GetDescription(),
+				Owner:       CreatePeerUserIdentity(utils.LeftOr(a.GetOwner())(&volatileUserAuth{})),
+				History:     gs.hr.GetName(),
+			}
+		}),
+	}, nil
 }
 
-func (gs *GrpcServer) GetStory(_ context.Context, _ *peer.StoryRequest) (*peer.Story, error) {
-	panic("not implemented") // TODO: Implement
+func (gs *GrpcServer) GetStory(_ context.Context, sr *peer.StoryRequest) (*peer.Story, error) {
+	s, err := gs.hr.GetStory(sr.GetId())
+	if err != nil {
+		return nil, err
+	}
+	return CreatePeerStory(&s), nil
 }
 
-func (gs *GrpcServer) GetStories(_ context.Context, _ *peer.StoriesRequest) (*peer.StoryList, error) {
-	panic("not implemented") // TODO: Implement
+func (gs *GrpcServer) GetStories(_ context.Context, sr *peer.StoriesRequest) (*peer.StoryList, error) {
+	stories, err := gs.hr.GetStories(sr.AgeNames, int(sr.Start), int(sr.End), sr.Order, sr.Filter)
+	if err != nil {
+		return nil, err
+	}
+	return &peer.StoryList{
+		Stories: utils.Map(stories, CreatePeerStory),
+	}, nil
 }
 
-func (gs *GrpcServer) GetAnswer(_ context.Context, _ *peer.AnswerRequest) (*peer.Answer, error) {
-	panic("not implemented") // TODO: Implement
+func (gs *GrpcServer) GetAnswer(_ context.Context, ar *peer.AnswerRequest) (*peer.Answer, error) {
+	ans, err := gs.hr.GetAnswer(ar.Id)
+	if err != nil {
+		return nil, err
+	}
+	return CreatePeerAnswer(&ans), nil
 }
 
-func (gs *GrpcServer) GetAnswers(_ context.Context, _ *peer.AnswersRequest) (*peer.StoryList, error) {
-	panic("not implemented") // TODO: Implement
+func (gs *GrpcServer) GetAnswers(_ context.Context, as *peer.AnswersRequest) (*peer.StoryList, error) {
+	answers, err := gs.hr.GetAnswers(as.PostableId, int(as.Start), int(as.End), int(as.Depth), as.Order, as.Filter)
+	if err != nil {
+		return nil, err
+	}
+	return &peer.StoryList{}, nil
 }
 
 func (gs *GrpcServer) mustEmbedUnimplementedHistoryReadServiceServer() {}
