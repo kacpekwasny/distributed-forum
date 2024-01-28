@@ -29,6 +29,9 @@ type HistoryReadServiceClient interface {
 	GetStories(ctx context.Context, in *StoriesRequest, opts ...grpc.CallOption) (*StoryList, error)
 	GetAnswer(ctx context.Context, in *AnswerRequest, opts ...grpc.CallOption) (*Answer, error)
 	GetAnswers(ctx context.Context, in *AnswersRequest, opts ...grpc.CallOption) (*AnswerList, error)
+	CreateAge(ctx context.Context, in *CreateAgeRequest, opts ...grpc.CallOption) (*Age, error)
+	CreateStory(ctx context.Context, in *CreateStoryRequest, opts ...grpc.CallOption) (*Story, error)
+	CreateAnswer(ctx context.Context, in *CreateAnswerRequest, opts ...grpc.CallOption) (*Answer, error)
 }
 
 type historyReadServiceClient struct {
@@ -102,6 +105,33 @@ func (c *historyReadServiceClient) GetAnswers(ctx context.Context, in *AnswersRe
 	return out, nil
 }
 
+func (c *historyReadServiceClient) CreateAge(ctx context.Context, in *CreateAgeRequest, opts ...grpc.CallOption) (*Age, error) {
+	out := new(Age)
+	err := c.cc.Invoke(ctx, "/peer.HistoryReadService/CreateAge", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *historyReadServiceClient) CreateStory(ctx context.Context, in *CreateStoryRequest, opts ...grpc.CallOption) (*Story, error) {
+	out := new(Story)
+	err := c.cc.Invoke(ctx, "/peer.HistoryReadService/CreateStory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *historyReadServiceClient) CreateAnswer(ctx context.Context, in *CreateAnswerRequest, opts ...grpc.CallOption) (*Answer, error) {
+	out := new(Answer)
+	err := c.cc.Invoke(ctx, "/peer.HistoryReadService/CreateAnswer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // HistoryReadServiceServer is the server API for HistoryReadService service.
 // All implementations must embed UnimplementedHistoryReadServiceServer
 // for forward compatibility
@@ -113,6 +143,9 @@ type HistoryReadServiceServer interface {
 	GetStories(context.Context, *StoriesRequest) (*StoryList, error)
 	GetAnswer(context.Context, *AnswerRequest) (*Answer, error)
 	GetAnswers(context.Context, *AnswersRequest) (*AnswerList, error)
+	CreateAge(context.Context, *CreateAgeRequest) (*Age, error)
+	CreateStory(context.Context, *CreateStoryRequest) (*Story, error)
+	CreateAnswer(context.Context, *CreateAnswerRequest) (*Answer, error)
 	mustEmbedUnimplementedHistoryReadServiceServer()
 }
 
@@ -140,6 +173,15 @@ func (UnimplementedHistoryReadServiceServer) GetAnswer(context.Context, *AnswerR
 }
 func (UnimplementedHistoryReadServiceServer) GetAnswers(context.Context, *AnswersRequest) (*AnswerList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAnswers not implemented")
+}
+func (UnimplementedHistoryReadServiceServer) CreateAge(context.Context, *CreateAgeRequest) (*Age, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAge not implemented")
+}
+func (UnimplementedHistoryReadServiceServer) CreateStory(context.Context, *CreateStoryRequest) (*Story, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateStory not implemented")
+}
+func (UnimplementedHistoryReadServiceServer) CreateAnswer(context.Context, *CreateAnswerRequest) (*Answer, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAnswer not implemented")
 }
 func (UnimplementedHistoryReadServiceServer) mustEmbedUnimplementedHistoryReadServiceServer() {}
 
@@ -280,6 +322,60 @@ func _HistoryReadService_GetAnswers_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _HistoryReadService_CreateAge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAgeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HistoryReadServiceServer).CreateAge(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/peer.HistoryReadService/CreateAge",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HistoryReadServiceServer).CreateAge(ctx, req.(*CreateAgeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HistoryReadService_CreateStory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateStoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HistoryReadServiceServer).CreateStory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/peer.HistoryReadService/CreateStory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HistoryReadServiceServer).CreateStory(ctx, req.(*CreateStoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HistoryReadService_CreateAnswer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAnswerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HistoryReadServiceServer).CreateAnswer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/peer.HistoryReadService/CreateAnswer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HistoryReadServiceServer).CreateAnswer(ctx, req.(*CreateAnswerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // HistoryReadService_ServiceDesc is the grpc.ServiceDesc for HistoryReadService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -314,6 +410,18 @@ var HistoryReadService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAnswers",
 			Handler:    _HistoryReadService_GetAnswers_Handler,
+		},
+		{
+			MethodName: "CreateAge",
+			Handler:    _HistoryReadService_CreateAge_Handler,
+		},
+		{
+			MethodName: "CreateStory",
+			Handler:    _HistoryReadService_CreateStory_Handler,
+		},
+		{
+			MethodName: "CreateAnswer",
+			Handler:    _HistoryReadService_CreateAnswer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
