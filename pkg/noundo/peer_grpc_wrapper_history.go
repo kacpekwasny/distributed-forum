@@ -93,10 +93,37 @@ func (h *historyPublicGrpcClient) CreateAge(owner UserIdentityIface, ageName str
 
 // Create a new story within
 func (h *historyPublicGrpcClient) CreateStory(author UserIdentityIface, ageName string, story StoryContentIface) (Story, error) {
-	panic("not implemented") // TODO: Implement
+	newStory, err := h.g.CreateStory(ctx.Background(), &peer.CreateStoryRequest{
+		Author: &peer.UserIdentity{
+			Username:         author.GetUsername(),
+			ParentServerName: author.GetParentServerName(),
+		},
+		AgeName: ageName,
+		StoryContent: &peer.StoryContent{
+			Title:   story.GetContent(),
+			Content: story.GetContent(),
+		},
+	})
+	if err != nil {
+		return Story{}, err
+	}
+	return *CreateNoundoStory(newStory), err
 }
 
 // Create an Answer under a post or other Answer
 func (h *historyPublicGrpcClient) CreateAnswer(author UserIdentityIface, parentId string, answerContent string) (Answer, error) {
-	panic("not implemented") // TODO: Implement
+	newAnswer, err := h.g.CreateAnswer(ctx.Background(), &peer.CreateAnswerRequest{
+		Author: &peer.UserIdentity{
+			Username:         author.GetUsername(),
+			ParentServerName: author.GetParentServerName(),
+		},
+		ParentId: parentId,
+		AnswerContent: &peer.AnswerContent{
+			Content: answerContent,
+		},
+	})
+	if err != nil {
+		return Answer{}, err
+	}
+	return *CreateNoundoAnswer(newAnswer), err
 }
