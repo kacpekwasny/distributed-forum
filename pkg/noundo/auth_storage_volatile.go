@@ -65,7 +65,7 @@ func (u *volatileUserAuth) Email() string {
 	return u.email
 }
 
-func (u *volatileUserAuth) Username() string {
+func (u *volatileUserAuth) GetUsername() string {
 	return u.username
 }
 
@@ -74,19 +74,19 @@ func (u *volatileUserAuth) PasswdHash() []byte {
 }
 
 // Domain of the server that is the parent for this account
-func (u *volatileUserAuth) ParentServerName() string {
+func (u *volatileUserAuth) GetParentServerName() string {
 	return u.parentServerName
 }
 
 // Username() + "@" + ParentServerName()`
-func (u *volatileUserAuth) FullUsername() string {
-	return u.Username() + "@" + u.ParentServerName()
+func (u *volatileUserAuth) GetFUsername() string {
+	return u.GetUsername() + "@" + u.GetParentServerName()
 }
 
-func (u *volatileUserAuth) AboutMe() string {
+func (u *volatileUserAuth) GetAboutMe() string {
 	return u.aboutMe
 }
 
-func (u *volatileUserAuth) AccountBirthDate() int64 {
+func (u *volatileUserAuth) GetAccountBirthDate() int64 {
 	return u.accountBirthDate
 }

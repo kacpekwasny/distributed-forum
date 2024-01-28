@@ -6,6 +6,8 @@ package peer;
 
 
 service HistoryReadService {
+    rpc GetName(Empty) returns (HistoryName);
+    rpc GetURL(Empty) returns (HistoryURL);
     rpc GetUser(UserRequest) returns (UserPublicInfo);
     rpc GetAge(AgeRequest) returns (Age);
     rpc GetAges(AgesRequest) returns (AgeList);
@@ -19,6 +21,14 @@ service HistoryReadService {
     // rpc GetAgeAdmins(AgeAdminsRequest) returns (UserIdentityList);
     // rpc GetAgeMembers(AgeMembersRequest) returns (UserPublicInfoList);
     // rpc GetAgeMembersNumber(AgeMembersNumberRequest) returns (int);
+
+    // ###############
+    // todo - following methods should be a separate service, but no time :/
+
+	rpc CreateAge(CreateAgeRequest) returns (Age);
+	rpc CreateStory(CreateStoryRequest) returns (Story);
+	rpc CreateAnswer(CreateAnswerRequest) returns (Answer);
+
 }
 
 
@@ -67,7 +77,26 @@ message AnswersRequest {
     // Add other fields as needed
 }
 
+message CreateAgeRequest {
+    UserIdentity owner = 1;
+    string ageName = 2;
+};
+
+message CreateStoryRequest {
+    UserIdentity author = 1;
+    string ageName = 2;
+    StoryContent storyContent = 3;
+};
+
+message CreateAnswerRequest {
+    UserIdentity author = 1;
+    string parentId = 2;
+    AnswerContent answerContent = 3;
+};
+
 // ~~~ Request Utilities ~~~ 
+message Empty {}
+
 message Order {
     string rule = 1;
 }
@@ -77,20 +106,37 @@ message Filter {
     string reject = 2;
 }
 
+message StoryContent {
+    string title = 1;
+    string content = 2;
+}
+
+message AnswerContent {
+    string content = 1;
+}
+
 
 
 // ~~~~~~~~~~~~~~~~~~
 //     Responses
 // ~~~~~~~~~~~~~~~~~~
 
+message HistoryName {
+    string name = 1;
+}
+
+message HistoryURL {
+    string URL = 1;
+}
+
 message UserIdentity {
     string username = 1;
-    string parentServer = 2;
+    string parentServerName = 2;
 }
 
 message UserPublicInfo {
     UserIdentity user = 1;
-    int64 birthDate = 2;
+    int64 accountBirthDate = 2;
     string aboutMe = 3;
 }
 
@@ -127,7 +173,6 @@ message Age {
     string name = 1;
     string description = 2;
     UserIdentity owner = 3;
-    string history = 4;
 }
 
 message AgeList {

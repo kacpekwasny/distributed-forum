@@ -42,8 +42,8 @@ func SignInUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request)
 
 	user := auth.GetUserByEmail(authMe.Email)
 	newJwt := JWTFields{
-		username:           user.Username(),
-		parentServerName:   user.ParentServerName(),
+		username:           user.GetUsername(),
+		parentServerName:   user.GetParentServerName(),
 		jwtIssuedTimestamp: UnixTimeNow(),
 	}
 	// TODO: currently unsecure

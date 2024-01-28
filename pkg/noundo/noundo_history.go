@@ -47,7 +47,7 @@ type HistoryWriteIface interface {
 	// Create a 'subreddit', but for the sake of naming, it will be called an `Age`
 	CreateAge(owner UserIdentityIface, ageName string) (AgeIface, error)
 	// Create a new story within
-	CreateStory(author UserIdentityIface, ageName string, story StoryContent) (Story, error)
+	CreateStory(author UserIdentityIface, ageName string, story StoryContentIface) (Story, error)
 	// Create an Answer under a post or other Answer
 	CreateAnswer(author UserIdentityIface, parentId string, answerContent string) (Answer, error)
 }

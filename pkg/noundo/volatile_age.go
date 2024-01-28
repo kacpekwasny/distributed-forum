@@ -3,15 +3,10 @@ package noundo
 // a *AgeVolatile AgeIface
 
 type AgeVolatile struct {
-	id              string
 	name            string
 	ownerUsername   string
 	adminsUsernames []string
 	description     string
-}
-
-func (a *AgeVolatile) GetId() string {
-	return a.id
 }
 
 func (a *AgeVolatile) GetName() string {
@@ -27,9 +22,8 @@ func (a *AgeVolatile) GetDescription() string {
 	return a.description
 }
 
-func (a *AgeVolatile) GetOwner() (UserPublicIface, error) {
-	panic("TODO")
-	// return a.auth.GetUserByEmail(a.ownerUsername), nil
+func (a *AgeVolatile) GetOwner() UserIdentityIface {
+	return &UserInfo{}
 }
 
 func (a *AgeVolatile) ChangeOwner(user UserIdentityIface) error {

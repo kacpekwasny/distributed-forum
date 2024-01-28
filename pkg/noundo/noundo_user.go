@@ -18,19 +18,19 @@ type User struct {
 }
 
 type UserIdentityIface interface {
-	// Username is the string that the user will go by, Username is unique in context of History
-	Username() string
+	// GetUsername is the string that the user will go by, GetUsername is unique in context of History
+	GetUsername() string
 
 	// Domain of the server that is the parent for this account
-	ParentServerName() string
+	GetParentServerName() string
 
 	// Username() + "@" + ParentServerName()`
-	FullUsername() string
+	GetFUsername() string
 }
 
 type UserMoreInfoIface interface {
-	AboutMe() string
-	AccountBirthDate() int64
+	GetAboutMe() string
+	GetAccountBirthDate() int64
 }
 
 type UserPublicIface interface {

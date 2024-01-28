@@ -104,9 +104,11 @@ type CompStoryValues struct {
 
 type PageStoryValues struct {
 	PageBaseValues
-	CompStoryValues
 	CompAgeHeaderValues
+	CompStoryValues
 	CompAnswerWrite
+
+	Answers []*Answer
 }
 
 // TODO - struct UserIdentity - Username, ParnetServer, FUsername,

@@ -35,15 +35,15 @@ type JWTFields struct {
 	jwtIssuedTimestamp int64
 }
 
-func (jwt *JWTFields) Username() string {
+func (jwt *JWTFields) GetUsername() string {
 	return jwt.username
 }
 
-func (jwt *JWTFields) ParentServerName() string {
+func (jwt *JWTFields) GetParentServerName() string {
 	return jwt.parentServerName
 }
 
-func (jwt *JWTFields) FullUsername() string {
+func (jwt *JWTFields) GetFUsername() string {
 	return jwt.username + "@" + jwt.parentServerName
 }
 
