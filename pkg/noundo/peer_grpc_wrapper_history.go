@@ -36,32 +36,52 @@ func (h *historyPublicGrpcClient) GetUser(username string) (UserPublicIface, err
 // get a single AgeIface
 func (h *historyPublicGrpcClient) GetAge(name string) (AgeIface, error) {
 	age, err := h.g.GetAge(ctx.Background(), &peer.AgeRequest{Name: name})
-	return age, err
+	return &peerAgeWrapper{age}, err
 }
 
 // Get ages ordered and filtered and sliced by the start & end integers
 func (h *historyPublicGrpcClient) GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error) {
-	panic("not implemented") // TODO: Implement
+	// todo order & filter
+	ages, err := h.g.GetAges(ctx.Background(), &peer.AgesRequest{Start: int32(start), End: int32(end), Order: &peer.Order{}, Filter: &peer.Filter{}})
+	return utils.Map(ages.Ages, func(age *peer.Age) AgeIface {
+		return &peerAgeWrapper{age}
+	}), err
 }
 
 // Get a single story
 func (h *historyPublicGrpcClient) GetStory(id string) (Story, error) {
-	panic("not implemented") // TODO: Implement
+	s, err := h.g.GetStory(ctx.Background(), &peer.StoryRequest{Id: id})
+	if err != nil {
+		return Story{}, nil
+	}
+	return *CreateNoundoStory(s), nil
 }
 
 // Get `n` stories ordered by different atributes, from []ages,
-func (h *historyPublicGrpcClient) GetStories(ageNames []string, start int, end int, order OrderIface, filter FilterIface) ([]*Story, error) {
-	panic("not implemented") // TODO: Implement
+func (h *historyPublicGrpcClient) GetStories(ageNames []string, start int, end int, order OrderIface, filter FilterIface) ([]*Story, error) { // todo change to []StoryIface
+	stories, err := h.g.GetStories(ctx.Background(), &peer.StoriesRequest{AgeNames: ageNames, Start: int32(start), End: int32(end), Order: &peer.Order{}, Filter: &peer.Filter{}})
+	if err != nil {
+		return nil, err
+	}
+	return utils.Map(stories.Stories, CreateNoundoStory), nil
 }
 
 // Get answer from anywhere in
 func (h *historyPublicGrpcClient) GetAnswer(id string) (Answer, error) {
-	panic("not implemented") // TODO: Implement
+	answer, err := h.g.GetAnswer(ctx.Background(), &peer.AnswerRequest{Id: id})
+	if err != nil {
+		return Answer{}, err
+	}
+	return *CreateNoundoAnswer(answer), nil
 }
 
 // Get tree of answers, to the specified postable with the specified depth
 func (h *historyPublicGrpcClient) GetAnswers(postableId string, start int, end int, depth int, order OrderIface, filter FilterIface) ([]*Answer, error) {
-	panic("not implemented") // TODO: Implement
+	answers, err := h.g.GetAnswers(ctx.Background(), &peer.AnswersRequest{PostableId: postableId, Start: int32(start), End: int32(end), Depth: int32(depth), Order: &peer.Order{}, Filter: &peer.Filter{}})
+	if err != nil {
+		return []*Answer{}, err
+	}
+	return utils.Map(answers.Answers, CreateNoundoAnswer), nil
 }
 
 // Create a 'subreddit', but for the sake of naming, it will be called an `Age`
@@ -77,7 +97,4 @@ func (h *historyPublicGrpcClient) CreateStory(author UserIdentityIface, ageName 
 // Create an Answer under a post or other Answer
 func (h *historyPublicGrpcClient) CreateAnswer(author UserIdentityIface, parentId string, answerContent string) (Answer, error) {
 	panic("not implemented") // TODO: Implement
-}
-
-type peerAgeWrapper struct {
 }

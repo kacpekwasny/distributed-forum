@@ -14,9 +14,9 @@ func CreatePeerUserIdentity(u UserIdentityIface) *peer.UserIdentity {
 
 func CreatePeerUserPublicInfo(u UserPublicIface) *peer.UserPublicInfo {
 	return &peer.UserPublicInfo{
-		User:      CreatePeerUserIdentity(u),
-		BirthDate: u.GetAccountBirthDate(),
-		AboutMe:   u.GetAboutMe(),
+		User:             CreatePeerUserIdentity(u),
+		AccountBirthDate: u.GetAccountBirthDate(),
+		AboutMe:          u.GetAboutMe(),
 	}
 }
 
@@ -56,6 +56,41 @@ func CreatePeerAge(a AgeIface) *peer.Age {
 	return &peer.Age{
 		Name:        a.GetName(),
 		Description: a.GetDescription(),
-		Owner:       CreatePeerUserIdentity(utils.LeftOr(a.GetOwner())(&volatileUserAuth{})),
+		Owner:       CreatePeerUserIdentity(a.GetOwner()),
+	}
+}
+
+func CreateNoundoStory(s *peer.Story) *Story {
+	return &Story{
+		Title:       s.GetTitle(),
+		AgeName:     s.GetAgeName(),
+		HistoryName: s.GetAgeName(),
+		Postable: Postable{
+			PostableId:    s.Postable.Id,
+			Author:        CreateNoundoUser(s.Postable.Author),
+			Contents:      s.Postable.Content,
+			TimeStampable: TimeStampable{s.Postable.Timestamp},
+		},
+	}
+}
+
+func CreateNoundoUser(u *peer.UserIdentity) UserInfo {
+	return UserInfo{
+		username:       u.GetUsername(),
+		parentServer:   u.GetParentServerName(),
+		FUsername:      u.GetFUsername(),
+		UserProfileURL: "todo, or remove field",
+	}
+}
+
+func CreateNoundoAnswer(a *peer.Answer) *Answer {
+	return &Answer{
+		ParentId: a.ParentId,
+		Postable: &Postable{
+			PostableId:    a.Postable.Id,
+			Author:        CreateNoundoUser(a.Postable.Author),
+			Contents:      a.Postable.Content,
+			TimeStampable: TimeStampable{a.Postable.Timestamp},
+		},
 	}
 }

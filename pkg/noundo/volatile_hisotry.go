@@ -40,7 +40,6 @@ func NewHistoryVolatile(historyName string) HistoryFullIface {
 // Create a 'subreddit', but for the sake of naming, it will be called an `Age`
 func (h *HistoryVolatile) CreateAge(owner UserIdentityIface, name string) (AgeIface, error) {
 	age := &AgeVolatile{
-		id:              NewRandId(),
 		name:            name,
 		ownerUsername:   owner.GetUsername(),
 		adminsUsernames: []string{},

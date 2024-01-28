@@ -37,14 +37,10 @@ func (gs *GrpcServer) GetAge(_ context.Context, ar *peer.AgeRequest) (*peer.Age,
 	if err != nil {
 		return nil, err
 	}
-	owner, err := age.GetOwner()
-	if err != nil {
-		return nil, err
-	}
 	return &peer.Age{
 		Name:        age.GetName(),
 		Description: age.GetDescription(),
-		Owner:       CreatePeerUserIdentity(owner),
+		Owner:       CreatePeerUserIdentity(age.GetOwner()),
 	}, nil
 }
 
@@ -58,7 +54,7 @@ func (gs *GrpcServer) GetAges(_ context.Context, ar *peer.AgesRequest) (*peer.Ag
 			return &peer.Age{
 				Name:        a.GetName(),
 				Description: a.GetDescription(),
-				Owner:       CreatePeerUserIdentity(utils.LeftOr(a.GetOwner())(&volatileUserAuth{})),
+				Owner:       CreatePeerUserIdentity(a.GetOwner()),
 			}
 		}),
 	}, nil
