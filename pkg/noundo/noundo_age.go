@@ -4,6 +4,7 @@ type AgeIface interface {
 	GetId() string
 	GetName() string
 	GetOwner() (UserPublicIface, error)
+	GetDescription() string
 
 	// GetAdmins() ([]UserPublicIface, error)
 	// AddAdmin(user UserIdentityIface) error

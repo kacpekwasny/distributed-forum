@@ -7,6 +7,7 @@ type AgeVolatile struct {
 	name            string
 	ownerUsername   string
 	adminsUsernames []string
+	description     string
 }
 
 func (a *AgeVolatile) GetId() string {
@@ -20,6 +21,10 @@ func (a *AgeVolatile) GetName() string {
 func (a *AgeVolatile) SetName(name string) error {
 	a.name = name
 	return nil
+}
+
+func (a *AgeVolatile) GetDescription() string {
+	return a.description
 }
 
 func (a *AgeVolatile) GetOwner() (UserPublicIface, error) {
