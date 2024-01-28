@@ -38,6 +38,7 @@ message AgesRequest {
     int32 start = 1;
     int32 end = 2;
     Order order = 3;
+    Filter filter = 4;
 }
 
 message StoryRequest {
