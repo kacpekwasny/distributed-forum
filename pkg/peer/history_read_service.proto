@@ -19,6 +19,14 @@ service HistoryReadService {
     // rpc GetAgeAdmins(AgeAdminsRequest) returns (UserIdentityList);
     // rpc GetAgeMembers(AgeMembersRequest) returns (UserPublicInfoList);
     // rpc GetAgeMembersNumber(AgeMembersNumberRequest) returns (int);
+
+    // ###############
+    // todo - following methods should be a separate service, but no time :/
+
+	rpc CreateAge(CreateAgeRequest) returns (Age);
+	rpc CreateStory(CreateStoryRequest) returns (Story);
+	rpc CreateAnswer(CreateAnswerRequest) returns (Answer);
+
 }
 
 
@@ -67,6 +75,23 @@ message AnswersRequest {
     // Add other fields as needed
 }
 
+message CreateAgeRequest {
+    UserIdentity owner = 1;
+    string ageName = 2;
+};
+
+message CreateStoryRequest {
+    UserIdentity author = 1;
+    string ageName = 2;
+    StoryContent storyContent = 3;
+};
+
+message CreateAnswerRequest {
+    UserIdentity author = 1;
+    string parentId = 2;
+    AnswerContent answerContent = 3;
+};
+
 // ~~~ Request Utilities ~~~ 
 message Order {
     string rule = 1;
@@ -75,6 +100,15 @@ message Order {
 message Filter {
     string find = 1;
     string reject = 2;
+}
+
+message StoryContent {
+    string title = 1;
+    string contents = 2;
+}
+
+message AnswerContent {
+    string contents = 1;
 }
 
 
