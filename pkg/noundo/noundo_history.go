@@ -19,7 +19,7 @@ type HistoryReadIface interface {
 	GetURL() string
 
 	// Retrive all user info by supplying a username
-	GetUser(username string) (UserPublicIface, error)
+	//GetUser(username string) (UserPublicIface, error)
 
 	// get a single AgeIface
 	GetAge(name string) (AgeIface, error)

@@ -6,8 +6,6 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/kacpekwasny/noundo/pkg/utils"
-	"golang.org/x/exp/maps"
 )
 
 // TODO:
@@ -129,16 +127,17 @@ func (h *HistoryPersistent) GetStories(ageNames []string, start int, end int, or
 	return stories, nil
 }
 
-func (h *HistoryPersistent) GetUser(username string) (UserPublicIface, error) {
-	// queries for user by username
-	var id int
-	var email, parent_server string
-	err := h.dbPool.QueryRow(context.Background(), "SELECT  id, email, parentServer FROM users WHERE username = $1", username).Scan(&id, &email, &parent_server)
-	//create user object
-	user := User{username: username, email: email, parentServerName: parent_server, id: id}
-
-	return utils.MapGetErr(h.users, username)
-}
+//not used so not implementing it
+//func (h *HistoryPersistent) GetUser(username string) (UserPublicIface, error) {
+//	// queries for user by username
+//	var id int
+//	var email, parent_server string
+//	err := h.dbPool.QueryRow(context.Background(), "SELECT  id, email, parentServer FROM users WHERE username = $1", username).Scan(&id, &email, &parent_server)
+//	//create user object
+//	user := User{username: username, email: email, parentServerName: parent_server, id: id}
+//
+//	return user, err
+//}
 
 func (h *HistoryPersistent) CreateUser(email string, username string, password string) (UserPublicIface, error) {
 	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
@@ -159,9 +158,18 @@ func (h *HistoryPersistent) GetURL() string {
 }
 
 func (h *HistoryPersistent) GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error) {
-	ages := []AgeIface{}
-	for _, a := range maps.Values(h.ages) {
-		ages = append(ages, a)
+
+	//get ages from db
+	var ages []AgeIface
+	rows, err := h.dbPool.Query(context.Background(), "SELECT  id, name, owner_id, description  FROM ages")
+	for rows.Next() {
+		var id, owner_id int
+		var name, description string
+		err = rows.Scan(&id, &name, &owner_id, &description)
+		if err != nil {
+			return nil, err
+		}
+		ages = append(ages, &AgePersistent{id: id, name: name, ownerId: owner_id, description: description})
 	}
 	return ages, nil
 }
@@ -176,75 +184,69 @@ func (h *HistoryPersistent) Authenticator() AuthenticatorIface {
 
 // Single age
 func (h *HistoryPersistent) GetAge(name string) (AgeIface, error) {
-	return utils.MapGetErr[string, *AgePersistent](h.ages, name)
+	// queries for age by name
+	var id, owner_id int
+	var description string
+	err := h.dbPool.QueryRow(context.Background(), "SELECT  id, owner_id, description  FROM ages WHERE name = $1", name).Scan(&id, &owner_id, &description)
+	//create age object
+	age := AgePersistent{id: id, name: name, ownerId: owner_id, description: description}
+
+	return &age, err
 }
 
 func (h *HistoryPersistent) CreateStory(author UserIdentityIface, ageName string, story StoryContent) (Story, error) {
-	_, exists := h.ages[ageName]
-	if !exists {
-		return Story{}, errors.New("age with ageName: '" + ageName + "' doesnt exist")
+	// queries for age by name
+	var id int
+	//gets age id
+	err := h.dbPool.QueryRow(context.Background(), "SELECT  id FROM ages WHERE name = $1", ageName).Scan(&id)
+	//insert the story into the db
+	h.dbPool.QueryRow(context.Background(), "INSERT INTO stories ( title, age_id, owner_id, content, timestamp) VALUES ($1, $2, $3, $4, $5) RETURNING id", story.Title, id, author.Id(), story.Content, time.Now().UnixNano())
+	//get the created story from db
+	var age_id, owner_id int
+	var title, content string
+	var timestamp int64
+	err = h.dbPool.QueryRow(context.Background(), "SELECT  title, asset_url, age_id, owner_id, content, timestamp  FROM stories WHERE id = $1", id).Scan(&title, &age_id, &owner_id, &content, &timestamp)
+	//if there is no story with this id
+	if err != nil {
+		return Story{}, err
 	}
 
-	id := NewRandId()
+	// creates story object
+	storyInternal := Story{Title: title, AgeId: age_id, Postable: Postable{
+		PostableId:    id,
+		AuthorId:      owner_id,
+		Contents:      content,
+		TimeStampable: TimeStampable{timestamp},
+	}}
 
-	storyInternal := Story{
-		Title:       story.Title,
-		AgeName:     ageName,
-		HistoryName: h.name,
-		Postable: Postable{
-			PostableId: id,
-			Author: UserInfo{
-				username:     author.Username(),
-				parentServer: author.ParentServerName(),
-				FUsername:    author.FullUsername(),
-			},
-			Contents: story.Content,
-			TimeStampable: TimeStampable{
-				Timestamp: time.Now().Unix(),
-			},
-		},
-		Reactionable: Reactionable{
-			Reactions: []Reaction{},
-		},
-	}
-	h.stories[id] = &storyInternal
-	return storyInternal, nil
+	return storyInternal, err
 }
 
 // Create an Answer under a post or other Answer
-func (h *HistoryPersistent) CreateAnswer(author UserIdentityIface, parentId string, answerContent string) (Answer, error) {
-	a, okA := h.answers[parentId]
-	s, okS := h.stories[parentId]
-	if !(okA || okS) {
-		return Answer{}, errors.New("no such parent id")
-	}
-	id := NewRandId()
-	answer := Answer{
-		ParentId: parentId,
-		Postable: &Postable{
-			PostableId:    id,
-			Author:        CreateUserInfo(author, h.GetName()),
-			Contents:      answerContent,
-			TimeStampable: CreateTimeStamp(),
-		},
-		Reactionable: &Reactionable{
-			Reactions: []Reaction{},
-		},
-		Answerable: &Answerable{
-			Answers: []Answer{},
-		},
-	}
-	var answers *[]Answer
-	if okA {
-		answers = &a.Answerable.Answers
-	}
-	if okS {
-		answers = &s.Answerable.Answers
-	}
-	*answers = append(*answers, answer)
+func (h *HistoryPersistent) CreateAnswer(author UserIdentityIface, parentId int, answerContent string) (Answer, error) {
 
-	h.answers[id] = &answer
-	return answer, nil
+	// queries for story by id
+	var age_id, owner_id int
+	var title, content string
+	var timestamp int64
+	err := h.dbPool.QueryRow(context.Background(), "SELECT  title, asset_url, age_id, owner_id, content, timestamp  FROM stories WHERE id = $1", parentId).Scan(&title, &age_id, &owner_id, &content, &timestamp)
+	//if there is no story with this id
+	if err != nil {
+		return Answer{}, err
+	}
+
+	//insert the answer into the db
+	h.dbPool.QueryRow(context.Background(), "INSERT INTO answers ( parent_id, owner_id, content, timestamp) VALUES ($1, $2, $3, $4) RETURNING id", parentId, author.Id(), answerContent, time.Now().UnixNano())
+	//get the created answer from db
+	var parent_id, owner_id2 int
+	var content2 string
+	var timestamp2 int64
+	err = h.dbPool.QueryRow(context.Background(), "SELECT  parent_id, owner_id, content, timestamp  FROM answers WHERE id = $1", parentId).Scan(&parent_id, &owner_id2, &content2, &timestamp2)
+
+	//create answer object
+	answer := Answer{ParentId: parent_id, Postable: Postable{PostableId: parentId, AuthorId: owner_id2, Contents: content2, TimeStampable: TimeStampable{Timestamp: timestamp2}}}
+
+	return answer, err
 }
 
 // Get tree of answers, with the specified depth

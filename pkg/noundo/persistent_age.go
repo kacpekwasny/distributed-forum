@@ -3,9 +3,9 @@ package noundo
 // a *AgeVolatile AgeIface
 
 type AgePersistent struct {
-	id          string
+	id          int
 	name        string
-	ownerId     string
+	ownerId     int
 	description string
 }
 
