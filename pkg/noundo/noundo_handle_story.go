@@ -85,6 +85,12 @@ func (n *NoUndo) HandleStoryGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ans, err := histIface.GetAnswers(storyId, 0, 10, 3, nil, nil)
+	if err != nil {
+		n.Handle404(w, r)
+		return
+	}
+
 	ExecTemplHtmxSensitive(tmpl, w, r, "story_page", r.URL.Path, &PageStoryValues{
 		PageBaseValues:      CreatePageBaseValues(story.Title, n.Self(), histIface, r),
 		CompAgeHeaderValues: CreateAgeHeader(historyName, story.AgeName),
@@ -100,6 +106,7 @@ func (n *NoUndo) HandleStoryGet(w http.ResponseWriter, r *http.Request) {
 			WriteAnswerPostURL: WriteAnswerURL(historyName, storyId),
 			HideAfterSend:      false,
 		},
+		Answers: ans,
 	})
 }
 

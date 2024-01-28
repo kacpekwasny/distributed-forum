@@ -23,8 +23,7 @@ func (a *AgeVolatile) GetDescription() string {
 }
 
 func (a *AgeVolatile) GetOwner() UserIdentityIface {
-	panic("TODO")
-	// return a.auth.GetUserByEmail(a.ownerUsername), nil
+	return &UserInfo{}
 }
 
 func (a *AgeVolatile) ChangeOwner(user UserIdentityIface) error {

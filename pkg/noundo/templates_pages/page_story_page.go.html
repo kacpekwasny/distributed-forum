@@ -8,7 +8,7 @@
     {{ if .CurrentUserInfo.SignedIn }}
       {{ template "answer_write" . }}
     {{ end }}
-    {{ template "answers_section" .CompStoryValues.Story }}
+    {{ template "answers_section" . }}
     {{ end }}
 
   </div>

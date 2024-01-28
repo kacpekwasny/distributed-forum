@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"log/slog"
 )
 
 // Panic if error
@@ -74,7 +75,7 @@ func Right[L any, R any](_ L, r R) R {
 
 func LeftLogRight[L any](l L, err error) L {
 	if err != nil {
-		log.Println(err)
+		slog.Info("LeftLogRight", "err", err)
 	}
 	return l
 }

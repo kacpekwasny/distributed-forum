@@ -1,6 +1,6 @@
 {{ block "answers_section" . }}
-    <div id="answers-for-{{ .Postable.PostableId }}">
-        {{ range .Answerable.Answers }}
+    <div id="answers-for-{{ .CompStoryValues.Story.Postable.PostableId }}">
+        {{ range .Answers }}
             {{ template "answer_tree_node" . }}
         {{ end }}
     </div>

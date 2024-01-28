@@ -8,7 +8,9 @@ import (
 )
 
 func NewHistoryPublicIfaceFromGrpcService(g peer.HistoryReadServiceClient) HistoryPublicIface {
-	return &historyPublicGrpcClient{}
+	return &historyPublicGrpcClient{
+		g: g,
+	}
 }
 
 type historyPublicGrpcClient struct {

@@ -20,18 +20,20 @@ func CreatePeerUserPublicInfo(u UserPublicIface) *peer.UserPublicInfo {
 	}
 }
 
-func CreatePeerStory(s *Story) *peer.Story {
-	return &peer.Story{
-		Title:       s.Title,
-		AgeName:     s.AgeName,
-		HistoryName: s.AgeName,
-		Postable: &peer.Postable{
-			Id:        s.PostableId,
-			Author:    CreatePeerUserIdentity(&s.Postable.Author),
-			Content:   s.Content(),
-			Timestamp: s.Timestamp,
-		},
-		Answerable: &peer.Answerable{},
+func CreatePeerStory(historyName string) func(s *Story) *peer.Story {
+	return func(s *Story) *peer.Story {
+		return &peer.Story{
+			Title:       s.Title,
+			AgeName:     s.AgeName,
+			HistoryName: historyName,
+			Postable: &peer.Postable{
+				Id:        s.PostableId,
+				Author:    CreatePeerUserIdentity(&s.Postable.Author),
+				Content:   s.Content(),
+				Timestamp: s.Timestamp,
+			},
+			Answerable: &peer.Answerable{},
+		}
 	}
 }
 
@@ -64,7 +66,7 @@ func CreateNoundoStory(s *peer.Story) *Story {
 	return &Story{
 		Title:       s.GetTitle(),
 		AgeName:     s.GetAgeName(),
-		HistoryName: s.GetAgeName(),
+		HistoryName: s.GetHistoryName(),
 		Postable: Postable{
 			PostableId:    s.Postable.Id,
 			Author:        CreateNoundoUser(s.Postable.Author),
@@ -91,6 +93,9 @@ func CreateNoundoAnswer(a *peer.Answer) *Answer {
 			Author:        CreateNoundoUser(a.Postable.Author),
 			Contents:      a.Postable.Content,
 			TimeStampable: TimeStampable{a.Postable.Timestamp},
+		},
+		Answerable: &Answerable{
+			Answers: utils.Map(a.Answerable.Answers, func(a *peer.Answer) Answer { return *CreateNoundoAnswer(a) }),
 		},
 	}
 }

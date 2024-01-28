@@ -7,5 +7,5 @@ type peerAgeWrapper struct {
 }
 
 func (a *peerAgeWrapper) GetOwner() UserIdentityIface {
-	return a.GetOwner()
+	return a.Age.GetOwner()
 }

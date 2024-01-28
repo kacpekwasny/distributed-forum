@@ -24,6 +24,14 @@ func NewGrpcServer(h HistoryPublicIface) *GrpcServer {
 
 // gs *GrpcServer peer.HistoryReadServiceServer
 
+func (gs *GrpcServer) GetName(_ context.Context, _ *peer.Empty) (*peer.HistoryName, error) {
+	return &peer.HistoryName{Name: gs.hr.GetName()}, nil
+}
+
+func (gs *GrpcServer) GetURL(_ context.Context, _ *peer.Empty) (*peer.HistoryURL, error) {
+	return &peer.HistoryURL{URL: gs.hr.GetURL()}, nil
+}
+
 func (gs *GrpcServer) GetUser(_ context.Context, ur *peer.UserRequest) (*peer.UserPublicInfo, error) {
 	user, err := gs.hr.GetUser(ur.Username)
 	if err != nil {
@@ -65,7 +73,7 @@ func (gs *GrpcServer) GetStory(_ context.Context, sr *peer.StoryRequest) (*peer.
 	if err != nil {
 		return nil, err
 	}
-	return CreatePeerStory(&s), nil
+	return CreatePeerStory(gs.hr.GetName())(&s), nil
 }
 
 func (gs *GrpcServer) GetStories(_ context.Context, sr *peer.StoriesRequest) (*peer.StoryList, error) {
@@ -74,7 +82,7 @@ func (gs *GrpcServer) GetStories(_ context.Context, sr *peer.StoriesRequest) (*p
 		return nil, err
 	}
 	return &peer.StoryList{
-		Stories: utils.Map(stories, CreatePeerStory),
+		Stories: utils.Map(stories, CreatePeerStory(gs.hr.GetName())),
 	}, nil
 }
 
@@ -109,7 +117,7 @@ func (gs *GrpcServer) CreateStory(_ context.Context, sr *peer.CreateStoryRequest
 	if err != nil {
 		return nil, err
 	}
-	return CreatePeerStory(&story), nil
+	return CreatePeerStory(gs.hr.GetName())(&story), nil
 }
 
 func (gs *GrpcServer) CreateAnswer(_ context.Context, ar *peer.CreateAnswerRequest) (*peer.Answer, error) {
