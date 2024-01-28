@@ -12,6 +12,15 @@ type GrpcServer struct {
 	peer.UnimplementedHistoryReadServiceServer
 }
 
+func NewGrpcServer(h HistoryReadIface) *GrpcServer {
+	return &GrpcServer{
+		hr: h,
+
+		// some future compatibility thing (it has default method implementations)
+		UnimplementedHistoryReadServiceServer: peer.UnimplementedHistoryReadServiceServer{},
+	}
+}
+
 // gs *GrpcServer HistoryReadServiceServer
 func (gs *GrpcServer) GetUser(_ context.Context, ur *peer.UserRequest) (*peer.UserPublicInfo, error) {
 	user, err := gs.hr.GetUser(ur.Username)
