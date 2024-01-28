@@ -6,27 +6,27 @@ import (
 )
 
 type PeerManagerGrpc struct {
-	alive   bool
+	alive   error
 	conn    *grpc.ClientConn
 	history peer.HistoryReadServiceClient
 }
 
-func NewGrpcPeerManager(serverAddr string) PeerManagerIface {
+func NewPeerManagerGrpc(serverAddr string) PeerManagerIface {
 	// todo Dial in a goroutine, that tries connection every X minutes,
 	conn, err := grpc.Dial(serverAddr)
 	return &PeerManagerGrpc{
-		alive:   err == nil,
+		alive:   err,
 		conn:    conn,
 		history: peer.NewHistoryReadServiceClient(conn),
 	}
 }
 
 func (pm *PeerManagerGrpc) PeerAlive() error {
-	panic("not implemented") // TODO: Implement
+	return pm.alive
 }
 
 func (pm *PeerManagerGrpc) History() (HistoryPublicIface, error) {
-	panic("not implemented") // TODO: Implement
+	return pm.history, pm.alive
 }
 
 func (pm *PeerManagerGrpc) HistoryURL() string {

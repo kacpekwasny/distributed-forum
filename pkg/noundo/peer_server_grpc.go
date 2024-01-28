@@ -8,11 +8,12 @@ import (
 )
 
 type GrpcServer struct {
-	hr HistoryReadIface
+	// todo change to back to historyReadIface
+	hr HistoryPublicIface
 	peer.UnimplementedHistoryReadServiceServer
 }
 
-func NewGrpcServer(h HistoryReadIface) *GrpcServer {
+func NewGrpcServer(h HistoryPublicIface) *GrpcServer {
 	return &GrpcServer{
 		hr: h,
 
@@ -21,7 +22,8 @@ func NewGrpcServer(h HistoryReadIface) *GrpcServer {
 	}
 }
 
-// gs *GrpcServer HistoryReadServiceServer
+// gs *GrpcServer peer.HistoryReadServiceServer
+
 func (gs *GrpcServer) GetUser(_ context.Context, ur *peer.UserRequest) (*peer.UserPublicInfo, error) {
 	user, err := gs.hr.GetUser(ur.Username)
 	if err != nil {
@@ -57,7 +59,6 @@ func (gs *GrpcServer) GetAges(_ context.Context, ar *peer.AgesRequest) (*peer.Ag
 				Name:        a.GetName(),
 				Description: a.GetDescription(),
 				Owner:       CreatePeerUserIdentity(utils.LeftOr(a.GetOwner())(&volatileUserAuth{})),
-				History:     gs.hr.GetName(),
 			}
 		}),
 	}, nil
@@ -97,6 +98,30 @@ func (gs *GrpcServer) GetAnswers(_ context.Context, as *peer.AnswersRequest) (*p
 	return &peer.AnswerList{
 		Answers: utils.Map(answers, CreatePeerAnswer),
 	}, nil
+}
+
+func (gs *GrpcServer) CreateAge(_ context.Context, ar *peer.CreateAgeRequest) (*peer.Age, error) {
+	age, err := gs.hr.CreateAge(ar.Owner, ar.AgeName)
+	if err != nil {
+		return nil, err
+	}
+	return CreatePeerAge(age), nil
+}
+
+func (gs *GrpcServer) CreateStory(_ context.Context, sr *peer.CreateStoryRequest) (*peer.Story, error) {
+	story, err := gs.hr.CreateStory(sr.Author, sr.AgeName, sr.StoryContent)
+	if err != nil {
+		return nil, err
+	}
+	return CreatePeerStory(&story), nil
+}
+
+func (gs *GrpcServer) CreateAnswer(_ context.Context, ar *peer.CreateAnswerRequest) (*peer.Answer, error) {
+	ans, err := gs.hr.CreateAnswer(ar.Author, ar.ParentId, ar.AnswerContent.Content)
+	if err != nil {
+		return nil, err
+	}
+	return CreatePeerAnswer(&ans), nil
 }
 
 func (gs *GrpcServer) mustEmbedUnimplementedHistoryReadServiceServer() {}

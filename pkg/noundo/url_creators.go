@@ -15,10 +15,10 @@ func StoryURL(browsingHistoryName string, storyId string) string {
 }
 
 func ProfileURL(user UserIdentityIface, usingHistoryName string) string {
-	if usingHistoryName == user.ParentServerName() {
-		return JoinURL("/profile", user.Username())
+	if usingHistoryName == user.GetParentServerName() {
+		return JoinURL("/profile", user.GetUsername())
 	}
-	return JoinURL("https://"+user.ParentServerName(), "profile", user.Username())
+	return JoinURL("https://"+user.GetParentServerName(), "profile", user.GetUsername())
 }
 
 func WriteStoryURL(historyName string, ageName string) string {

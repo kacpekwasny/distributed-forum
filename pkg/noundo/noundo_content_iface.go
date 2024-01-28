@@ -25,18 +25,31 @@ type AnswerIface interface {
 	ParentId() string
 }
 
+type StoryContentIface interface {
+	GetTitle() string
+	GetContent() string
+}
+
 type AnswerableIface interface {
 	Answers() []AnswerIface
 }
 
-func (u *UserInfo) Username() string {
+func (u *UserInfo) GetUsername() string {
 	return u.username
 }
 
-func (u *UserInfo) ParentServerName() string {
+func (u *UserInfo) GetParentServerName() string {
 	return u.parentServer
 }
 
-func (u *UserInfo) FullUsername() string {
+func (u *UserInfo) GetFUsername() string {
 	return u.username + "@" + u.parentServer
+}
+
+func (s *StoryContent) GetTitle() string {
+	return s.Title
+}
+
+func (s *StoryContent) GetContent() string {
+	return s.Content
 }

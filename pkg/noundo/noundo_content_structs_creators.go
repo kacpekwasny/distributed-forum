@@ -4,9 +4,9 @@ import "time"
 
 func CreateUserInfo(user UserIdentityIface, usingHistoryName string) UserInfo {
 	return UserInfo{
-		username:       user.Username(),
-		FUsername:      user.FullUsername(),
-		parentServer:   user.ParentServerName(),
+		username:       user.GetUsername(),
+		FUsername:      user.GetFUsername(),
+		parentServer:   user.GetParentServerName(),
 		UserProfileURL: ProfileURL(user, usingHistoryName),
 	}
 }

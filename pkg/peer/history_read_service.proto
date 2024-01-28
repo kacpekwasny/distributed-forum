@@ -104,11 +104,11 @@ message Filter {
 
 message StoryContent {
     string title = 1;
-    string contents = 2;
+    string content = 2;
 }
 
 message AnswerContent {
-    string contents = 1;
+    string content = 1;
 }
 
 
@@ -119,7 +119,7 @@ message AnswerContent {
 
 message UserIdentity {
     string username = 1;
-    string parentServer = 2;
+    string parentServerName = 2;
 }
 
 message UserPublicInfo {
@@ -161,7 +161,6 @@ message Age {
     string name = 1;
     string description = 2;
     UserIdentity owner = 3;
-    string history = 4;
 }
 
 message AgeList {

@@ -42,7 +42,7 @@ func (h *HistoryVolatile) CreateAge(owner UserIdentityIface, name string) (AgeIf
 	age := &AgeVolatile{
 		id:              NewRandId(),
 		name:            name,
-		ownerUsername:   owner.Username(),
+		ownerUsername:   owner.GetUsername(),
 		adminsUsernames: []string{},
 	}
 	h.ages[name] = age
@@ -122,7 +122,7 @@ func (h *HistoryVolatile) GetAge(name string) (AgeIface, error) {
 	return utils.MapGetErr[string, *AgeVolatile](h.ages, name)
 }
 
-func (h *HistoryVolatile) CreateStory(author UserIdentityIface, ageName string, story StoryContent) (Story, error) {
+func (h *HistoryVolatile) CreateStory(author UserIdentityIface, ageName string, story StoryContentIface) (Story, error) {
 	_, exists := h.ages[ageName]
 	if !exists {
 		return Story{}, errors.New("age with ageName: '" + ageName + "' doesnt exist")
@@ -131,17 +131,17 @@ func (h *HistoryVolatile) CreateStory(author UserIdentityIface, ageName string, 
 	id := NewRandId()
 
 	storyInternal := Story{
-		Title:       story.Title,
+		Title:       story.GetTitle(),
 		AgeName:     ageName,
 		HistoryName: h.name,
 		Postable: Postable{
 			PostableId: id,
 			Author: UserInfo{
-				username:     author.Username(),
-				parentServer: author.ParentServerName(),
-				FUsername:    author.FullUsername(),
+				username:     author.GetUsername(),
+				parentServer: author.GetParentServerName(),
+				FUsername:    author.GetFUsername(),
 			},
-			Contents: story.Content,
+			Contents: story.GetContent(),
 			TimeStampable: TimeStampable{
 				Timestamp: time.Now().Unix(),
 			},

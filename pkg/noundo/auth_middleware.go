@@ -34,7 +34,7 @@ func HttpAuthenticator(auth AuthenticatorIface) mux.MiddlewareFunc {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			jwt, err := JWTCheckAndParse(r, auth.HmacSecret())
 			if err == nil {
-				slog.Debug("request from an authenticated user", "username", jwt.Username)
+				slog.Debug("request from an authenticated user", "username", jwt.GetUsername)
 				*r = *AddJWTtoCtx(r, jwt)
 			}
 			next.ServeHTTP(w, r)

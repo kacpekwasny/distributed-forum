@@ -7,16 +7,16 @@ import (
 
 func CreatePeerUserIdentity(u UserIdentityIface) *peer.UserIdentity {
 	return &peer.UserIdentity{
-		Username:     u.Username(),
-		ParentServer: u.ParentServerName(),
+		Username:         u.GetUsername(),
+		ParentServerName: u.GetParentServerName(),
 	}
 }
 
 func CreatePeerUserPublicInfo(u UserPublicIface) *peer.UserPublicInfo {
 	return &peer.UserPublicInfo{
 		User:      CreatePeerUserIdentity(u),
-		BirthDate: u.AccountBirthDate(),
-		AboutMe:   u.AboutMe(),
+		BirthDate: u.GetAccountBirthDate(),
+		AboutMe:   u.GetAboutMe(),
 	}
 }
 
@@ -49,5 +49,13 @@ func CreatePeerAnswer(a *Answer) *peer.Answer {
 				return CreatePeerAnswer(&a)
 			}),
 		},
+	}
+}
+
+func CreatePeerAge(a AgeIface) *peer.Age {
+	return &peer.Age{
+		Name:        a.GetName(),
+		Description: a.GetDescription(),
+		Owner:       CreatePeerUserIdentity(utils.LeftOr(a.GetOwner())(&volatileUserAuth{})),
 	}
 }

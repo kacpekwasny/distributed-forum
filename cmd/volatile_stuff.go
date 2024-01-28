@@ -32,8 +32,10 @@ func init() {
 	createStories(h2, 5, a2.GetName(), u2k, "# My first post\n prev was the header. this is the content.")
 
 	peersNexus0 := n.NewPeersNexus()
-	peersNexus0.RegisterPeerManager(n.NewPeerManagerDummy(h1))
-	peersNexus0.RegisterPeerManager(n.NewPeerManagerDummy(h2))
+	peersNexus0.RegisterPeerManager(n.NewPeerManagerGrpc("127.0.0.1:8091"))
+	peersNexus0.RegisterPeerManager(n.NewPeerManagerGrpc("127.0.0.1:8092"))
+	// peersNexus0.RegisterPeerManager(n.NewPeerManagerDummy(h1))
+	// peersNexus0.RegisterPeerManager(n.NewPeerManagerDummy(h2))
 
 	peersNexus1 := n.NewPeersNexus()
 	peersNexus1.RegisterPeerManager(n.NewPeerManagerDummy(h0))
@@ -50,7 +52,7 @@ func init() {
 
 func createStories(h n.HistoryFullIface, m int, age string, author n.UserPublicIface, text string) {
 	for i := 0; i < m; i++ {
-		s, _ := h.CreateStory(author, age, n.StoryContent{
+		s, _ := h.CreateStory(author, age, &n.StoryContent{
 			Title:   lorGen.Words(5),
 			Content: lorGen.Sentences(rint(30)),
 		})
