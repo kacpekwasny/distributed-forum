@@ -10,6 +10,7 @@ func NewUserStruct(email, username, parentServerName string, passwdHash []byte) 
 }
 
 type User struct {
+	id               int
 	email            string
 	username         string
 	passwdHash       []byte // TODO remove, and do something with this object, make a UserIdentityObject, or make it the JWT
@@ -18,6 +19,8 @@ type User struct {
 }
 
 type UserIdentityIface interface {
+	// Id created by the db
+	Id() string
 	// Username is the string that the user will go by, Username is unique in context of History
 	Username() string
 

@@ -12,16 +12,15 @@ type UserInfo struct {
 }
 
 type Postable struct {
-	PostableId string
-	Author     UserInfo
+	PostableId int
+	AuthorId   int
 	Contents   string
 
 	TimeStampable
 }
 type Story struct {
-	Title       string
-	AgeName     string
-	HistoryName string
+	Title string
+	AgeId int
 
 	Postable // TODO
 	Reactionable
@@ -29,8 +28,8 @@ type Story struct {
 }
 
 type Answer struct {
-	ParentId string
-	*Postable
+	ParentId int
+	Postable
 	*Reactionable
 	*Answerable
 }
