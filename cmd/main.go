@@ -7,16 +7,18 @@ import (
 	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
-func runUniverse(wg *sync.WaitGroup, uni *noundo.Universe, addr string) {
-	utils.Loge(noundo.NewNoUndo(uni).ListenAndServe(addr))
+func runUniverse(wg *sync.WaitGroup, uni *noundo.Universe, httpAddr string, grpcAddr string) {
+	n := noundo.NewNoUndo(uni)
+	n.SetupListen(httpAddr, grpcAddr)
+	utils.Loge(n.Serve())
 	wg.Done()
 }
 
 func main() {
 	var wg = sync.WaitGroup{}
 	wg.Add(3)
-	go runUniverse(&wg, uni0, ":8080")
-	go runUniverse(&wg, uni1, ":8081")
-	go runUniverse(&wg, uni2, ":8082")
+	go runUniverse(&wg, uni0, ":8080", ":8090")
+	go runUniverse(&wg, uni1, ":8081", ":8091")
+	go runUniverse(&wg, uni2, ":8082", ":8092")
 	wg.Wait()
 }

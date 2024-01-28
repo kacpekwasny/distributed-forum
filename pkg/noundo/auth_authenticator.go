@@ -16,6 +16,8 @@ type AuthenticatorIface interface {
 
 	GetUserByEmail(email string) UserAuthIface
 	GetUserByUsername(username string) UserAuthIface
+
+	HmacSecret() []byte
 }
 
 // ~~~ Authenticator ~~~
@@ -23,10 +25,15 @@ type AuthenticatorIface interface {
 type Authenticator struct {
 	authStorage      AuthenticatorStorageIface
 	PasswordHashCost int
+	hmacSecret       []byte
 }
 
-func NewAuthenticator(as AuthenticatorStorageIface, PasswordHashCost int) AuthenticatorIface {
-	return &Authenticator{as, PasswordHashCost}
+func NewAuthenticator(as AuthenticatorStorageIface, passwordHashCost int, hmacSecret []byte) AuthenticatorIface {
+	return &Authenticator{
+		authStorage:      as,
+		PasswordHashCost: passwordHashCost,
+		hmacSecret:       hmacSecret,
+	}
 }
 
 func (a *Authenticator) SignIn(am *SignInRequest) error {
@@ -58,4 +65,8 @@ func (a *Authenticator) GetUserByEmail(email string) UserAuthIface {
 
 func (a *Authenticator) GetUserByUsername(username string) UserAuthIface {
 	return utils.Left(a.authStorage.GetUserByUsername(username))
+}
+
+func (a *Authenticator) HmacSecret() []byte {
+	return a.hmacSecret
 }

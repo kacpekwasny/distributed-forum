@@ -11,6 +11,7 @@
         <ul>
         {{range .LocalAges}}
             <li>
+                <!-- TODO make it somewhat reasonabely OK looking -->
                 {{ template "age_link" . }}
             </li>
         {{end}}
@@ -22,6 +23,11 @@
         {{range .Peers}}
             <li>
                 <a href="{{ .Href }}">{{ .DisplayName }}</a>
+                <div class="d-flex flex-row">
+                    {{ range .Ages }}
+                        {{ template "age_link" . }}
+                    {{ end }}
+                </div>
             </li>
         {{end}}
         </ul>

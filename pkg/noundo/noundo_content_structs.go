@@ -5,9 +5,9 @@ import "github.com/kacpekwasny/noundo/pkg/enums"
 // ~~ Structs ~~
 
 type UserInfo struct {
-	Username       string
+	username       string
 	FUsername      string
-	ParentServer   string
+	parentServer   string
 	UserProfileURL string
 }
 

@@ -4,6 +4,8 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type privCtxType string
@@ -23,15 +25,21 @@ func GetJWT(ctx context.Context) *JWTFields {
 	return &jwtfields
 }
 
-func HttpAuthenticator(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		jwt, err := JWTCheckAndParse(r)
-		if err == nil {
-			slog.Debug("request from an authenticated user", "username", jwt.Username)
-			*r = *AddJWTtoCtx(r, jwt)
-		}
-		next.ServeHTTP(w, r)
-	})
+func HttpAuthenticator(auth AuthenticatorIface) mux.MiddlewareFunc {
+
+	// return MiddleWare function
+	return func(next http.Handler) http.Handler {
+
+		// type HandlerFunc func(ResponseWriter, *Request)
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			jwt, err := JWTCheckAndParse(r, auth.HmacSecret())
+			if err == nil {
+				slog.Debug("request from an authenticated user", "username", jwt.Username)
+				*r = *AddJWTtoCtx(r, jwt)
+			}
+			next.ServeHTTP(w, r)
+		})
+	}
 }
 
 func AddJWTtoCtx(r *http.Request, jwt JWTFields) *http.Request {

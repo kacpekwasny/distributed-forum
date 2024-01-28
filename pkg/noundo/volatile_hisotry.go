@@ -2,7 +2,6 @@ package noundo
 
 import (
 	"errors"
-	"sort"
 	"time"
 
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -33,7 +32,7 @@ func NewHistoryVolatile(historyName string) HistoryFullIface {
 		ages:    make(map[string]*AgeVolatile),
 		stories: make(map[string]*Story),
 		answers: make(map[string]*Answer),
-		auth:    NewAuthenticator(NewVolatileAuthStorage(historyName, &usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST),
+		auth:    NewAuthenticator(NewVolatileAuthStorage(historyName, &usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST, []byte(historyName)),
 		users:   usersUsername,
 	}
 }
@@ -65,18 +64,18 @@ func (h *HistoryVolatile) GetAnswer(id string) (Answer, error) {
 }
 
 // GetFirst n stories ordered by different atributes, from []ages,
-func (h *HistoryVolatile) GetStories(ageNames []string, start int, end int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error) {
+func (h *HistoryVolatile) GetStories(ageNames []string, start int, end int, order OrderIface, filter FilterIface) ([]*Story, error) {
 	stories := []*Story{}
 	for _, story := range h.stories {
-		if filter == nil || filter.Keep(story) {
-			stories = append(stories, story)
-		}
+		stories = append(stories, story)
+		// if filter == nil || filter.Keep(story) {
+		// }
 	}
-	if order != nil {
-		sort.SliceStable(stories, func(i, j int) bool {
-			return order.Less(stories[i], stories[j])
-		})
-	}
+	// if order != nil {
+	// 	sort.SliceStable(stories, func(i, j int) bool {
+	// 			return order.Less(stories[i], stories[j])
+	// 	})
+	// }
 	return stories, nil
 }
 
@@ -87,7 +86,7 @@ func (h *HistoryVolatile) GetUser(username string) (UserPublicIface, error) {
 func (h *HistoryVolatile) CreateUser(email string, username string, password string) (UserPublicIface, error) {
 	r := h.auth.SignUpUser(NewSignUpRequest(email, username, password))
 	if r.Ok {
-		return h.auth.GetUserByEmail(username).(UserPublicIface), nil
+		return h.auth.GetUserByUsername(username).(UserPublicIface), nil
 	}
 	return nil, errors.New(string(r.MsgCode))
 }
@@ -102,7 +101,7 @@ func (h *HistoryVolatile) GetURL() string {
 	return h.url
 }
 
-func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface[AgeIface], filter FilterIface[AgeIface]) ([]AgeIface, error) {
+func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error) {
 	ages := []AgeIface{}
 	for _, a := range maps.Values(h.ages) {
 		ages = append(ages, a)
@@ -110,9 +109,9 @@ func (h *HistoryVolatile) GetAges(start int, end int, order OrderIface[AgeIface]
 	return ages, nil
 }
 
-func (h *HistoryVolatile) GetStoriesUserJoined(user UserIdentityIface, start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) ([]StoryIface, error) {
-	panic("not implemented") // TODO: Implement
-}
+// func (h *HistoryVolatile) GetStoriesUserJoined(user UserIdentityIface, start int, end int, order OrderIface, filter FilterIface) ([]StoryIface, error) {
+// 	panic("not implemented") // TODO: Implement
+// }
 
 func (h *HistoryVolatile) Authenticator() AuthenticatorIface {
 	return h.auth
@@ -123,7 +122,7 @@ func (h *HistoryVolatile) GetAge(name string) (AgeIface, error) {
 	return utils.MapGetErr[string, *AgeVolatile](h.ages, name)
 }
 
-func (h *HistoryVolatile) CreateStory(ageName string, author UserIdentityIface, story StoryContent) (Story, error) {
+func (h *HistoryVolatile) CreateStory(author UserIdentityIface, ageName string, story StoryContent) (Story, error) {
 	_, exists := h.ages[ageName]
 	if !exists {
 		return Story{}, errors.New("age with ageName: '" + ageName + "' doesnt exist")
@@ -138,8 +137,8 @@ func (h *HistoryVolatile) CreateStory(ageName string, author UserIdentityIface, 
 		Postable: Postable{
 			PostableId: id,
 			Author: UserInfo{
-				Username:     author.Username(),
-				ParentServer: author.ParentServerName(),
+				username:     author.Username(),
+				parentServer: author.ParentServerName(),
 				FUsername:    author.FullUsername(),
 			},
 			Contents: story.Content,
@@ -192,6 +191,6 @@ func (h *HistoryVolatile) CreateAnswer(author UserIdentityIface, parentId string
 }
 
 // Get tree of answers, with the specified depth
-func (h *HistoryVolatile) GetAnswers(postableId string, start int, end int, depth int, order OrderIface[*Story], filter FilterIface[*Story]) ([]*Story, error) {
+func (h *HistoryVolatile) GetAnswers(postableId string, start int, end int, depth int, order OrderIface, filter FilterIface) ([]*Answer, error) {
 	panic("not implemented") // TODO: Implement
 }

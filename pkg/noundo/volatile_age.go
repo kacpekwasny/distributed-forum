@@ -7,6 +7,7 @@ type AgeVolatile struct {
 	name            string
 	ownerUsername   string
 	adminsUsernames []string
+	description     string
 }
 
 func (a *AgeVolatile) GetId() string {
@@ -20,6 +21,10 @@ func (a *AgeVolatile) GetName() string {
 func (a *AgeVolatile) SetName(name string) error {
 	a.name = name
 	return nil
+}
+
+func (a *AgeVolatile) GetDescription() string {
+	return a.description
 }
 
 func (a *AgeVolatile) GetOwner() (UserPublicIface, error) {
@@ -51,11 +56,11 @@ func (a *AgeVolatile) GetMembersNumber() (int, error) {
 	panic("not implemented") // TODO: Implement
 }
 
-// Create a Story written by an Author in a certain Age
-func (a *AgeVolatile) AddStory(author UserIdentityIface, age AgeIface, story StoryIface) (StoryIface, error) {
-	panic("not implemented") // TODO: Implement
-}
+// // Create a Story written by an Author in a certain Age
+// func (a *AgeVolatile) AddStory(author UserIdentityIface, age AgeIface, story StoryIface) (StoryIface, error) {
+// 	panic("not implemented") // TODO: Implement
+// }
 
-func (a *AgeVolatile) GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) []StoryIface {
-	panic("not implemented") // TODO: Implement
-}
+// func (a *AgeVolatile) GetStories(start int, end int, order OrderIface[StoryIface], filter FilterIface[StoryIface]) []StoryIface {
+// 	panic("not implemented") // TODO: Implement
+// }

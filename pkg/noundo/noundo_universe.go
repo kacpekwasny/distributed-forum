@@ -6,7 +6,7 @@ package noundo
 type UniverseIface interface {
 	Self() HistoryFullIface
 	Authenticator() AuthenticatorIface
-	Peers() []HistoryPublicIface
+	Peers() []HistoryReadIface
 }
 
 func NewUniverse(self HistoryFullIface, peersNexus_ PeersNexusIface) *Universe {

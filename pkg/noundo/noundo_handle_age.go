@@ -18,12 +18,6 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = history.GetAge(ageName)
-	if err != nil {
-		n.Handle404(w, r)
-		return
-	}
-
 	stories, err := history.GetStories(
 		[]string{ageName},
 		int(utils.GetQueryParamInt(r, "start", 0)),
@@ -33,7 +27,7 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		slog.Debug("GetStories failed", "ageName", ageName, "err", err)
-		n.HandleHome(w, r)
+		n.Handle404(w, r)
 		return
 	}
 

@@ -56,7 +56,7 @@ func (n *NoUndo) HandleCreateStoryPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = history.CreateStory(v["age"], jwt, story)
+	_, err = history.CreateStory(jwt, v["age"], story)
 	if err != nil {
 		utils.WriteJsonWithStatus(w, InternalError, http.StatusInternalServerError)
 		return

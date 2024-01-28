@@ -102,15 +102,12 @@
   }
 
   function profileOrSignIn(signedIn) {
-    console.log(signedIn, typeof signedIn);
     if (signedIn) {
       SignIn.style.display = 'none';
       Profile.style.display = 'block';
-      console.log('if', SignIn.style.display, Profile.style.display);
     } else {
       SignIn.style.display = 'block';
       Profile.style.display = 'none';
-      console.log('else', SignIn.style.display, Profile.style.display);
     }
   }
 

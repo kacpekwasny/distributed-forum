@@ -3,6 +3,8 @@ package noundo
 import (
 	"net/http"
 	"net/url"
+
+	"github.com/kacpekwasny/noundo/pkg/utils"
 )
 
 // ~~~~~~  home.go.html ~~~~~~
@@ -15,12 +17,19 @@ func CreateAgeInfo(parentDomainURL string, historyName string, ageName string) A
 	}
 }
 
-func CreateHistoryInfo(his HistoryPublicIface) HistoryInfo {
+func CreateHistoryInfo[T HistoryReadIface](his T) HistoryInfo {
 	name := his.GetName()
 	href := his.GetURL()
+	ages, _ := his.GetAges(0, 30, nil, nil)
 	return HistoryInfo{
 		DisplayName: name,
 		Href:        href,
+		Ages: utils.Map(ages, func(a AgeIface) AgeLink {
+			return AgeLink{
+				Name: a.GetName(),
+				Href: AgeURL(his.GetName(), a.GetName()),
+			}
+		}),
 	}
 }
 
@@ -34,7 +43,7 @@ func CreateCompWriteStory(hxPost string) CompWriteStory {
 	}
 }
 
-func CreatePageBaseValues(title string, using HistoryPublicIface, browsing HistoryPublicIface, r *http.Request) PageBaseValues {
+func CreatePageBaseValues(title string, using HistoryReadIface, browsing HistoryReadIface, r *http.Request) PageBaseValues {
 	return PageBaseValues{
 		PageTitle:       title,
 		CurrentUserInfo: CreateCurrentUserInfo(r),

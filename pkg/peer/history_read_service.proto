@@ -1,0 +1,144 @@
+syntax = "proto3";
+
+option go_package = "github.com/kacpekwasny/noundo/pkg/peer";
+
+package peer;
+
+
+service HistoryReadService {
+    rpc GetUser(UserRequest) returns (UserPublicInfo);
+    rpc GetAge(AgeRequest) returns (Age);
+    rpc GetAges(AgesRequest) returns (AgeList);
+    rpc GetStory(StoryRequest) returns (Story);
+    rpc GetStories(StoriesRequest) returns (StoryList);
+    rpc GetAnswer(AnswerRequest) returns (Answer);
+    rpc GetAnswers(AnswersRequest) returns (AnswerList);
+
+    // todo later
+    // rpc GetAgeOwner(AgeOwnerRequest) returns (UserIdentity);
+    // rpc GetAgeAdmins(AgeAdminsRequest) returns (UserIdentityList);
+    // rpc GetAgeMembers(AgeMembersRequest) returns (UserPublicInfoList);
+    // rpc GetAgeMembersNumber(AgeMembersNumberRequest) returns (int);
+}
+
+
+// ~~~~~~~~~~~~~~~~~~
+//      Requests
+// ~~~~~~~~~~~~~~~~~~
+
+message UserRequest {
+    string username = 1;
+}
+
+message AgeRequest {
+    string name = 1;
+}
+
+message AgesRequest {
+    int32 start = 1;
+    int32 end = 2;
+    Order order = 3;
+    Filter filter = 4;
+}
+
+message StoryRequest {
+    string id = 1;
+}
+
+message StoriesRequest {
+    repeated string ageNames = 1;
+    int32 start = 2;
+    int32 end = 3;
+    Order order = 4;
+    Filter filter = 5;
+}
+
+message AnswerRequest {
+    string id = 1;
+}
+
+message AnswersRequest {
+    string postableId = 1;
+    int32 start = 2;
+    int32 end = 3;
+    int32 depth = 4;
+    Order order = 5;
+    Filter filter = 6;
+    // Add other fields as needed
+}
+
+// ~~~ Request Utilities ~~~ 
+message Order {
+    string rule = 1;
+}
+
+message Filter {
+    string find = 1;
+    string reject = 2;
+}
+
+
+
+// ~~~~~~~~~~~~~~~~~~
+//     Responses
+// ~~~~~~~~~~~~~~~~~~
+
+message UserIdentity {
+    string username = 1;
+    string parentServer = 2;
+}
+
+message UserPublicInfo {
+    UserIdentity user = 1;
+    int64 birthDate = 2;
+    string aboutMe = 3;
+}
+
+message Story {
+    string title = 1;
+    string ageName = 2;
+    string historyName = 3;
+    Postable postable = 4;
+    Answerable answerable = 5;
+}
+
+message Postable {
+    string id = 1;
+    UserIdentity author = 2;
+    string content = 3;
+    int64 timestamp = 4;
+}
+
+message Answerable {
+    repeated Answer answers = 1; 
+}
+
+message Answer {
+    string parentId = 1;
+    Postable postable = 2;
+    Answerable answerable = 3;
+}
+
+//  todo
+// message Reactionable {
+// }
+
+message Age {
+    string name = 1;
+    string description = 2;
+    UserIdentity owner = 3;
+    string history = 4;
+}
+
+message AgeList {
+    repeated Age ages = 1;
+}
+
+message StoryList {
+    repeated Story stories = 1;
+}
+
+message AnswerList {
+    repeated Answer answers = 1;
+}
+

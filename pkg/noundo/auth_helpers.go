@@ -4,30 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/schema"
 	"golang.org/x/exp/slog"
 )
 
-var jwtCookieKey string
-
-var hmacSecret []byte
-
+var jwtCookieKey string = "bueykivxivcxf436ugkhgu8owy3886^$&7ae"
 var decoder = schema.NewDecoder()
-
-func init() {
-	// TODO (change this)
-	stringSecret := os.Getenv("FORUM_JWT_HMAC_SECRET")
-	if len(stringSecret) == 0 {
-		stringSecret = "hmacSampleSecret"
-	}
-	hmacSecret = []byte(stringSecret)
-
-	// Its for a `Key: Value` pair. Just a random key so no collisions will occur
-	jwtCookieKey = "bueykivxivcxf436ugkhgu8owy3886^$&7ae"
-}
 
 // Decode `http.Request.Body` into `AuthMe struct`
 func GetSignInRequest(r *http.Request) (*SignInRequest, error) {
@@ -68,7 +52,7 @@ func SignInUser(auth AuthenticatorIface, w http.ResponseWriter, r *http.Request)
 		newJWTMapClaims(newJwt),
 	)
 
-	tokenString, err := token.SignedString(hmacSecret)
+	tokenString, err := token.SignedString(auth.HmacSecret())
 	if err != nil {
 		slog.Warn("signing token error: %s\n", err)
 		return err
@@ -115,7 +99,7 @@ func SignUpUser(auth AuthenticatorIface, r *http.Request) *SignUpResponse {
 }
 
 // Validate the JWT sent with the incoming Request
-func JWTCheckAndParse(r *http.Request) (JWTFields, error) {
+func JWTCheckAndParse(r *http.Request, hmacSecret []byte) (JWTFields, error) {
 	var jfEmpty JWTFields
 	c, err := r.Cookie(jwtCookieKey)
 	if err != nil {
