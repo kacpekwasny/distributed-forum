@@ -28,7 +28,7 @@ type HistoryReadServiceClient interface {
 	GetStory(ctx context.Context, in *StoryRequest, opts ...grpc.CallOption) (*Story, error)
 	GetStories(ctx context.Context, in *StoriesRequest, opts ...grpc.CallOption) (*StoryList, error)
 	GetAnswer(ctx context.Context, in *AnswerRequest, opts ...grpc.CallOption) (*Answer, error)
-	GetAnswers(ctx context.Context, in *AnswersRequest, opts ...grpc.CallOption) (*StoryList, error)
+	GetAnswers(ctx context.Context, in *AnswersRequest, opts ...grpc.CallOption) (*AnswerList, error)
 }
 
 type historyReadServiceClient struct {
@@ -93,8 +93,8 @@ func (c *historyReadServiceClient) GetAnswer(ctx context.Context, in *AnswerRequ
 	return out, nil
 }
 
-func (c *historyReadServiceClient) GetAnswers(ctx context.Context, in *AnswersRequest, opts ...grpc.CallOption) (*StoryList, error) {
-	out := new(StoryList)
+func (c *historyReadServiceClient) GetAnswers(ctx context.Context, in *AnswersRequest, opts ...grpc.CallOption) (*AnswerList, error) {
+	out := new(AnswerList)
 	err := c.cc.Invoke(ctx, "/peer.HistoryReadService/GetAnswers", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ type HistoryReadServiceServer interface {
 	GetStory(context.Context, *StoryRequest) (*Story, error)
 	GetStories(context.Context, *StoriesRequest) (*StoryList, error)
 	GetAnswer(context.Context, *AnswerRequest) (*Answer, error)
-	GetAnswers(context.Context, *AnswersRequest) (*StoryList, error)
+	GetAnswers(context.Context, *AnswersRequest) (*AnswerList, error)
 	mustEmbedUnimplementedHistoryReadServiceServer()
 }
 
@@ -138,7 +138,7 @@ func (UnimplementedHistoryReadServiceServer) GetStories(context.Context, *Storie
 func (UnimplementedHistoryReadServiceServer) GetAnswer(context.Context, *AnswerRequest) (*Answer, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAnswer not implemented")
 }
-func (UnimplementedHistoryReadServiceServer) GetAnswers(context.Context, *AnswersRequest) (*StoryList, error) {
+func (UnimplementedHistoryReadServiceServer) GetAnswers(context.Context, *AnswersRequest) (*AnswerList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAnswers not implemented")
 }
 func (UnimplementedHistoryReadServiceServer) mustEmbedUnimplementedHistoryReadServiceServer() {}

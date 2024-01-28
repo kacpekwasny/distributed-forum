@@ -80,12 +80,14 @@ func (gs *GrpcServer) GetAnswer(_ context.Context, ar *peer.AnswerRequest) (*pee
 	return CreatePeerAnswer(&ans), nil
 }
 
-func (gs *GrpcServer) GetAnswers(_ context.Context, as *peer.AnswersRequest) (*peer.StoryList, error) {
+func (gs *GrpcServer) GetAnswers(_ context.Context, as *peer.AnswersRequest) (*peer.AnswerList, error) {
 	answers, err := gs.hr.GetAnswers(as.PostableId, int(as.Start), int(as.End), int(as.Depth), as.Order, as.Filter)
 	if err != nil {
 		return nil, err
 	}
-	return &peer.StoryList{}, nil
+	return &peer.AnswerList{
+		Answers: utils.Map(answers, CreatePeerAnswer),
+	}, nil
 }
 
 func (gs *GrpcServer) mustEmbedUnimplementedHistoryReadServiceServer() {}

@@ -1,6 +1,9 @@
 package noundo
 
-import "github.com/kacpekwasny/noundo/pkg/peer"
+import (
+	"github.com/kacpekwasny/noundo/pkg/peer"
+	"github.com/kacpekwasny/noundo/pkg/utils"
+)
 
 func CreatePeerUserIdentity(u UserIdentityIface) *peer.UserIdentity {
 	return &peer.UserIdentity{
@@ -41,6 +44,10 @@ func CreatePeerAnswer(a *Answer) *peer.Answer {
 			Content:   a.Contents,
 			Timestamp: a.Timestamp,
 		},
-		Answerable: &peer.Answerable{},
+		Answerable: &peer.Answerable{
+			Answers: utils.Map(a.Answerable.Answers, func(a Answer) *peer.Answer {
+				return CreatePeerAnswer(&a)
+			}),
+		},
 	}
 }

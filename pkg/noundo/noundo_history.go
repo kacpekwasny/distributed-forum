@@ -34,7 +34,7 @@ type HistoryReadIface interface {
 	// Get answer from anywhere in
 	GetAnswer(id string) (Answer, error)
 	// Get tree of answers, to the specified postable with the specified depth
-	GetAnswers(postableId string, start int, end int, depth int, order OrderIface, filter FilterIface) ([]*Story, error)
+	GetAnswers(postableId string, start int, end int, depth int, order OrderIface, filter FilterIface) ([]*Answer, error)
 
 	// todo later
 	// GetAgeOwner(name string) (UserIdentityIface, error)
