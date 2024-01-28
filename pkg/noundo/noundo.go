@@ -73,6 +73,8 @@ func (n *NoUndo) Serve() error {
 	// Gracefull stop is the waiting/sync point, as it waits to read from error channels
 	// if it recieves a value (or a singal, it proceeds to Gracefuly stop all running services)
 	n.GracefulStop(chGrpcErr, chHttpErr)
+
+	// todo defer? user defer to close? idk would have to redo couple functions.
 	return nil // todo
 }
 

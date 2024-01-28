@@ -2,42 +2,32 @@ package noundo
 
 // TODO iface read + iface write
 
-// type StoryIface interface {
-// 	PostableIface
-// 	AnswerableIface
-// 	Title() string
-// }
+// ############################ //
+// ~~~~~~ Postable Ifaces~~~~~ //
+type PostableIface interface {
+	Id() string
+	Content() string
+	Author() UserIdentityIface
+	Timestamp() int64
+}
 
-// type AnswerIface interface {
-// 	PostableIface
-// 	AnswerableIface
-// }
+type StoryIface interface {
+	PostableIface
+	AnswerableIface
 
-// type PostableIface interface {
-// 	Id() string
-// 	Content() string
-// 	AuthorFUsername() string
-// 	ReactionableIface
-// }
+	Title() string
+}
 
-// type AnswerableIface interface {
-// 	AddAnswer(author UserIdentityIface, answerable AnswerableIface, answer AnswerIface) (AnswerIface, error)
-// 	Answers(start int, end int, depth int, order OrderIface[AnswerableIface], filter FilterIface[AnswerableIface], ages []AgeIface) ([]AnswerIface, error)
-// }
+type AnswerIface interface {
+	PostableIface
+	AnswerableIface
 
-// type ReactionableIface interface {
-// 	ReactionStats() (map[enums.ReactionType]int, error)
-// 	Reactions() ([]ReactionIface, error)
-// 	React(user UserIdentityIface, reaction ReactionIface) error
-// }
+	ParentId() string
+}
 
-// type ReactionIface interface {
-// 	Id() Id
-// 	Enum() enums.ReactionType
-// 	ParentId() Id
-// 	AuthorFUsername() string
-// 	Timestamp() uint64
-// }
+type AnswerableIface interface {
+	Answers() []AnswerIface
+}
 
 func (u *UserInfo) Username() string {
 	return u.username
