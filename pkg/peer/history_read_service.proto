@@ -6,6 +6,8 @@ package peer;
 
 
 service HistoryReadService {
+    rpc GetName(Empty) returns (HistoryName);
+    rpc GetURL(Empty) returns (HistoryURL);
     rpc GetUser(UserRequest) returns (UserPublicInfo);
     rpc GetAge(AgeRequest) returns (Age);
     rpc GetAges(AgesRequest) returns (AgeList);
@@ -93,6 +95,8 @@ message CreateAnswerRequest {
 };
 
 // ~~~ Request Utilities ~~~ 
+message Empty {}
+
 message Order {
     string rule = 1;
 }
@@ -117,6 +121,14 @@ message AnswerContent {
 //     Responses
 // ~~~~~~~~~~~~~~~~~~
 
+message HistoryName {
+    string name = 1;
+}
+
+message HistoryURL {
+    string URL = 1;
+}
+
 message UserIdentity {
     string username = 1;
     string parentServerName = 2;
@@ -124,7 +136,7 @@ message UserIdentity {
 
 message UserPublicInfo {
     UserIdentity user = 1;
-    int64 birthDate = 2;
+    int64 accountBirthDate = 2;
     string aboutMe = 3;
 }
 

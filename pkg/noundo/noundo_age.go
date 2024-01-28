@@ -1,9 +1,8 @@
 package noundo
 
 type AgeIface interface {
-	GetId() string
 	GetName() string
-	GetOwner() (UserPublicIface, error)
+	GetOwner() UserIdentityIface
 	GetDescription() string
 
 	// GetAdmins() ([]UserPublicIface, error)

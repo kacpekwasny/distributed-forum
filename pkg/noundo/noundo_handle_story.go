@@ -133,7 +133,6 @@ func (n *NoUndo) HandleCreateAnswerGet(w http.ResponseWriter, r *http.Request) {
 		WriteAnswerPostURL: WriteAnswerURL(parts[2], postableId),
 		HideAfterSend:      true,
 	})
-
 }
 
 func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) {
@@ -142,7 +141,6 @@ func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) 
 		http.Redirect(w, r, "/signin", http.StatusTemporaryRedirect)
 		return
 	}
-	// TODO get the POST body of answer
 
 	var answerContent AnswerContent
 	err := json.NewDecoder(r.Body).Decode(&answerContent)
@@ -150,6 +148,7 @@ func (n *NoUndo) HandleCreateAnswerPost(w http.ResponseWriter, r *http.Request) 
 		utils.WriteJsonWithStatus(w, InvalidValue, http.StatusBadRequest)
 		return
 	}
+
 	if !validAnswer(answerContent) {
 		slog.Debug("invalid_answer", "answerContent", answerContent)
 		utils.WriteJsonWithStatus(w, InvalidValue, http.StatusBadRequest)

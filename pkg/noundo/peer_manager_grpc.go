@@ -8,7 +8,7 @@ import (
 type PeerManagerGrpc struct {
 	alive   error
 	conn    *grpc.ClientConn
-	history peer.HistoryReadServiceClient
+	history HistoryPublicIface
 }
 
 func NewPeerManagerGrpc(serverAddr string) PeerManagerIface {
@@ -17,7 +17,7 @@ func NewPeerManagerGrpc(serverAddr string) PeerManagerIface {
 	return &PeerManagerGrpc{
 		alive:   err,
 		conn:    conn,
-		history: peer.NewHistoryReadServiceClient(conn),
+		history: NewHistoryPublicIfaceFromGrpcService(peer.NewHistoryReadServiceClient(conn)),
 	}
 }
 

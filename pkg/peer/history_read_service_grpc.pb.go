@@ -22,6 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HistoryReadServiceClient interface {
+	GetName(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HistoryName, error)
+	GetURL(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HistoryURL, error)
 	GetUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserPublicInfo, error)
 	GetAge(ctx context.Context, in *AgeRequest, opts ...grpc.CallOption) (*Age, error)
 	GetAges(ctx context.Context, in *AgesRequest, opts ...grpc.CallOption) (*AgeList, error)
@@ -40,6 +42,24 @@ type historyReadServiceClient struct {
 
 func NewHistoryReadServiceClient(cc grpc.ClientConnInterface) HistoryReadServiceClient {
 	return &historyReadServiceClient{cc}
+}
+
+func (c *historyReadServiceClient) GetName(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HistoryName, error) {
+	out := new(HistoryName)
+	err := c.cc.Invoke(ctx, "/peer.HistoryReadService/GetName", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *historyReadServiceClient) GetURL(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HistoryURL, error) {
+	out := new(HistoryURL)
+	err := c.cc.Invoke(ctx, "/peer.HistoryReadService/GetURL", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *historyReadServiceClient) GetUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserPublicInfo, error) {
@@ -136,6 +156,8 @@ func (c *historyReadServiceClient) CreateAnswer(ctx context.Context, in *CreateA
 // All implementations must embed UnimplementedHistoryReadServiceServer
 // for forward compatibility
 type HistoryReadServiceServer interface {
+	GetName(context.Context, *Empty) (*HistoryName, error)
+	GetURL(context.Context, *Empty) (*HistoryURL, error)
 	GetUser(context.Context, *UserRequest) (*UserPublicInfo, error)
 	GetAge(context.Context, *AgeRequest) (*Age, error)
 	GetAges(context.Context, *AgesRequest) (*AgeList, error)
@@ -153,6 +175,12 @@ type HistoryReadServiceServer interface {
 type UnimplementedHistoryReadServiceServer struct {
 }
 
+func (UnimplementedHistoryReadServiceServer) GetName(context.Context, *Empty) (*HistoryName, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetName not implemented")
+}
+func (UnimplementedHistoryReadServiceServer) GetURL(context.Context, *Empty) (*HistoryURL, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetURL not implemented")
+}
 func (UnimplementedHistoryReadServiceServer) GetUser(context.Context, *UserRequest) (*UserPublicInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
@@ -194,6 +222,42 @@ type UnsafeHistoryReadServiceServer interface {
 
 func RegisterHistoryReadServiceServer(s grpc.ServiceRegistrar, srv HistoryReadServiceServer) {
 	s.RegisterService(&HistoryReadService_ServiceDesc, srv)
+}
+
+func _HistoryReadService_GetName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HistoryReadServiceServer).GetName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/peer.HistoryReadService/GetName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HistoryReadServiceServer).GetName(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HistoryReadService_GetURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HistoryReadServiceServer).GetURL(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/peer.HistoryReadService/GetURL",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HistoryReadServiceServer).GetURL(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _HistoryReadService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -383,6 +447,14 @@ var HistoryReadService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "peer.HistoryReadService",
 	HandlerType: (*HistoryReadServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetName",
+			Handler:    _HistoryReadService_GetName_Handler,
+		},
+		{
+			MethodName: "GetURL",
+			Handler:    _HistoryReadService_GetURL_Handler,
+		},
 		{
 			MethodName: "GetUser",
 			Handler:    _HistoryReadService_GetUser_Handler,
