@@ -42,7 +42,7 @@ func (h *HistoryPersistent) CreateAge(owner UserIdentityIface, name string) (Age
 	//return age, err
 
 	//the bellow code INSERTS into the db and returns the created age
-	var id string
+	var id int
 	err := h.dbPool.QueryRow(context.Background(), "INSERT INTO ages ( name, owner_id) VALUES ($1, $2) RETURNING id", name, owner.Id()).Scan(&id)
 	age := &AgePersistent{id, name, owner.Id(), ""}
 	return age, err
@@ -250,6 +250,6 @@ func (h *HistoryPersistent) CreateAnswer(author UserIdentityIface, parentId int,
 }
 
 // Get tree of answers, with the specified depth
-func (h *HistoryPersistent) GetAnswers(postableId string, start int, end int, depth int, order OrderIface, filter FilterIface) ([]*Answer, error) {
+func (h *HistoryPersistent) GetAnswers(postableId int, start int, end int, depth int, order OrderIface, filter FilterIface) ([]Answer, error) {
 	panic("not implemented") // TODO: Implement
 }

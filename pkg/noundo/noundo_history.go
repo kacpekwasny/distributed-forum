@@ -27,14 +27,14 @@ type HistoryReadIface interface {
 	GetAges(start int, end int, order OrderIface, filter FilterIface) ([]AgeIface, error)
 
 	// Get a single story
-	GetStory(id string) (Story, error)
+	GetStory(id int) (Story, error)
 	// Get `n` stories ordered by different atributes, from []ages,
-	GetStories(ageNames []string, start int, end int, order OrderIface, filter FilterIface) ([]*Story, error)
+	GetStories(ageNames []string, start int, end int, order OrderIface, filter FilterIface) ([]Story, error)
 
 	// Get answer from anywhere in
-	GetAnswer(id string) (Answer, error)
+	GetAnswer(id int) (Answer, error)
 	// Get tree of answers, to the specified postable with the specified depth
-	GetAnswers(postableId string, start int, end int, depth int, order OrderIface, filter FilterIface) ([]*Answer, error)
+	GetAnswers(postableId int, start int, end int, depth int, order OrderIface, filter FilterIface) ([]Answer, error)
 
 	// todo later
 	// GetAgeOwner(name string) (UserIdentityIface, error)
@@ -49,7 +49,7 @@ type HistoryWriteIface interface {
 	// Create a new story within
 	CreateStory(author UserIdentityIface, ageName string, story StoryContent) (Story, error)
 	// Create an Answer under a post or other Answer
-	CreateAnswer(author UserIdentityIface, parentId string, answerContent string) (Answer, error)
+	CreateAnswer(author UserIdentityIface, parentId int, answerContent string) (Answer, error)
 }
 
 type HistoryWritePrivateIface interface {
