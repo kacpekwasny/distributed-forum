@@ -100,7 +100,7 @@ func (h *historyPublicGrpcClient) CreateStory(author UserIdentityIface, ageName 
 		},
 		AgeName: ageName,
 		StoryContent: &peer.StoryContent{
-			Title:   story.GetContent(),
+			Title:   story.GetTitle(),
 			Content: story.GetContent(),
 		},
 	})
