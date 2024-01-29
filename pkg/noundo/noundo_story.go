@@ -38,7 +38,7 @@ func (s *CreateStory) Content() string {
 // 	}
 // }
 
-func (s *Story) Id() string {
+func (s *Story) Id() int {
 	return s.Postable.PostableId
 }
 

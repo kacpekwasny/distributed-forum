@@ -23,14 +23,11 @@ type HistoryPersistent struct {
 func NewHistoryPersistent(historyName string) HistoryFullIface {
 	// TODO: use .env file for database connection
 	dbpool, err := pgxpool.New(context.Background(), "postgresql://localhost:5432/distributed_forum")
-	usersUsername := make(map[string]UserAllIface)
-	usersEmail := make(map[string]UserAllIface)
 	return &HistoryPersistent{
 		name:   historyName,
 		url:    "http://" + historyName,
 		dbPool: dbpool,
-		auth:   NewAuthenticator(NewPersistentAuthStorage(historyName, &usersEmail, &usersUsername), DEFAULT_PASS_HASH_COST, []byte(historyName)),
-		users:  usersUsername,
+		auth:   NewAuthenticator(NewPersistentAuthStorage(historyName, dbpool)),
 	}
 }
 
@@ -57,7 +54,7 @@ func (h *HistoryPersistent) GetStory(id int) (Story, error) {
 
 	//get the answers
 	var answers []Answer
-	rows, err := h.dbPool.Query(context.Background(), "SELECT  id, parent_id, owner_id, content, score, timestamp  FROM answers WHERE story_id = $1", id)
+	rows, err := h.dbPool.Query(context.Background(), "SELECT  id, parent_id, owner_id, content, score, timestamp  FROM comments WHERE story_id = $1", id)
 	for rows.Next() {
 		var id, parent_id, owner_id, score int
 		var content string
@@ -92,7 +89,7 @@ func (h *HistoryPersistent) GetAnswer(id int) (Answer, error) {
 	var parent_id, owner_id int
 	var content string
 	var timestamp int64
-	err := h.dbPool.QueryRow(context.Background(), "SELECT  parent_id, owner_id, content, timestamp  FROM answers WHERE id = $1", id).Scan(&parent_id, &owner_id, &content, &timestamp)
+	err := h.dbPool.QueryRow(context.Background(), "SELECT  parent_id, owner_id, content, timestamp  FROM comments WHERE id = $1", id).Scan(&parent_id, &owner_id, &content, &timestamp)
 	//create answer object
 	answer := Answer{ParentId: -1, Postable: Postable{PostableId: id, AuthorId: owner_id, Contents: content, TimeStampable: TimeStampable{Timestamp: timestamp}}}
 
@@ -236,12 +233,12 @@ func (h *HistoryPersistent) CreateAnswer(author UserIdentityIface, parentId int,
 	}
 
 	//insert the answer into the db
-	h.dbPool.QueryRow(context.Background(), "INSERT INTO answers ( parent_id, owner_id, content, timestamp) VALUES ($1, $2, $3, $4) RETURNING id", parentId, author.Id(), answerContent, time.Now().UnixNano())
+	h.dbPool.QueryRow(context.Background(), "INSERT INTO comments ( parent_id, owner_id, content, timestamp) VALUES ($1, $2, $3, $4) RETURNING id", parentId, author.Id(), answerContent, time.Now().UnixNano())
 	//get the created answer from db
 	var parent_id, owner_id2 int
 	var content2 string
 	var timestamp2 int64
-	err = h.dbPool.QueryRow(context.Background(), "SELECT  parent_id, owner_id, content, timestamp  FROM answers WHERE id = $1", parentId).Scan(&parent_id, &owner_id2, &content2, &timestamp2)
+	err = h.dbPool.QueryRow(context.Background(), "SELECT  parent_id, owner_id, content, timestamp  FROM comments WHERE id = $1", parentId).Scan(&parent_id, &owner_id2, &content2, &timestamp2)
 
 	//create answer object
 	answer := Answer{ParentId: parent_id, Postable: Postable{PostableId: parentId, AuthorId: owner_id2, Contents: content2, TimeStampable: TimeStampable{Timestamp: timestamp2}}}

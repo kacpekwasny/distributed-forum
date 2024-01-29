@@ -21,6 +21,7 @@ type User struct {
 type UserIdentityIface interface {
 	// Id created by the db
 	Id() int
+
 	// Username is the string that the user will go by, Username is unique in context of History
 	Username() string
 

@@ -28,11 +28,9 @@ type Authenticator struct {
 	hmacSecret       []byte
 }
 
-func NewAuthenticator(as AuthenticatorStorageIface, passwordHashCost int, hmacSecret []byte) AuthenticatorIface {
+func NewAuthenticator(as AuthenticatorStorageIface) AuthenticatorIface {
 	return &Authenticator{
-		authStorage:      as,
-		PasswordHashCost: passwordHashCost,
-		hmacSecret:       hmacSecret,
+		authStorage: as,
 	}
 }
 

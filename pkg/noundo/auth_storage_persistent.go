@@ -1,8 +1,12 @@
 package noundo
 
-import "github.com/kacpekwasny/noundo/pkg/utils"
+import (
+	"context"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
 
 type persistentUserAuth struct {
+	id               int
 	email            string
 	username         string
 	passwdHash       []byte // TODO remove, and do something with this object, make a UserIdentityObject, or make it the JWT
@@ -12,81 +16,114 @@ type persistentUserAuth struct {
 }
 
 type persistentAuthStorage struct {
-	serverName    string
-	emailUsers    *map[string]UserAllIface
-	usernameUsers *map[string]UserAllIface
+	serverName string
+	dbPool     *pgxpool.Pool
 }
 
 // ~~~ Authenticator Storage ~~~
 func NewPersistentAuthStorage(
 	serverName string,
-	emailUsers *map[string]UserAllIface,
-	usernameUsers *map[string]UserAllIface,
+	dbPool *pgxpool.Pool,
+
 ) AuthenticatorStorageIface {
 	return &persistentAuthStorage{
-		serverName:    serverName,
-		emailUsers:    emailUsers,
-		usernameUsers: usernameUsers,
+		serverName: serverName,
+		dbPool:     dbPool,
 	}
 }
 
 // TODO multithread handling
 func (va *persistentAuthStorage) CreateUserOrErr(email, username string, password []byte) MsgEnum {
-	if _, ok := (*va.emailUsers)[email]; ok {
+	//check if there's already a user with this email or username
+	err := va.dbPool.QueryRow(context.Background(), "SELECT id FROM users WHERE email = $1 ", email).Scan()
+	if err == nil {
 		return EmailInUse
 	}
-	if _, ok := (*va.usernameUsers)[username]; ok {
+	err = va.dbPool.QueryRow(context.Background(), "SELECT id FROM users WHERE username = $1 ", username).Scan()
+	if err == nil {
 		return UsernameInUse
 	}
-	u := &persistentUserAuth{
-		email:            email,
-		username:         username,
-		passwdHash:       password,
-		parentServerName: va.serverName,
-		aboutMe:          "Hi I am: " + username,
-		accountBirthDate: UnixTimeNow(),
+	var id int
+	err = va.dbPool.QueryRow(context.Background(), "INSERT INTO users ( email, username, password_hash, parent_server, account_birth_date, about_me) VALUES ($1, $2, $3, $4,current_timestamp, $5) RETURNING id", email, username, password, va.serverName, "Hi I am: "+username).Scan(&id)
+	if err != nil {
+		return Err
 	}
-	(*va.emailUsers)[email] = u
-	(*va.usernameUsers)[username] = u
 	return Ok
 }
 
 func (va *persistentAuthStorage) GetUserByEmail(email string) (UserAuthIface, error) {
-	user, ok := (*va.emailUsers)[email]
-	return utils.ResultOkToErr(user, ok)("email_not_found")
+	//get the user from the db
+	var id int
+	var username, parentServerName, aboutMe string
+	var passwordHash []byte
+
+	var accountBirthDate int64
+	err := va.dbPool.QueryRow(context.Background(), "SELECT id, username, parent_server, account_birth_date, about_me, password_hash FROM users WHERE email = $1", email).Scan(&id, &username, &parentServerName, &accountBirthDate, &aboutMe, &passwordHash)
+	if err != nil {
+		return nil, err
+	}
+	return persistentUserAuth{
+		id:               id,
+		email:            email,
+		username:         username,
+		passwdHash:       nil,
+		parentServerName: parentServerName,
+		aboutMe:          aboutMe,
+		accountBirthDate: accountBirthDate,
+	}, nil
 }
 
 func (va *persistentAuthStorage) GetUserByUsername(username string) (UserAuthIface, error) {
-	user, ok := (*va.usernameUsers)[username]
-	return utils.ResultOkToErr(user, ok)("username_not_found")
+	//get the user from the db
+	var id int
+	var email, parentServerName, aboutMe string
+	var accountBirthDate int64
+	var passwordHash []byte
+	err := va.dbPool.QueryRow(context.Background(), "SELECT id, email, parent_server, account_birth_date, about_me, password_hash FROM users WHERE username = $1", username).Scan(&id, &email, &parentServerName, &accountBirthDate, &aboutMe, &passwordHash)
+	if err != nil {
+		return nil, err
+	}
+	return persistentUserAuth{
+		id:               id,
+		email:            email,
+		username:         username,
+		passwdHash:       passwordHash,
+		parentServerName: parentServerName,
+		aboutMe:          aboutMe,
+		accountBirthDate: accountBirthDate,
+	}, nil
+
 }
 
-func (u *persistentUserAuth) Email() string {
+func (u persistentUserAuth) Id() int {
+	return u.id
+}
+func (u persistentUserAuth) Email() string {
 	return u.email
 }
 
-func (u *persistentUserAuth) Username() string {
+func (u persistentUserAuth) Username() string {
 	return u.username
 }
 
-func (u *persistentUserAuth) PasswdHash() []byte {
+func (u persistentUserAuth) PasswdHash() []byte {
 	return u.passwdHash
 }
 
 // Domain of the server that is the parent for this account
-func (u *persistentUserAuth) ParentServerName() string {
+func (u persistentUserAuth) ParentServerName() string {
 	return u.parentServerName
 }
 
 // Username() + "@" + ParentServerName()`
-func (u *persistentUserAuth) FullUsername() string {
+func (u persistentUserAuth) FullUsername() string {
 	return u.Username() + "@" + u.ParentServerName()
 }
 
-func (u *persistentUserAuth) AboutMe() string {
+func (u persistentUserAuth) AboutMe() string {
 	return u.aboutMe
 }
 
-func (u *persistentUserAuth) AccountBirthDate() int64 {
+func (u persistentUserAuth) AccountBirthDate() int64 {
 	return u.accountBirthDate
 }
