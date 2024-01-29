@@ -1,8 +1,13 @@
 # noundo
 
-### Redistributed - interconnected servers, every server can be accessed by any other server.
-### Nothing can disapear - peers permanently mutualy cache each others content.
-### No action can be undone - the cached content doesn't expier, doesnt need to be refreshed.
+### Redistributed 
+interconnected servers, every server can be accessed by any other server.
+
+### Nothing can disapear
+peers permanently mutualy cache each others content.
+
+### No action can be undone
+the cached content doesn't expier, doesnt need to be refreshed.
 
 The forums structure was based on reddit.
 - history - a server
