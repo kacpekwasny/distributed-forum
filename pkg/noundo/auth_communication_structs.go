@@ -35,6 +35,11 @@ type JWTFields struct {
 	jwtIssuedTimestamp int64
 }
 
+func (jwt *JWTFields) Id() int {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (jwt *JWTFields) Username() string {
 	return jwt.username
 }

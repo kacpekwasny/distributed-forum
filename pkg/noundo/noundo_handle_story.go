@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -71,7 +72,7 @@ func (n *NoUndo) HandleCreateStoryPost(w http.ResponseWriter, r *http.Request) {
 func (n *NoUndo) HandleStoryGet(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	historyName := vars["history"]
-	storyId := vars["story-id"]
+	storyId, _ := strconv.Atoi(vars["story-id"])
 
 	histIface, err := n.uni.GetHistoryByName(historyName)
 	if err != nil {

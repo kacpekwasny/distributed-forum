@@ -3,6 +3,7 @@ package noundo
 import (
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -34,9 +35,9 @@ func (n *NoUndo) HandleAge(w http.ResponseWriter, r *http.Request) {
 	storiesForTmpl := make([]CompStoryValues, len(stories))
 	for i, s := range stories {
 		storiesForTmpl[i] = CompStoryValues{
-			Story:        *s,
+			Story:        s,
 			ClampContent: true,
-			StoryURL:     StoryURL(s.HistoryName, s.Id()),
+			StoryURL:     StoryURL(s., strconv.Itoa(s.Id())),
 		}
 	}
 
