@@ -2,6 +2,7 @@ package noundo
 
 import (
 	"errors"
+	"slices"
 	"time"
 
 	"github.com/kacpekwasny/noundo/pkg/utils"
@@ -66,9 +67,9 @@ func (h *HistoryVolatile) GetAnswer(id string) (Answer, error) {
 func (h *HistoryVolatile) GetStories(ageNames []string, start int, end int, order OrderIface, filter FilterIface) ([]*Story, error) {
 	stories := []*Story{}
 	for _, story := range h.stories {
-		stories = append(stories, story)
-		// if filter == nil || filter.Keep(story) {
-		// }
+		if slices.Contains(ageNames, story.AgeName) {
+			stories = append(stories, story)
+		}
 	}
 	// if order != nil {
 	// 	sort.SliceStable(stories, func(i, j int) bool {
