@@ -1,5 +1,8 @@
 # noundo
 
+The commits from last couple of days were a race against time. Please dont judge me, I will refactor it. It was only my first attept at this.
+
+
 ### Redistributed 
 interconnected servers, every server can be accessed by any other server.
 
