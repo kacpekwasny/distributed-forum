@@ -14,10 +14,10 @@ the cached content doesn't expier, doesnt need to be refreshed.
 
 The forums structure was based on reddit.
 - history - a server
-  - age - a subreddit
-    - story - a post in an age
-      - answer - a comment to a story, also answers to answers are possible
-  - users - a history has users,
+    - age - a subreddit
+        - story - a post in an age
+            - answer - a comment to a story, also answers to answers are possible
+    - users - a history has users,
 
 
 ## Progress
@@ -59,6 +59,13 @@ The forums structure was based on reddit.
 - Example: on your browser you have opened history `brows.com`, your user is registered @ `reg.com`,  you 
   are browsing an *age* from `age.com`. You may post a *story* to that *age* if `brows.com <-> age.com` and `age.com <-> reg.com`, where `<->` meens a peer connection.
 - if you browse `a.com` from `brows.com`, then every post, answer coming retrived from `a.com` will be saved at `brows.com`. Thanks to **no-undo** policy, those posts never expire, and will never be deleted from the internet.
+
+## Running your own history
+
+To run your own history you should configure the code in main.go, eg. specify the name etc. and create the admin
+account.
+
+
 
 
 
